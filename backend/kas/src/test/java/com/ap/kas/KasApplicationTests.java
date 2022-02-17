@@ -8,6 +8,7 @@ class KasApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
 	}
 
 }
