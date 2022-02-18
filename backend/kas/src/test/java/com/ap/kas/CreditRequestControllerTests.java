@@ -62,6 +62,8 @@ public class CreditRequestControllerTests {
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
 
         //assert that all PASSED fields are the same, aka all fields in the dto.
+        //we can't test if the two objects are the same, even with hashcode and equals overrides
+        //since the test data doesn't have an ID, and even if it did it's ID wouldn't match the DTO since they're separate entries in the repo
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
         assertEquals(creditRequest.getRequestedAmount(), actualCreditRequest.getRequestedAmount());

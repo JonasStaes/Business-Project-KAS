@@ -13,6 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Credit_Request")
 public class CreditRequest {
+    
     @Id
     @Column(name = "credit_request_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
