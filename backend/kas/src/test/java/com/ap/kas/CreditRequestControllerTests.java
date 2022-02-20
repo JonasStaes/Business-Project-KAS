@@ -1,10 +1,14 @@
 package com.ap.kas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-import java.time.Duration;
+import java.time.Period;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
@@ -12,6 +16,7 @@ import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -21,6 +26,8 @@ import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CreditRequestControllerTests {
+
+    private static final String CONTROLLER_MAPPING = "/credit_request";
     
     @Autowired
     private TestRestTemplate restTemplate;
@@ -31,6 +38,9 @@ public class CreditRequestControllerTests {
     @Autowired
     private CreditRequestMapper creditRequestMapper;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     private static CreditRequest creditRequest;
 
     @BeforeAll
@@ -38,10 +48,27 @@ public class CreditRequestControllerTests {
         //initialize test data
         creditRequest = new CreditRequest();
         creditRequest.setName("Test Request");
-        creditRequest.setRequestedAmount(100.0f);
+        creditRequest.setTotalAmount(100.0f);
         creditRequest.setTotalAmount(200.0f);
-        creditRequest.setDuration(Duration.ofDays(60));
+        creditRequest.setDuration(Period.ofMonths(2));
         creditRequest.setAccountability("Test Accountability");
+    }
+
+    @Test
+    public void readAllCapabilitiesTest() {
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all", MessageResponse.class);
+        assertEquals(HttpStatus.OK, forEntity.getStatusCode());
+
+        List<CreditRequestReadDto> expectedList = new LinkedList<CreditRequestReadDto>();
+        creditRequestRepository.findAll().forEach(cr -> {
+            expectedList.add(creditRequestMapper.convertToReadDto(cr));
+        });
+
+        List<CreditRequestReadDto> actualList = new LinkedList<CreditRequestReadDto>();
+        ((List<Object>)forEntity.getBody().getData()).forEach(o -> {
+            actualList.add(modelMapper.map(o, CreditRequestReadDto.class));
+        });
+        assertIterableEquals(expectedList, actualList);
     }
 
 
@@ -50,13 +77,13 @@ public class CreditRequestControllerTests {
         //create dto for test
         CreditRequestCreateDto dto = new CreditRequestCreateDto();
         dto.setName(creditRequest.getName());
-        dto.setRequestedAmount(creditRequest.getRequestedAmount());
+        dto.setFinancedAmount(creditRequest.getFinancedAmount());
         dto.setTotalAmount(creditRequest.getTotalAmount());
         dto.setDuration(creditRequest.getDuration());
         dto.setAccountability(creditRequest.getAccountability());
 
         //get actual result from mock API call
-        final ResponseEntity<MessageResponse> forEntity = restTemplate.postForEntity("/credit_request/", dto, MessageResponse.class);
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.postForEntity(CONTROLLER_MAPPING + "/", dto, MessageResponse.class);
 
         //assert that status code is ok, meaning the request was successful
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
@@ -66,7 +93,7 @@ public class CreditRequestControllerTests {
         //since the test data doesn't have an ID, and even if it did it's ID wouldn't match the DTO since they're separate entries in the repo
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
-        assertEquals(creditRequest.getRequestedAmount(), actualCreditRequest.getRequestedAmount());
+        assertEquals(creditRequest.getFinancedAmount(), actualCreditRequest.getFinancedAmount());
         assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
         assertEquals(creditRequest.getDuration(), actualCreditRequest.getDuration());
         assertEquals(creditRequest.getAccountability(), actualCreditRequest.getAccountability());

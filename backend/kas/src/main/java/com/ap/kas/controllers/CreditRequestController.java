@@ -1,8 +1,12 @@
 package com.ap.kas.controllers;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
@@ -12,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +34,19 @@ public class CreditRequestController {
     
     @Autowired
     private CreditRequestRepository creditRequestRepository;
+
+    @GetMapping("/all")
+    public ResponseEntity<MessageResponse> readCreditRequests() {
+        try {
+            List<CreditRequestReadDto> creditRequests = new LinkedList<CreditRequestReadDto>();
+            creditRequestRepository.findAll().forEach(cr -> {
+                creditRequests.add(creditRequestMapper.convertToReadDto(cr));
+            });
+            return ResponseEntity.ok(new MessageResponse("Got all credit requests!", creditRequests));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a credit request"));
+        }
+    }
 
     @PostMapping("/")
     public ResponseEntity<MessageResponse> createCreditRequest(@Valid @RequestBody CreditRequestCreateDto newCreditRequest) {

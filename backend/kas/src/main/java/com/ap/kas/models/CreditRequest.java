@@ -1,7 +1,7 @@
 package com.ap.kas.models;
 
-import java.io.File;
-import java.time.Duration;
+import java.time.Period;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,72 +21,77 @@ public class CreditRequest {
 
     private String name;
 
-    private float requestedAmount; 
+    private float financedAmount; 
 
     private float totalAmount;
 
-    private Duration duration; 
+    private Period duration; 
 
     private String accountability; 
     
     //private File[] files;
 
-    public CreditRequest() {
-    }
+    public CreditRequest() {}
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public CreditRequest(String name, float financedAmount, float totalAmount, Period duration, String accountability) {
         this.name = name;
-    }
-
-    public float getRequestedAmount() {
-        return requestedAmount;
-    }
-
-    public void setRequestedAmount(float requestedAmount) {
-        this.requestedAmount = requestedAmount;
-    }
-
-    public float getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(float totalAmount) {
+        this.financedAmount = financedAmount;
         this.totalAmount = totalAmount;
-    }
-
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Duration duration) {
         this.duration = duration;
-    }
-
-    public String getAccountability() {
-        return accountability;
-    }
-    
-    public void setAccountability(String accountability) {
         this.accountability = accountability;
     }
 
-    // public File[] getFiles() {
-    //     return files;
-    // }
-    
-    // public void setFiles(File[] files) {
-    //     this.files = files;
-    // }
+    public int getId() { return this.id; }
+
+    public void setId(int id) { this.id = id; }
+
+    public String getName() { return this.name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public float getFinancedAmount() { return this.financedAmount; }
+
+    public void setFinancedAmount(float financedAmount) { this.financedAmount = financedAmount; }
+
+    public float getTotalAmount() { return this.totalAmount; }
+
+    public void setTotalAmount(float totalAmount) { this.totalAmount = totalAmount; }
+
+    public Period getDuration() { return this.duration; }
+
+    public void setDuration(Period duration) { this.duration = duration; }
+
+    public String getAccountability() { return this.accountability; }
+
+    public void setAccountability(String accountability) { this.accountability = accountability; }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof CreditRequest)) {
+            return false;
+        }
+        CreditRequest creditRequest = (CreditRequest) o;
+        return id == creditRequest.id && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && totalAmount == creditRequest.totalAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, financedAmount, totalAmount, duration, accountability);
+    }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", name='" + getName() + "'" +
+            ", financedAmount='" + getFinancedAmount() + "'" +
+            ", totalAmount='" + getTotalAmount() + "'" +
+            ", duration='" + getDuration() + "'" +
+            ", accountability='" + getAccountability() + "'" +
+            "}";
+    }
 }
