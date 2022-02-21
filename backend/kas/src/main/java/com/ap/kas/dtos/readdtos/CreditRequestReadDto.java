@@ -1,9 +1,13 @@
 package com.ap.kas.dtos.readdtos;
 
 import java.time.Period;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
+
+import com.ap.kas.models.FileStorage;
 
 public class CreditRequestReadDto {
     
@@ -13,63 +17,44 @@ public class CreditRequestReadDto {
     @NotBlank
     private String name;
 
-    private float financedAmount; 
+    private float requestedAmount;
 
-    private float totalAmount;
+    private float financedAmount; 
 
     private Period duration; 
 
     @NotBlank
-    private String accountability; 
+    private String accountability;
 
-    public int getId() {
-        return id;
-    }
+    private List<FileStorage> files = new LinkedList<FileStorage>();;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public int getId() { return id; }
 
-    public String getName() {
-        return name;
-    }
+    public void setId(int id) { this.id = id; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() { return name; }
 
-    public float getFinancedAmount() {
-        return this.financedAmount;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public void setFinancedAmount(float financedAmount) {
-        this.financedAmount = financedAmount;
-    }    
+    public float getFinancedAmount() { return this.financedAmount; }
 
-    public float getTotalAmount() {
-        return totalAmount;
-    }
+    public void setFinancedAmount(float financedAmount) { this.financedAmount = financedAmount; }    
 
-    public void setTotalAmount(float totalAmount) {
-        this.totalAmount = totalAmount;
-    }
+    public float getRequestedAmount() { return requestedAmount; }
 
-    public Period getDuration() {
-        return duration;
-    }
+    public void setRequestedAmount(float requestedAmount) { this.requestedAmount = requestedAmount; }
 
-    public void setDuration(Period duration) {
-        this.duration = duration;
-    }
+    public Period getDuration() { return duration; }
 
-    public String getAccountability() {
-        return accountability;
-    }
+    public void setDuration(Period duration) { this.duration = duration; }
+
+    public String getAccountability() { return accountability; }
     
-    public void setAccountability(String accountability) {
-        this.accountability = accountability;
-    }
+    public void setAccountability(String accountability) { this.accountability = accountability; }
 
+    public List<FileStorage> getFiles() { return files; }
+
+    public void setFiles(List<FileStorage> files) { this.files = files; }
 
     @Override
     public boolean equals(Object o) {
@@ -79,26 +64,24 @@ public class CreditRequestReadDto {
             return false;
         }
         CreditRequestReadDto creditRequestReadDto = (CreditRequestReadDto) o;
-        return id == creditRequestReadDto.id && Objects.equals(name, creditRequestReadDto.name) && financedAmount == creditRequestReadDto.financedAmount && totalAmount == creditRequestReadDto.totalAmount && Objects.equals(duration, creditRequestReadDto.duration) && Objects.equals(accountability, creditRequestReadDto.accountability);
+        return id == creditRequestReadDto.id && Objects.equals(name, creditRequestReadDto.name) && requestedAmount == creditRequestReadDto.requestedAmount && financedAmount == creditRequestReadDto.financedAmount && Objects.equals(duration, creditRequestReadDto.duration) && Objects.equals(accountability, creditRequestReadDto.accountability) && Objects.equals(files, creditRequestReadDto.files);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, financedAmount, totalAmount, duration, accountability);
+        return Objects.hash(id, name, requestedAmount, financedAmount, duration, accountability, files);
     }
-
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
             ", name='" + getName() + "'" +
+            ", requestedAmount='" + getRequestedAmount() + "'" +
             ", financedAmount='" + getFinancedAmount() + "'" +
-            ", totalAmount='" + getTotalAmount() + "'" +
             ", duration='" + getDuration() + "'" +
             ", accountability='" + getAccountability() + "'" +
+            ", files='" + getFiles() + "'" +
             "}";
     }
-
-
 }

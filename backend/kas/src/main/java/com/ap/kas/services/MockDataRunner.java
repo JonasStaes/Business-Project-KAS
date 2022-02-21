@@ -40,9 +40,7 @@ public class MockDataRunner implements CommandLineRunner {
     }
 
     private CreditRequest createRandomCreditRequest(int i) {
-        float financedAmount = (float)Math.floor(100 + Math.random() * (20000 - 100)); 
-        float totalAmount = (float)Math.floor((200 + financedAmount) + Math.random() * ((50000 + financedAmount) - (200 + financedAmount)));
-        return new CreditRequest("test " + i, financedAmount, totalAmount, Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i);
+        return new CreditRequest("test " + i, (float)Math.floor(100 + Math.random() * (20000 - 100)), (float)Math.floor(100 + Math.random() * (20000 - 100)), Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i);
     }
     
 }

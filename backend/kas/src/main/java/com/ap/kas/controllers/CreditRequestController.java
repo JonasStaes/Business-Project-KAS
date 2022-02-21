@@ -1,5 +1,6 @@
 package com.ap.kas.controllers;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,8 +9,10 @@ import javax.validation.Valid;
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
+import com.ap.kas.models.FileStorage;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
+import com.ap.kas.services.FileStorageService;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.slf4j.Logger;
@@ -31,6 +34,9 @@ public class CreditRequestController {
 
     @Autowired
     private CreditRequestMapper creditRequestMapper;
+
+    @Autowired
+    private FileStorageService fileStorageService;
     
     @Autowired
     private CreditRequestRepository creditRequestRepository;
@@ -53,6 +59,15 @@ public class CreditRequestController {
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
         try {
             CreditRequest creditRequest = creditRequestMapper.convertFromCreateDTO(newCreditRequest);
+            List<FileStorage> fileStorage = new LinkedList<FileStorage>();
+            newCreditRequest.getFiles().forEach(file -> {
+                try {
+                    fileStorage.add(fileStorageService.convert(file, creditRequest));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            creditRequest.setFiles(fileStorage);
             logger.info("New Credit Request:\n {}", creditRequest);
             creditRequestRepository.save(creditRequest);
             return ResponseEntity.ok(new MessageResponse("Successfully created credit request!"));

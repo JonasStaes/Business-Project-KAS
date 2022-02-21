@@ -5,7 +5,7 @@ const urlBase: string = "credit_request"
 
 //I still need to double check how we're uploading files, so leave that out for now
 class CreditRequestService {
-    create(name: string, requestedAmount: number, totalAmount: number, duration: number, accountability: string/*, files: File[]*/) {
-        return http.post(`${urlBase}/`, {name, requestedAmount, totalAmount, duration, accountability/*, files*/})
+    create(name: string, requestedAmount: number, financedAmount: number, duration: number, accountability: string, files: File[]) {
+        return http.post(`${urlBase}/`, {name, requestedAmount, financedAmount, duration, accountability, files})
     }
 }

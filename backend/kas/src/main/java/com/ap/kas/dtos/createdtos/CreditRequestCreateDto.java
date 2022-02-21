@@ -1,25 +1,31 @@
 package com.ap.kas.dtos.createdtos;
 
 import java.time.Period;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class CreditRequestCreateDto {
     
     @NotBlank
     private String name;
 
-    private float financedAmount; 
+    private float requestedAmount;
 
-    private float totalAmount;
+    private float financedAmount; 
 
     @NotNull
     private Period duration; 
 
     @NotBlank
     private String accountability; 
+
+    private List<MultipartFile> files = new LinkedList<MultipartFile>();
 
     public String getName() { return name; }
 
@@ -29,9 +35,9 @@ public class CreditRequestCreateDto {
 
     public void setFinancedAmount(float financedAmount) { this.financedAmount = financedAmount; }
     
-    public float getTotalAmount() { return totalAmount; }
+    public float getRequestedAmount() { return requestedAmount; }
 
-    public void setTotalAmount(float totalAmount) { this.totalAmount = totalAmount; }
+    public void setRequestedAmount(float requestedAmount) { this.requestedAmount = requestedAmount; }
 
     public Period getDuration() { return duration; }
 
@@ -40,6 +46,10 @@ public class CreditRequestCreateDto {
     public String getAccountability() { return accountability; }
 
     public void setAccountability(String accountability) { this.accountability = accountability; }
+
+    public List<MultipartFile> getFiles() { return this.files; }
+
+    public void setFiles(List<MultipartFile> files) { this.files = files; }
 
 
     @Override
@@ -50,12 +60,12 @@ public class CreditRequestCreateDto {
             return false;
         }
         CreditRequestCreateDto creditRequestCreateDto = (CreditRequestCreateDto) o;
-        return Objects.equals(name, creditRequestCreateDto.name) && financedAmount == creditRequestCreateDto.financedAmount && totalAmount == creditRequestCreateDto.totalAmount && Objects.equals(duration, creditRequestCreateDto.duration) && Objects.equals(accountability, creditRequestCreateDto.accountability);
+        return Objects.equals(name, creditRequestCreateDto.name) && financedAmount == creditRequestCreateDto.financedAmount && requestedAmount == creditRequestCreateDto.requestedAmount && Objects.equals(duration, creditRequestCreateDto.duration) && Objects.equals(accountability, creditRequestCreateDto.accountability) && Objects.equals(files, creditRequestCreateDto.files);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, financedAmount, totalAmount, duration, accountability);
+        return Objects.hash(name, financedAmount, requestedAmount, duration, accountability, files);
     }
 
 
@@ -64,9 +74,10 @@ public class CreditRequestCreateDto {
         return "{" +
             " name='" + getName() + "'" +
             ", financedAmount='" + getFinancedAmount() + "'" +
-            ", totalAmount='" + getTotalAmount() + "'" +
+            ", requestedAmount='" + getRequestedAmount() + "'" +
             ", duration='" + getDuration() + "'" +
             ", accountability='" + getAccountability() + "'" +
+            ", files='" + getFiles() + "'" +
             "}";
     }
 }

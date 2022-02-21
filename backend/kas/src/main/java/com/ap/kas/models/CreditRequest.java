@@ -1,23 +1,30 @@
 package com.ap.kas.models;
 
 import java.time.Period;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
-@Table(name = "Credit_Request")
+@Table(name = "credit_request")
 public class CreditRequest {
     
     @Id
     @Column(name = "credit_request_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     private String name;
 
@@ -29,7 +36,8 @@ public class CreditRequest {
 
     private String accountability; 
     
-    //private File[] files;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditRequest", cascade = CascadeType.ALL)
+    private List<FileStorage> files = new LinkedList<FileStorage>();
 
     public CreditRequest() {}
 
@@ -41,9 +49,9 @@ public class CreditRequest {
         this.accountability = accountability;
     }
 
-    public int getId() { return this.id; }
+    public String getId() { return this.id; }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public String getName() { return this.name; }
 
@@ -65,6 +73,10 @@ public class CreditRequest {
 
     public void setAccountability(String accountability) { this.accountability = accountability; }
 
+    public List<FileStorage> getFiles() { return files; }
+
+    public void setFiles(List<FileStorage> files) { this.files = files; }
+
 
     @Override
     public boolean equals(Object o) {
@@ -74,12 +86,12 @@ public class CreditRequest {
             return false;
         }
         CreditRequest creditRequest = (CreditRequest) o;
-        return id == creditRequest.id && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && totalAmount == creditRequest.totalAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability);
+        return Objects.equals(id, creditRequest.id) && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && totalAmount == creditRequest.totalAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability) && Objects.equals(files, creditRequest.files);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, financedAmount, totalAmount, duration, accountability);
+        return Objects.hash(id, name, financedAmount, totalAmount, duration, accountability, files);
     }
 
 
@@ -92,6 +104,7 @@ public class CreditRequest {
             ", totalAmount='" + getTotalAmount() + "'" +
             ", duration='" + getDuration() + "'" +
             ", accountability='" + getAccountability() + "'" +
+            ", files='" + getFiles() + "'" +
             "}";
     }
 }
