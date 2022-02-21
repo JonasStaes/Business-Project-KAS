@@ -78,7 +78,7 @@ public class CreditRequestControllerTests {
         CreditRequestCreateDto dto = new CreditRequestCreateDto();
         dto.setName(creditRequest.getName());
         dto.setFinancedAmount(creditRequest.getFinancedAmount());
-        dto.setTotalAmount(creditRequest.getTotalAmount());
+        dto.setRequestedAmount(creditRequest.getTotalAmount());
         dto.setDuration(creditRequest.getDuration());
         dto.setAccountability(creditRequest.getAccountability());
 
