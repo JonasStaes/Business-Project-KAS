@@ -3,6 +3,7 @@ package com.ap.kas.config;
 import java.time.Period;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 
 import org.modelmapper.Converter;
@@ -31,6 +32,7 @@ public class AppConfig {
         });
 
         mapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(m -> m.skip(CreditRequest::setFiles));
+        //mapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(m -> m.skip(CreditRequestReadDto::setFiles));
         
         return mapper;
     }

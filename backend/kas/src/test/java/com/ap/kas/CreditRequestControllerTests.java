@@ -48,8 +48,8 @@ public class CreditRequestControllerTests {
         //initialize test data
         creditRequest = new CreditRequest();
         creditRequest.setName("Test Request");
-        creditRequest.setTotalAmount(100.0f);
-        creditRequest.setTotalAmount(200.0f);
+        creditRequest.setRequestedAmount(100.0f);
+        creditRequest.setRequestedAmount(200.0f);
         creditRequest.setDuration(Period.ofMonths(2));
         creditRequest.setAccountability("Test Accountability");
     }
@@ -78,7 +78,7 @@ public class CreditRequestControllerTests {
         CreditRequestCreateDto dto = new CreditRequestCreateDto();
         dto.setName(creditRequest.getName());
         dto.setFinancedAmount(creditRequest.getFinancedAmount());
-        dto.setRequestedAmount(creditRequest.getTotalAmount());
+        dto.setRequestedAmount(creditRequest.getRequestedAmount());
         dto.setDuration(creditRequest.getDuration());
         dto.setAccountability(creditRequest.getAccountability());
 
@@ -94,7 +94,7 @@ public class CreditRequestControllerTests {
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
         assertEquals(creditRequest.getFinancedAmount(), actualCreditRequest.getFinancedAmount());
-        assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
+        assertEquals(creditRequest.getRequestedAmount(), actualCreditRequest.getRequestedAmount());
         assertEquals(creditRequest.getDuration(), actualCreditRequest.getDuration());
         assertEquals(creditRequest.getAccountability(), actualCreditRequest.getAccountability());
     }

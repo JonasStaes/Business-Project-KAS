@@ -30,7 +30,7 @@ public class CreditRequest {
 
     private float financedAmount; 
 
-    private float totalAmount;
+    private float requestedAmount;
 
     private Period duration; 
 
@@ -41,10 +41,10 @@ public class CreditRequest {
 
     public CreditRequest() {}
 
-    public CreditRequest(String name, float financedAmount, float totalAmount, Period duration, String accountability) {
+    public CreditRequest(String name, float financedAmount, float requestedAmount, Period duration, String accountability) {
         this.name = name;
         this.financedAmount = financedAmount;
-        this.totalAmount = totalAmount;
+        this.requestedAmount = requestedAmount;
         this.duration = duration;
         this.accountability = accountability;
     }
@@ -61,9 +61,9 @@ public class CreditRequest {
 
     public void setFinancedAmount(float financedAmount) { this.financedAmount = financedAmount; }
 
-    public float getTotalAmount() { return this.totalAmount; }
+    public float getRequestedAmount() { return this.requestedAmount; }
 
-    public void setTotalAmount(float totalAmount) { this.totalAmount = totalAmount; }
+    public void setRequestedAmount(float totalAmount) { this.requestedAmount = totalAmount; }
 
     public Period getDuration() { return this.duration; }
 
@@ -86,12 +86,12 @@ public class CreditRequest {
             return false;
         }
         CreditRequest creditRequest = (CreditRequest) o;
-        return Objects.equals(id, creditRequest.id) && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && totalAmount == creditRequest.totalAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability) && Objects.equals(files, creditRequest.files);
+        return Objects.equals(id, creditRequest.id) && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && requestedAmount == creditRequest.requestedAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability) && Objects.equals(files, creditRequest.files);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, financedAmount, totalAmount, duration, accountability, files);
+        return Objects.hash(id, name, financedAmount, requestedAmount, duration, accountability, files);
     }
 
 
@@ -101,7 +101,7 @@ public class CreditRequest {
             " id='" + getId() + "'" +
             ", name='" + getName() + "'" +
             ", financedAmount='" + getFinancedAmount() + "'" +
-            ", totalAmount='" + getTotalAmount() + "'" +
+            ", requestedAmount='" + getRequestedAmount() + "'" +
             ", duration='" + getDuration() + "'" +
             ", accountability='" + getAccountability() + "'" +
             ", files='" + getFiles() + "'" +

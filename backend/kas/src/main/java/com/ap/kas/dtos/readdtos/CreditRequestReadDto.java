@@ -12,7 +12,7 @@ import com.ap.kas.models.FileStorage;
 public class CreditRequestReadDto {
     
     @NotBlank
-    private int id;
+    private String id;
 
     @NotBlank
     private String name;
@@ -28,9 +28,9 @@ public class CreditRequestReadDto {
 
     private List<FileStorage> files = new LinkedList<FileStorage>();;
 
-    public int getId() { return id; }
+    public String getId() { return id; }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public String getName() { return name; }
 
