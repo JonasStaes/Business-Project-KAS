@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ap.kas.dtos.createdtos.UserCreateDto;
 import com.ap.kas.dtos.readdtos.UserReadDto;
 import com.ap.kas.models.Roles;
 import com.ap.kas.models.User;
@@ -69,5 +70,33 @@ public class UserControllerTests {
         });
         assertIterableEquals(expectedList, actualList);
     }
+
+    @Test
+    public void createNewUserTest() {
+        //create dto for test
+        UserCreateDto dto = new UserCreateDto();
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setActive(user.getActive());
+        dto.setRole(user.getRole());;
+
+        //get actual result from mock API call
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.postForEntity(CONTROLLER_MAPPING + "/", dto, MessageResponse.class);
+
+        //assert that status code is ok, meaning the request was successful
+        assertEquals(HttpStatus.OK, forEntity.getStatusCode());
+
+        //assert that all PASSED fields are the same, aka all fields in the dto.
+        //we can't test if the two objects are the same, even with hashcode and equals overrides
+        //since the test data doesn't have an ID, and even if it did it's ID wouldn't match the DTO since they're separate entries in the repo
+        User actualUser = userRepository.findByName(user.getName()).get();
+        assertEquals(user.getName(), actualUser.getName());
+        assertEquals(user.getEmail(), actualUser.getEmail());
+        assertEquals(user.getActive(), actualUser.getActive());
+        assertEquals(user.getRole(), actualUser.getRole());
+        
+    }
+
+
     
 }
