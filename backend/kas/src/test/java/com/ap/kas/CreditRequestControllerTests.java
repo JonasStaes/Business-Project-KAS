@@ -12,6 +12,7 @@ import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
+import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -39,6 +40,9 @@ public class CreditRequestControllerTests {
     private CreditRequestMapper creditRequestMapper;
 
     @Autowired
+    private FileStorageRepository fileStorageRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     private static CreditRequest creditRequest;
@@ -61,7 +65,9 @@ public class CreditRequestControllerTests {
 
         List<CreditRequestReadDto> expectedList = new LinkedList<CreditRequestReadDto>();
         creditRequestRepository.findAll().forEach(cr -> {
-            expectedList.add(creditRequestMapper.convertToReadDto(cr));
+            CreditRequestReadDto creditRequestReadDto = creditRequestMapper.convertToReadDto(cr);
+            creditRequestReadDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
+            expectedList.add(creditRequestReadDto);
         });
 
         List<CreditRequestReadDto> actualList = new LinkedList<CreditRequestReadDto>();
@@ -81,6 +87,7 @@ public class CreditRequestControllerTests {
         dto.setRequestedAmount(creditRequest.getRequestedAmount());
         dto.setDuration(creditRequest.getDuration());
         dto.setAccountability(creditRequest.getAccountability());
+        //dto.setFiles(fileStorageRepository.findAllByCreditRequest(creditRequest));
 
         //get actual result from mock API call
         final ResponseEntity<MessageResponse> forEntity = restTemplate.postForEntity(CONTROLLER_MAPPING + "/", dto, MessageResponse.class);

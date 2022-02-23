@@ -10,16 +10,17 @@ class CreditRequestService {
     }
 
     create(name: string, requestedAmount: number, financedAmount: number, duration: number, accountability: string, files: File[]) {
-        console.log(files[0].slice().text())
         let formData = new FormData();
         formData.append('name', name);
         formData.append('requestedAmount', requestedAmount.toString());
         formData.append('financedAmount', financedAmount.toString());
         formData.append('duration', `P${duration}M`);
         formData.append('accountability', accountability);
-        files.forEach(file => {
-            formData.append('files', file);
-        })        
+        if(files !== undefined) {
+            files.forEach(file => {
+                formData.append('files', file);
+            })   
+        }     
         return http.post(`${urlBase}/`, formData)
     }
 }

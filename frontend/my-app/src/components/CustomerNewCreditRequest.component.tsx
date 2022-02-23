@@ -1,14 +1,15 @@
 import { ArrowCircleLeftIcon, DocumentAddIcon, PlusCircleIcon } from "@heroicons/react/solid";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreditRequestService from "../services/CreditRequest.service";
 
 export default function NewCreditRequest() {
   const navigate = useNavigate(); 
-  const [totalValue, setTotalValue] = useState(0);
+  const [requestedAmount, setRequestedAmount] = useState(0);
+  const [formFilled, setFormFilled] = useState(false);
 
   const [name, setName] = useState("");
-  const [requestedAmount, setRequestedAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [financedAmount, setFinancedAmount] = useState(0);
   const [sliderValue, setSliderValue] = useState(12);
   const [accountability, setAccountability] = useState("");
@@ -23,11 +24,11 @@ export default function NewCreditRequest() {
       }
     }
 
-    function handleRequestedAmountInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleTotalAmountInputChange(e: React.ChangeEvent<HTMLInputElement>) {
       if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-        setRequestedAmount(parseFloat(e.target.value));
+        setTotalAmount(parseFloat(e.target.value));
       } else {
-        setRequestedAmount(0);
+        setTotalAmount(0);
       }
     }
 
@@ -60,18 +61,22 @@ export default function NewCreditRequest() {
       }
     }
 
-    function calculateTotalValue() {
-      setTotalValue(requestedAmount + financedAmount);
-    }
+    const calculateTotalValue = useCallback(() => {
+      setRequestedAmount(totalAmount - financedAmount);
+    }, [totalAmount, financedAmount])
+
+    const checkIfFormFilled = useCallback(() => {
+      setFormFilled(name !== "" && totalAmount > 0 && financedAmount > 0 && accountability !== "");
+    }, [name, totalAmount, financedAmount, accountability])
 
     useEffect(() => {
       calculateTotalValue();
-      console.log(files)
-    }, [financedAmount, requestedAmount, files])
+      checkIfFormFilled();
+    }, [calculateTotalValue, checkIfFormFilled])
 
     function submitCreditRequest() {
-      if(name !== "" && requestedAmount > 0 && financedAmount > 0 && accountability !== "") {
-        CreditRequestService.create(name, requestedAmount, financedAmount, sliderValue, accountability, files)
+      if(name !== "" && totalAmount > 0 && financedAmount > 0 && accountability !== "") {
+        CreditRequestService.create(name, totalAmount, financedAmount, sliderValue, accountability, files)
           .then(res => {
             console.info(res);
             navigate("../credit_requests");
@@ -83,7 +88,7 @@ export default function NewCreditRequest() {
     }
 
     return(
-        <div className="mx-auto max-w-7xl py-8">
+        <div className="mx-auto max-w-7xl py-8 min-h-full">
             <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6">
                 <div className="flex justify-between gap-8">
                   <div className="w-72">
@@ -105,17 +110,17 @@ export default function NewCreditRequest() {
                               ].join(" ")}
                               htmlFor="name_input" 
                             >
-                                NAAM
+                                Projectnaam
                             </label>
                         </div>
                     </div>
                     <div className="pb-4">
                         <div className="relative group">
                             <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer"
-                              id="requested_amount_input" 
+                              id="total_amount_input" 
                               type={"number"} 
                               required
-                              onChange={handleRequestedAmountInputChange}
+                              onChange={handleTotalAmountInputChange}
                             />
                             <label className={[
                               "text-2xl uppercase",
@@ -125,9 +130,9 @@ export default function NewCreditRequest() {
                               "group-focus-within:-translate-y-full peer-valid:-translate-y-full",
                               "group-focus-within:pl-0 peer-valid:pl-0"
                               ].join(" ")}
-                              htmlFor="requested_amount_input"
+                              htmlFor="total_amount_input"
                             >
-                                TE FINANCIEEREN
+                                Totaal bedrag
                             </label>
                         </div>
                     </div>
@@ -149,21 +154,21 @@ export default function NewCreditRequest() {
                               ].join(" ")}
                               htmlFor="financed_amount_input" 
                             >
-                                ZELF GEFINANCIERD
+                                Zelf gefinancierd
                             </label>
                         </div>
                     </div>
                     <div className="container pl-2 flex flex-col py-4 space-y-2">
-                      <label className="text-3xl uppercase" htmlFor="total_value">Totaal:</label>
+                      <label className="text-2xl uppercase" htmlFor="total_value">Gevraagd bedrag:</label>
                       <input className="bg-main-input rounded border-0"
                         id="total_value"
                         type="text" 
                         disabled
-                        value={totalValue}
+                        value={requestedAmount}
                       />
                     </div>
                     <div className="container pl-2 flex flex-col py-4 space-y-2">
-                      <label className="text-3xl uppercase" htmlFor="period_input">Looptijd: </label>
+                      <label className="text-2xl uppercase" htmlFor="period_input">Looptijd: </label>
                       <input className="form-range"
                         id="period_input"
                         type="range" 
@@ -176,12 +181,19 @@ export default function NewCreditRequest() {
                     </div>
                   </div>
                   <div className="grow flex flex-row-reverse gap-x-2">
-                    <textarea className="resize-none bg-main-input border-2 border-main-0 rounded min-h-full w-3/5"
-                      id="accountability_input"
-                      onChange={handleAccountabilityInputChange}
-                    />
+                    <div className="w-3/5 flex flex-col">
+                      <label className="text-2xl uppercase"
+                        htmlFor="accountability_input">
+                        Verantwoording aanvraag
+                      </label>
+                      <textarea className="resize-none bg-main-input border-2 border-main-0 rounded grow"
+                        id="accountability_input"
+                        onChange={handleAccountabilityInputChange}
+                      />
+                    </div>
                     <div className="flex flex-col-reverse">
-                      <label className="uppercase text-lg flex justify-center text-main-1 bg-main-0 shadow rounded w-40 py-2" htmlFor="file_input">
+                      <label className="uppercase text-lg flex justify-center text-main-1 bg-main-0 shadow rounded w-40 py-2" 
+                      htmlFor="file_input">
                         Upload File
                         <DocumentAddIcon className="fill-current h-7 w-7 ml-2"/>
                         <input  className="hidden"
@@ -200,7 +212,8 @@ export default function NewCreditRequest() {
                   <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
                   Terug
                 </Link>
-                <button className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center"
+                <button className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center disabled:bg-main-input"
+                  disabled={!formFilled}
                   onClick={submitCreditRequest}
                 >
                   <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>

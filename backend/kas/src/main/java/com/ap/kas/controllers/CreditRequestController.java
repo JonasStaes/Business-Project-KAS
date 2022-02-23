@@ -72,16 +72,18 @@ public class CreditRequestController {
             logger.info("New Credit Request:\n {}", creditRequest);
 
             CreditRequest savedCreditRequest = creditRequestRepository.save(creditRequest);
-            newCreditRequest.getFiles().forEach(file -> {
-                try {
-                    FileStorage convertedFile = fileStorageService.convert(file);
-                    convertedFile.setCreditRequest(savedCreditRequest);
-                    logger.info("Converted File: \n {}", convertedFile);
-                    fileStorageRepository.save(convertedFile);
-                } catch (IOException e) {
-                    logger.error("{}", e);
-                }
-            });
+            if(newCreditRequest.getFiles() != null) {
+                newCreditRequest.getFiles().forEach(file -> {
+                    try {
+                        FileStorage convertedFile = fileStorageService.convert(file);
+                        convertedFile.setCreditRequest(savedCreditRequest);
+                        logger.info("Converted File: \n {}", convertedFile);
+                        fileStorageRepository.save(convertedFile);
+                    } catch (IOException e) {
+                        logger.error("{}", e);
+                    }
+                });
+            }
             return ResponseEntity.ok(new MessageResponse("Successfully created credit request!", creditRequestMapper.convertToReadDto(creditRequest)));
         } catch (Exception e) {
             logger.error("{}", e);

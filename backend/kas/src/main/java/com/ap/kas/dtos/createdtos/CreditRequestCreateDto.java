@@ -59,12 +59,12 @@ public class CreditRequestCreateDto {
             return false;
         }
         CreditRequestCreateDto creditRequestCreateDto = (CreditRequestCreateDto) o;
-        return Objects.equals(name, creditRequestCreateDto.name) && financedAmount == creditRequestCreateDto.financedAmount && requestedAmount == creditRequestCreateDto.requestedAmount && Objects.equals(duration, creditRequestCreateDto.duration) && Objects.equals(accountability, creditRequestCreateDto.accountability) && Objects.equals(files, creditRequestCreateDto.files);
+        return Objects.equals(name, creditRequestCreateDto.name) && requestedAmount == creditRequestCreateDto.requestedAmount && financedAmount == creditRequestCreateDto.financedAmount && Objects.equals(duration, creditRequestCreateDto.duration) && Objects.equals(accountability, creditRequestCreateDto.accountability) && Objects.equals(files, creditRequestCreateDto.files);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, financedAmount, requestedAmount, duration, accountability, files);
+        return Objects.hash(name, requestedAmount, financedAmount, duration, accountability, files);
     }
 
 
@@ -72,8 +72,8 @@ public class CreditRequestCreateDto {
     public String toString() {
         return "{" +
             " name='" + getName() + "'" +
-            ", financedAmount='" + getFinancedAmount() + "'" +
             ", requestedAmount='" + getRequestedAmount() + "'" +
+            ", financedAmount='" + getFinancedAmount() + "'" +
             ", duration='" + getDuration() + "'" +
             ", accountability='" + getAccountability() + "'" +
             ", files='" + getFiles() + "'" +

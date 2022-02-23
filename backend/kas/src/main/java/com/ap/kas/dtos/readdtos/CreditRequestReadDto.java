@@ -56,6 +56,7 @@ public class CreditRequestReadDto {
 
     public void setFiles(List<FileStorage> files) { this.files = files; }
 
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -64,13 +65,14 @@ public class CreditRequestReadDto {
             return false;
         }
         CreditRequestReadDto creditRequestReadDto = (CreditRequestReadDto) o;
-        return id == creditRequestReadDto.id && Objects.equals(name, creditRequestReadDto.name) && requestedAmount == creditRequestReadDto.requestedAmount && financedAmount == creditRequestReadDto.financedAmount && Objects.equals(duration, creditRequestReadDto.duration) && Objects.equals(accountability, creditRequestReadDto.accountability) && Objects.equals(files, creditRequestReadDto.files);
+        return Objects.equals(id, creditRequestReadDto.id) && Objects.equals(name, creditRequestReadDto.name) && requestedAmount == creditRequestReadDto.requestedAmount && financedAmount == creditRequestReadDto.financedAmount && Objects.equals(duration, creditRequestReadDto.duration) && Objects.equals(accountability, creditRequestReadDto.accountability) && Objects.equals(files, creditRequestReadDto.files);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, requestedAmount, financedAmount, duration, accountability, files);
     }
+
 
     @Override
     public String toString() {
@@ -84,4 +86,6 @@ public class CreditRequestReadDto {
             ", files='" + getFiles() + "'" +
             "}";
     }
+    
+
 }
