@@ -39,9 +39,9 @@ export default function CustomerCreditRequests() {
             <span className="text-xl tracking-wider mr-2 uppercase">Aanvraag</span>
           </Link>
         </div>
-        <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg border-main-0 rounded border-2 h-4/5">
-          <table className="table-auto border-collapse min-w-full p-4 overflow-y-auto">
-            <thead className="bg-gray-300">
+        <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg border-main-0 rounded border-2 h-4/5 overflow-y-auto">
+          <table className="table-auto border-collapse min-w-full p-4">
+            <thead className="bg-gray-300 sticky top-0">
               <tr className="h-8">
                 <th>Naam</th>
                 <th>Verantwoording</th>

@@ -29,8 +29,8 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.deleteAll();
 
         List<CreditRequest> creditRequests = new LinkedList<CreditRequest>() {{
-            for (int i = 0; i < 10; i++) {
-                add(createRandomCreditRequest(i));
+            for (int i = 0; i < 20; i++) {
+                add(createRandomCreditRequest(i + 1));
             }
         }};
 
