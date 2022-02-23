@@ -1,41 +1,30 @@
-package com.ap.kas.models;
-
+package com.ap.kas.dtos.readdtos;
 
 import java.util.Objects;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.ap.kas.models.Roles;
 
-import org.hibernate.annotations.GenericGenerator;
+public class UserReadDto {
 
-@Entity
-@Table (name = "user" )
-public class User{
-
-    @Id
-    @Column (name = "user_id")
-    @GeneratedValue (generator = "uuid")
-    @GenericGenerator (name = "uuid", strategy = "uuid2")
+    @NotBlank
     private String id;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String email;
 
-    private Roles role; 
+    @NotNull
+    private Roles role;
 
+    @NotNull
     private Boolean active;
 
-    public User () {}
     
-    public User(String name, String email ){
-        this.name = name;
-        this.email = email;
-    }
 
     public String getId() {
         return id;
@@ -60,7 +49,7 @@ public class User{
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public Roles getRole() {
         return role;
     }
@@ -69,7 +58,6 @@ public class User{
         this.role = role;
     }
 
-    
     public Boolean getActive() {
         return active;
     }
@@ -82,11 +70,11 @@ public class User{
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof User)) {
+        if (!(o instanceof UserReadDto)) {
             return false;
         }
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && email == user.email && role == user.role && active == user.active;
+        UserReadDto userReadDto = (UserReadDto) o;
+        return id == userReadDto.id && Objects.equals(name, userReadDto.name) && email == userReadDto.email && role == userReadDto.role && active == userReadDto.active;
     }
 
     @Override
@@ -96,19 +84,8 @@ public class User{
 
     @Override
     public String toString() {
-        return "User [active=" + active + ", email=" + email + ", id=" + id + ", name=" + name + ", role=" + role + "]";
+        return "UserReadDto [active=" + active + ", email=" + email + ", id=" + id + ", name=" + name + ", role=" + role
+                + "]";
     }
-
-    
-
-    
-
-
-
-
-
-
-
-
-
+   
 }
