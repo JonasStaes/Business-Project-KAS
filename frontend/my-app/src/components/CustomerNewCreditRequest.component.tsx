@@ -52,8 +52,11 @@ export default function NewCreditRequest() {
     }
 
     function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-      if(e.target.validity.valid && e.target!.files![0]) {
-        setFiles(files => [...files, e.target!.files![0]]);
+      if(e.target.validity.valid && e.target!.files!) {
+        for (let i = 0; i < e.target!.files!.length; i++) {
+          setFiles(files => [...files, e.target!.files![i]]);
+        }
+        
       }
     }
 
