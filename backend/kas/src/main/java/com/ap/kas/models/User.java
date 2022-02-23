@@ -32,9 +32,11 @@ public class User{
 
     public User () {}
     
-    public User(String name, String email ){
+    public User(String name, String email, Roles role, Boolean active ){
         this.name = name;
         this.email = email;
+        this.role = role;
+        this.active = active;
     }
 
     public String getId() {

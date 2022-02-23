@@ -6,7 +6,10 @@ import java.util.List;
 
 import com.ap.kas.config.Profiles;
 import com.ap.kas.models.CreditRequest;
+import com.ap.kas.models.Roles;
+import com.ap.kas.models.User;
 import com.ap.kas.repositories.CreditRequestRepository;
+import com.ap.kas.repositories.UserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,9 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     private CreditRequestRepository creditRequestRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public void run(String... args) throws Exception {
         creditRequestRepository.deleteAll();
@@ -37,10 +43,26 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.saveAll(creditRequests);
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
+
+        userRepository.deleteAll();
+        
+        List<User> users = new LinkedList<User>() {{
+            for (int i = 0; i < 10; i++) {
+                add(createRandomUser(i));
+            }
+        }};
+
+        userRepository.saveAll(users);
+
+        userRepository.findAll().forEach(u -> logger.info("{}", u));
     }
 
     private CreditRequest createRandomCreditRequest(int i) {
         return new CreditRequest("test " + i, (float)Math.floor(100 + Math.random() * (20000 - 100)), (float)Math.floor(100 + Math.random() * (20000 - 100)), Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i);
+    }
+
+    private User createRandomUser(int i){
+        return new User("test" + i, "testEmail" + i, Roles.OFFICE_EMPLOYEE, true);
     }
     
 }
