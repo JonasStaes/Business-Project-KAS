@@ -2,9 +2,6 @@ package com.ap.kas.config;
 
 import java.time.Period;
 
-import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
-import com.ap.kas.models.CreditRequest;
-
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -29,8 +26,6 @@ public class AppConfig {
             }
             
         });
-
-        mapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(m -> m.skip(CreditRequest::setFiles));
         
         return mapper;
     }

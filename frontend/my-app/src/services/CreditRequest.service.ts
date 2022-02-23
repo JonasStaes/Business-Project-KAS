@@ -10,7 +10,15 @@ class CreditRequestService {
     }
 
     create(name: string, requestedAmount: number, financedAmount: number, duration: number, accountability: string, files: File[]) {
-        return http.post(`${urlBase}/`, {name, requestedAmount, financedAmount, duration: `P${duration}M`, accountability, files})
+        console.log(files[0].slice().text())
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('requestedAmount', requestedAmount.toString());
+        formData.append('financedAmount', financedAmount.toString());
+        formData.append('duration', `P${duration}M`);
+        formData.append('accountability', accountability);
+        formData.append('files', new Blob(files));
+        return http.post(`${urlBase}/`, formData)
     }
 }
 

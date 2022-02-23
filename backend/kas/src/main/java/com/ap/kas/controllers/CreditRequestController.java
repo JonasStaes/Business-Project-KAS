@@ -12,6 +12,7 @@ import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.FileStorage;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
+import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.FileStorageService;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
@@ -20,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +38,9 @@ public class CreditRequestController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private FileStorageRepository fileStorageRepository;
     
     @Autowired
     private CreditRequestRepository creditRequestRepository;
@@ -46,8 +50,12 @@ public class CreditRequestController {
         try {
             List<CreditRequestReadDto> creditRequests = new LinkedList<CreditRequestReadDto>();
             creditRequestRepository.findAll().forEach(cr -> {
-                creditRequests.add(creditRequestMapper.convertToReadDto(cr));
+                CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(cr);
+                readDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
+                creditRequests.add(readDto);
             });
+
+            logger.info("Outgoing Credit Requests: \n {}", creditRequests);
             return ResponseEntity.ok(new MessageResponse("Got all credit requests!", creditRequests));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -56,22 +64,25 @@ public class CreditRequestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<MessageResponse> createCreditRequest(@Valid @RequestBody CreditRequestCreateDto newCreditRequest) {
+    public ResponseEntity<MessageResponse> createCreditRequest(@Valid @ModelAttribute CreditRequestCreateDto newCreditRequest) {
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
+        logger.info("Files:\n {}", newCreditRequest.getFiles());
         try {
             CreditRequest creditRequest = creditRequestMapper.convertFromCreateDTO(newCreditRequest);
-            List<FileStorage> fileStorage = new LinkedList<FileStorage>();
+            logger.info("New Credit Request:\n {}", creditRequest);
+
+            CreditRequest savedCreditRequest = creditRequestRepository.save(creditRequest);
             newCreditRequest.getFiles().forEach(file -> {
                 try {
-                    fileStorage.add(fileStorageService.convert(file, creditRequest));
+                    FileStorage convertedFile = fileStorageService.convert(file);
+                    convertedFile.setCreditRequest(savedCreditRequest);
+                    logger.info("Converted File: \n {}", convertedFile);
+                    fileStorageRepository.save(convertedFile);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("{}", e);
                 }
             });
-            creditRequest.setFiles(fileStorage);
-            logger.info("New Credit Request:\n {}", creditRequest);
-            creditRequestRepository.save(creditRequest);
-            return ResponseEntity.ok(new MessageResponse("Successfully created credit request!"));
+            return ResponseEntity.ok(new MessageResponse("Successfully created credit request!", creditRequestMapper.convertToReadDto(creditRequest)));
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create credit request"));

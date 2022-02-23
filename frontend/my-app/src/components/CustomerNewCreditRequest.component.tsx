@@ -52,8 +52,8 @@ export default function NewCreditRequest() {
     }
 
     function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-      if(e.target.validity.valid && !e.target.files) {
-        setFiles(files => [...files, e.target.files![0]]);
+      if(e.target.validity.valid && e.target!.files![0]) {
+        setFiles(files => [...files, e.target!.files![0]]);
       }
     }
 
@@ -63,7 +63,8 @@ export default function NewCreditRequest() {
 
     useEffect(() => {
       calculateTotalValue();
-    }, [financedAmount, requestedAmount])
+      console.log(files)
+    }, [financedAmount, requestedAmount, files])
 
     function submitCreditRequest() {
       if(name !== "" && requestedAmount > 0 && financedAmount > 0 && accountability !== "") {

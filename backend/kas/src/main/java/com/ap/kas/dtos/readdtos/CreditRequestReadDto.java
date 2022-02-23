@@ -26,7 +26,7 @@ public class CreditRequestReadDto {
     @NotBlank
     private String accountability;
 
-    private List<FileStorage> files = new LinkedList<FileStorage>();;
+    private List<FileStorage> files = new LinkedList<FileStorage>();
 
     public String getId() { return id; }
 

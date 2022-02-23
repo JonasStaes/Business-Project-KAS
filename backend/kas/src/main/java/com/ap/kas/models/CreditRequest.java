@@ -1,17 +1,12 @@
 package com.ap.kas.models;
 
 import java.time.Period;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -35,9 +30,6 @@ public class CreditRequest {
     private Period duration; 
 
     private String accountability; 
-    
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creditRequest", cascade = CascadeType.ALL)
-    private List<FileStorage> files = new LinkedList<FileStorage>();
 
     public CreditRequest() {}
 
@@ -73,10 +65,6 @@ public class CreditRequest {
 
     public void setAccountability(String accountability) { this.accountability = accountability; }
 
-    public List<FileStorage> getFiles() { return files; }
-
-    public void setFiles(List<FileStorage> files) { this.files = files; }
-
 
     @Override
     public boolean equals(Object o) {
@@ -86,12 +74,12 @@ public class CreditRequest {
             return false;
         }
         CreditRequest creditRequest = (CreditRequest) o;
-        return Objects.equals(id, creditRequest.id) && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && requestedAmount == creditRequest.requestedAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability) && Objects.equals(files, creditRequest.files);
+        return Objects.equals(id, creditRequest.id) && Objects.equals(name, creditRequest.name) && financedAmount == creditRequest.financedAmount && requestedAmount == creditRequest.requestedAmount && Objects.equals(duration, creditRequest.duration) && Objects.equals(accountability, creditRequest.accountability);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, financedAmount, requestedAmount, duration, accountability, files);
+        return Objects.hash(id, name, financedAmount, requestedAmount, duration, accountability);
     }
 
 
@@ -104,7 +92,6 @@ public class CreditRequest {
             ", requestedAmount='" + getRequestedAmount() + "'" +
             ", duration='" + getDuration() + "'" +
             ", accountability='" + getAccountability() + "'" +
-            ", files='" + getFiles() + "'" +
             "}";
     }
 }

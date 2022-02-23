@@ -3,6 +3,7 @@ package com.ap.kas.models;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -10,7 +11,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "file")
@@ -26,18 +31,19 @@ public class FileStorage {
     @Lob
     private byte[] data;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "credit_request_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private CreditRequest creditRequest;
 
 
     public FileStorage() {}
 
-    public FileStorage(String name, String type, byte[] data, CreditRequest creditRequest) {
+    public FileStorage(String name, String type, byte[] data) {
         this.name = name;
         this.type = type;
         this.data = data;
-        this.creditRequest = creditRequest;
     }
 
 
