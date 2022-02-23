@@ -25,7 +25,7 @@ public class CreditRequestCreateDto {
     @NotBlank
     private String accountability; 
 
-    private List<MultipartFile> files = new LinkedList<MultipartFile>();
+    private List<MultipartFile> files;
 
     public String getName() { return name; }
 

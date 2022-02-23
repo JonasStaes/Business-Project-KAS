@@ -17,7 +17,9 @@ class CreditRequestService {
         formData.append('financedAmount', financedAmount.toString());
         formData.append('duration', `P${duration}M`);
         formData.append('accountability', accountability);
-        formData.append('files', new Blob(files));
+        files.forEach(file => {
+            formData.append('files', file);
+        })        
         return http.post(`${urlBase}/`, formData)
     }
 }

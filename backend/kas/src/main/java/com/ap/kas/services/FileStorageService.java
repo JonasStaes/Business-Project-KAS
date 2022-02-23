@@ -12,7 +12,6 @@ public class FileStorageService {
 
     public FileStorage convert(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        System.out.println(file.getName());
         FileStorage fileStorage = new FileStorage(fileName, file.getContentType(), file.getBytes());
         return fileStorage;
     }
