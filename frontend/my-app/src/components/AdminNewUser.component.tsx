@@ -1,4 +1,4 @@
-import { ArrowCircleLeftIcon, DocumentAddIcon, PlusCircleIcon } from "@heroicons/react/solid";
+import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserService from "../services/User.service";
@@ -9,7 +9,6 @@ export default function NewUser() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [active, setActive] = useState(false);
 
   
 
@@ -46,7 +45,7 @@ export default function NewUser() {
     return(
         <div className="mx-auto max-w-7xl py-8">
             <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6">
-                <div className="flex justify-between gap-8">
+                <div className="justify-between gap-8">
                   <div className="w-72">
                     <div className="pb-4">
                         <div className="relative group">
@@ -74,7 +73,7 @@ export default function NewUser() {
                         <div className="relative group">
                             <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer"
                               id="requested_amount_input" 
-                              type={"number"} 
+                              type={"text"} 
                               required
                               onChange={handleEmailInputChange}
                             />
@@ -93,7 +92,7 @@ export default function NewUser() {
                         </div>
                     </div>
               </div>
-              <div className="w-full flex justify-between">
+              <div className="w-full flex justify-between position-relative">
                 <Link to="../users" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
                   <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
                   Terug

@@ -50,9 +50,6 @@ public class UserReadDto {
         this.email = email;
     }
 
-    
-
-  
 
     public Boolean getActive() {
         return active;

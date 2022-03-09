@@ -19,7 +19,7 @@ export function CustomerRoutes() {
                 <Route path="credit_requests" element={<CustomerCreditRequests/>}/>
                 <Route path="new_credit_request" element={<CustomerNewCreditRequest/>}/>
             </Route>
-            <Route path="/kas/admin" element={<CustomerHome/>}>
+            <Route path="/kas/admin" element={<AdminHome/>}>
                 <Route index element={<Navigate replace to="/kas/admin/users"/>}/>
                 <Route path ="users" element ={<AdminUsers/>}/>
                 <Route path ="new_user" element ={<AdminNewUsers/>}/>

@@ -2,7 +2,6 @@ import { PlusCircleIcon } from "@heroicons/react/solid";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import CreditRequestService from "../services/CreditRequest.service";
 import UserService from "../services/User.service";
 
 interface User {
@@ -11,7 +10,7 @@ interface User {
   active: boolean
 }
 
-export default function CustomerCreditRequests() {
+export default function AdminUsers() {
   const [users, setUsers] = useState<Array<User>>([]);
 
     const getUsers = useCallback(() => {
@@ -55,7 +54,7 @@ export default function CustomerCreditRequests() {
                   <tr key={nanoid()} className="h-8">
                     <td className="text-center border-x">{usr.name}</td>
                     <td className="text-center border-x">{usr.email}</td>
-                    <td className="text-center border-x">{usr.active}</td>
+                    <td className="text-center border-x">{usr.active.toString()}</td>
                   </tr>
                 );
               } else {
@@ -63,7 +62,7 @@ export default function CustomerCreditRequests() {
                   <tr key={nanoid()} className="bg-blue-200 h-8">
                     <td className="text-center border-x">{usr.name}</td>
                     <td className="text-center border-x">{usr.email}</td>
-                    <td className="text-center border-x">{usr.active}</td>
+                    <td className="text-center border-x">{usr.active.toString()}</td>
                   </tr>
                 );
               }

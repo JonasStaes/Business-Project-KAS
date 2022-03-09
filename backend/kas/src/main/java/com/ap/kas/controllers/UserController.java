@@ -42,6 +42,7 @@ public class UserController {
             userRepository.findAll().forEach(cr -> {
                 users.add(userMapper.convertToReadDto(cr));
             });
+            System.out.println("here");
             return ResponseEntity.ok(new MessageResponse("Got all users!", users));
         } catch (Exception e) {
             logger.error("{}", e);
