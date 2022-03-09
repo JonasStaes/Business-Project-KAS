@@ -51,7 +51,6 @@ public class UserControllerTests {
         user.setName("Test User");
         user.setActive(true);
         user.setEmail("test@outlook.com");
-        user.setRole(Roles.CUSTOMER);
     }
 
     @Test
@@ -78,7 +77,7 @@ public class UserControllerTests {
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setActive(user.getActive());
-        dto.setRole(user.getRole());;
+        //dto.setRole(user.getRole());;
 
         //get actual result from mock API call
         final ResponseEntity<MessageResponse> forEntity = restTemplate.postForEntity(CONTROLLER_MAPPING + "/", dto, MessageResponse.class);
@@ -93,7 +92,7 @@ public class UserControllerTests {
         assertEquals(user.getName(), actualUser.getName());
         assertEquals(user.getEmail(), actualUser.getEmail());
         assertEquals(user.getActive(), actualUser.getActive());
-        assertEquals(user.getRole(), actualUser.getRole());
+        //assertEquals(user.getRole(), actualUser.getRole());
         
     }
 

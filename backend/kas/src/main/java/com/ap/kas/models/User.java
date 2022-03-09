@@ -26,16 +26,16 @@ public class User{
 
     private String email;
 
-    private Roles role; 
+    //private Roles role; 
 
     private Boolean active;
 
     public User () {}
     
-    public User(String name, String email, Roles role, Boolean active ){
+    public User(String name, String email, Boolean active ){
         this.name = name;
         this.email = email;
-        this.role = role;
+        //this.role = role;
         this.active = active;
     }
 
@@ -63,14 +63,6 @@ public class User{
         this.email = email;
     }
     
-    public Roles getRole() {
-        return role;
-    }
-
-    public void setRole(Roles role) {
-        this.role = role;
-    }
-
     
     public Boolean getActive() {
         return active;
@@ -88,17 +80,17 @@ public class User{
             return false;
         }
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && email == user.email && role == user.role && active == user.active;
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && email == user.email && active == user.active;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, role, active);
+        return Objects.hash(id, name, email, active);
     }
 
     @Override
     public String toString() {
-        return "User [active=" + active + ", email=" + email + ", id=" + id + ", name=" + name + ", role=" + role + "]";
+        return "User [active=" + active + ", email=" + email + ", id=" + id + ", name=" + name  + "]";
     }
 
     

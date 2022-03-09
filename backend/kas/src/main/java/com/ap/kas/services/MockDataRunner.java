@@ -62,7 +62,7 @@ public class MockDataRunner implements CommandLineRunner {
     }
 
     private User createRandomUser(int i){
-        return new User("test" + i, "testEmail" + i, Roles.OFFICE_EMPLOYEE, true);
+        return new User("test" + i, "testEmail" + i,  true);
     }
     
 }

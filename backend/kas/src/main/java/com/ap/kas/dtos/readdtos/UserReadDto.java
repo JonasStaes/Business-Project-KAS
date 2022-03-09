@@ -1,6 +1,6 @@
 package com.ap.kas.dtos.readdtos;
 
-import java.util.Objects;
+
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,8 +18,8 @@ public class UserReadDto {
     @NotBlank
     private String email;
 
-    @NotNull
-    private Roles role;
+    //@NotNull
+    //private Roles role;
 
     @NotNull
     private Boolean active;
@@ -50,13 +50,9 @@ public class UserReadDto {
         this.email = email;
     }
 
-    public Roles getRole() {
-        return role;
-    }
+    
 
-    public void setRole(Roles role) {
-        this.role = role;
-    }
+  
 
     public Boolean getActive() {
         return active;
@@ -76,7 +72,6 @@ public class UserReadDto {
         result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((role == null) ? 0 : role.hashCode());
         return result;
     }
 
@@ -109,15 +104,13 @@ public class UserReadDto {
                 return false;
         } else if (!name.equals(other.name))
             return false;
-        if (role != other.role)
-            return false;
+
         return true;
     }
 
     @Override
     public String toString() {
-        return "UserReadDto [active=" + active + ", email=" + email + ", id=" + id + ", name=" + name + ", role=" + role
-                + "]";
+        return "UserReadDto [active=" + active + ", email=" + email + ", id=" + id + ", name=" + name + "]";
     }
    
 }

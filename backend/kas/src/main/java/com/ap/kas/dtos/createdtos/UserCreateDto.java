@@ -15,8 +15,8 @@ public class UserCreateDto {
     @NotBlank
     private String email;
 
-    @NotNull
-    private Roles role;
+    //@NotNull
+    //private Roles role;
 
     @NotNull
     private Boolean active;
@@ -37,14 +37,6 @@ public class UserCreateDto {
         this.email = email;
     }
 
-    public Roles getRole() {
-        return role;
-    }
-
-    public void setRole(Roles role) {
-        this.role = role;
-    }
-
     public Boolean getActive() {
         return active;
     }
@@ -61,17 +53,17 @@ public class UserCreateDto {
             return false;
         }
         UserCreateDto userCreateDto = (UserCreateDto) o;
-        return Objects.equals(name, userCreateDto.name) && email == userCreateDto.email && role == userCreateDto.role && active == userCreateDto.active;
+        return Objects.equals(name, userCreateDto.name) && email == userCreateDto.email && active == userCreateDto.active;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, role, active);
+        return Objects.hash(name, email, active);
     }
 
     @Override
     public String toString() {
-        return "UserCreateDto [active=" + active + ", email=" + email + ", name=" + name + ", role=" + role + "]";
+        return "UserCreateDto [active=" + active + ", email=" + email + ", name=" + name +  "]";
     }
 
     
