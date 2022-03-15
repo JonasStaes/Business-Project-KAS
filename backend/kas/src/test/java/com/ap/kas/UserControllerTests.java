@@ -6,12 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ap.kas.dtos.createdtos.UserCreateDto;
-import com.ap.kas.dtos.readdtos.UserReadDto;
+import com.ap.kas.dtos.createdtos.CustomerCreateDto;
+import com.ap.kas.dtos.readdtos.CustomerReadDto;
 import com.ap.kas.models.Roles;
 import com.ap.kas.models.User;
 import com.ap.kas.payload.response.MessageResponse;
-import com.ap.kas.repositories.UserRepository;
+import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.services.mappers.UserMapper;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -34,7 +34,7 @@ public class UserControllerTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository userRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -58,14 +58,14 @@ public class UserControllerTests {
         final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all", MessageResponse.class);
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
 
-        List<UserReadDto> expectedList = new LinkedList<UserReadDto>();
+        List<CustomerReadDto> expectedList = new LinkedList<CustomerReadDto>();
         userRepository.findAll().forEach(cr -> {
             expectedList.add(userMapper.convertToReadDto(cr));
         });
 
-        List<UserReadDto> actualList = new LinkedList<UserReadDto>();
+        List<CustomerReadDto> actualList = new LinkedList<CustomerReadDto>();
         ((List<Object>)forEntity.getBody().getData()).forEach(o -> {
-            actualList.add(modelMapper.map(o, UserReadDto.class));
+            actualList.add(modelMapper.map(o, CustomerReadDto.class));
         });
         assertIterableEquals(expectedList, actualList);
     }
@@ -73,10 +73,9 @@ public class UserControllerTests {
     @Test
     public void createNewUserTest() {
         //create dto for test
-        UserCreateDto dto = new UserCreateDto();
+        CustomerCreateDto dto = new CustomerCreateDto();
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
-        dto.setActive(user.getActive());
         //dto.setRole(user.getRole());;
 
         //get actual result from mock API call
@@ -91,7 +90,6 @@ public class UserControllerTests {
         User actualUser = userRepository.findByName(user.getName()).get();
         assertEquals(user.getName(), actualUser.getName());
         assertEquals(user.getEmail(), actualUser.getEmail());
-        assertEquals(user.getActive(), actualUser.getActive());
         //assertEquals(user.getRole(), actualUser.getRole());
         
     }

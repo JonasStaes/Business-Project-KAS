@@ -1,7 +1,7 @@
-import { ReactComponent as Logo } from '../resources/logo.svg';
+import { ReactComponent as Logo } from '../../resources/logo.svg';
 import { UserCircleIcon } from '@heroicons/react/solid';
 import { Outlet } from "react-router-dom";
-import '../App.css'
+import '../../App.css'
 
 export default function AdminHome() {
     return(

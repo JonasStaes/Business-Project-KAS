@@ -1,8 +1,8 @@
 package com.ap.kas.services.mappers;
 
-import com.ap.kas.dtos.createdtos.UserCreateDto;
-import com.ap.kas.dtos.readdtos.UserReadDto;
-import com.ap.kas.models.User;
+import com.ap.kas.dtos.createdtos.CustomerCreateDto;
+import com.ap.kas.dtos.readdtos.CustomerReadDto;
+import com.ap.kas.models.Customer;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,11 @@ public class UserMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public User convertFromCreateDTO(UserCreateDto userCreateDto) {
-        return modelMapper.map(userCreateDto, User.class);
+    public Customer convertFromCreateDTO(CustomerCreateDto customerCreateDto) {
+        return modelMapper.map(customerCreateDto, Customer.class);
     }
 
-    public UserReadDto convertToReadDto(User user) {
-        return modelMapper.map(user, UserReadDto.class);
+    public CustomerReadDto convertToReadDto(Customer customer) {
+        return modelMapper.map(customer, CustomerReadDto.class);
     }
 }

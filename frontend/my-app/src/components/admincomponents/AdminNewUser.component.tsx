@@ -1,7 +1,7 @@
 import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserService from "../services/User.service";
+import UserService from "../../services/User.service";
 
 export default function NewUser() {
   const navigate = useNavigate(); 

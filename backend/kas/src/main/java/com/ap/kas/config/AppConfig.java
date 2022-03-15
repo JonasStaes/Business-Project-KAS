@@ -1,12 +1,17 @@
 package com.ap.kas.config;
 
 import java.time.Period;
+import java.util.Properties;
+
+import com.ap.kas.models.Roles;
 
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class AppConfig {
@@ -14,8 +19,6 @@ public class AppConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
-
-        //credit request custom mappings
 
         //converts the period string back to a period with built in method
         mapper.addConverter(new Converter<String, Period>() {
@@ -26,7 +29,44 @@ public class AppConfig {
             }
             
         });
+
+        mapper.addConverter(new Converter<Roles, String>() {
+
+            @Override
+            public String convert(MappingContext<Roles, String> ctx) {
+                return ctx.getSource() == null ? null : ctx.getSource().name().toLowerCase();
+            }
+            
+        });
+
+        mapper.addConverter(new Converter<String, Roles>() {
+
+            @Override
+            public Roles convert(MappingContext<String, Roles> ctx) {
+                return ctx.getSource() == null ? null : Roles.getRoleByName(ctx.getSource());
+            }
+            
+        });
         
         return mapper;
+    }
+
+    @Bean
+    public JavaMailSender javaMailSender() {
+        JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
+
+        mailSenderImpl.setHost("smtp.gmail.com");
+        mailSenderImpl.setPort(587);
+
+        mailSenderImpl.setUsername("noreplay.omega@gmail.com");
+        mailSenderImpl.setPassword("there is no password");
+
+        Properties props = mailSenderImpl.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "false");
+        
+        return mailSenderImpl;
     }
 }
