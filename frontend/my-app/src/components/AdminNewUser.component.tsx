@@ -30,7 +30,7 @@ export default function NewUser() {
 
 
     function submitUser() {
-      if(name !== "" && email !== "") {
+      if(name !== "" && email !== "") {     
         UserService.create(name, email, false)
           .then(res => {
             console.info(res);
