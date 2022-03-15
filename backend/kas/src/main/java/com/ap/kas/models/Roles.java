@@ -1,9 +1,16 @@
 package com.ap.kas.models;
 
+import java.util.stream.Stream;
+
 public enum Roles {
-    CUSTOMER,
-    OFFICE_EMPLOYEE,
+    KLANT,
+    KANTOOR_MEDEWERKER,
+    ADMINISTRATOR,
     COMPLIANCE,
-    CREDIT_BEOORDELAAR,
-    COMMERCIAL_DIRECTION    
+    KREDIET_BEOORDELAAR,
+    COMMERCIELE_DIRECTIE;
+
+    public static Roles getRoleByName(String name) {
+        return Stream.of(Roles.values()).filter(role -> role.toString().toLowerCase().equals(name.toLowerCase())).findFirst().orElse(null);
+    }
 }

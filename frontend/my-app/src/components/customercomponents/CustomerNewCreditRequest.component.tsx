@@ -1,7 +1,7 @@
 import { ArrowCircleLeftIcon, DocumentAddIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import CreditRequestService from "../services/CreditRequest.service";
+import CreditRequestService from "../../services/CreditRequest.service";
 
 export default function NewCreditRequest() {
   const navigate = useNavigate(); 
@@ -94,7 +94,7 @@ export default function NewCreditRequest() {
                   <div className="w-72">
                     <div className="pb-4">
                         <div className="relative group">
-                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer" 
+                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0" 
                               id="name_input"
                               type={"text"} 
                               required
@@ -116,7 +116,7 @@ export default function NewCreditRequest() {
                     </div>
                     <div className="pb-4">
                         <div className="relative group">
-                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer"
+                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0"
                               id="total_amount_input" 
                               type={"number"} 
                               required
@@ -138,7 +138,7 @@ export default function NewCreditRequest() {
                     </div>
                     <div className="pb-4">
                         <div className=" relative group">
-                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer"
+                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0"
                               id="financed_amount_input" 
                               type={"number"} 
                               required

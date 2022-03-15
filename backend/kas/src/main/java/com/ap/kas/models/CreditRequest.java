@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "credit_request")
+@Table(name = "tblCreditRequests")
 public class CreditRequest {
     
     @Id

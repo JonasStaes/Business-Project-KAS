@@ -86,6 +86,5 @@ public class CreditRequestReadDto {
             ", files='" + getFiles() + "'" +
             "}";
     }
-    
 
 }

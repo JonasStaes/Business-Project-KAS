@@ -2,7 +2,7 @@ import { PlusCircleIcon } from "@heroicons/react/solid";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import UserService from "../services/User.service";
+import UserService from "../../services/User.service";
 
 interface User {
   name: string
@@ -49,7 +49,7 @@ export default function AdminUsers() {
             </thead>
             <tbody>
             {users.map((usr, i) => {
-              if(i % 2 == 0) {
+              if(i % 2 === 0) {
                 return(
                   <tr key={nanoid()} className="h-8">
                     <td className="text-center border-x">{usr.name}</td>

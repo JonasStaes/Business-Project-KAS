@@ -3,7 +3,6 @@ import http from "./https-common"
 //make sure this is the same as the request mapping in the backend controller.
 const urlBase: string = "credit_request"
 
-//I still need to double check how we're uploading files, so leave that out for now
 class CreditRequestService {
     getAll() {
         return http.get(`${urlBase}/all`)

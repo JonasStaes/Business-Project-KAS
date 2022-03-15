@@ -6,16 +6,19 @@ import java.util.List;
 
 import com.ap.kas.config.Profiles;
 import com.ap.kas.models.CreditRequest;
+import com.ap.kas.models.Customer;
+import com.ap.kas.models.Employee;
 import com.ap.kas.models.Roles;
-import com.ap.kas.models.User;
 import com.ap.kas.repositories.CreditRequestRepository;
-import com.ap.kas.repositories.UserRepository;
+import com.ap.kas.repositories.CustomerRepository;
+import com.ap.kas.repositories.EmployeeRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +31,13 @@ public class MockDataRunner implements CommandLineRunner {
     private CreditRequestRepository creditRequestRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
@@ -44,25 +53,20 @@ public class MockDataRunner implements CommandLineRunner {
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
-        userRepository.deleteAll();
+        customerRepository.deleteAll();
+        Customer customer = new Customer("customer", "customer@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer")), 1234567890);
+        customerRepository.save(customer);
+        customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
+
+        employeeRepository.deleteAll();
+        Employee employee = new Employee("employee", "employee@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        employee.addRole(Roles.ADMINISTRATOR);
+        employeeRepository.save(employee);
+        employeeRepository.findAll().forEach(em -> logger.info("{}", em));
         
-        List<User> users = new LinkedList<User>() {{
-            for (int i = 0; i < 10; i++) {
-                add(createRandomUser(i));
-            }
-        }};
-
-        userRepository.saveAll(users);
-
-        userRepository.findAll().forEach(u -> logger.info("{}", u));
     }
 
     private CreditRequest createRandomCreditRequest(int i) {
         return new CreditRequest("test " + i, (float)Math.floor(100 + Math.random() * (20000 - 100)), (float)Math.floor(100 + Math.random() * (20000 - 100)), Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i);
-    }
-
-    private User createRandomUser(int i){
-        return new User("test" + i, "testEmail" + i,  true);
-    }
-    
+    }    
 }
