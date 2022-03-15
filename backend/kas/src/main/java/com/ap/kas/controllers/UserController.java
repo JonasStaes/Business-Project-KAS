@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,6 @@ public class UserController {
             userRepository.findAll().forEach(cr -> {
                 users.add(userMapper.convertToReadDto(cr));
             });
-            System.out.println("here");
             return ResponseEntity.ok(new MessageResponse("Got all users!", users));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -51,16 +51,16 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<MessageResponse> createCreditRequest(@Valid @RequestBody UserCreateDto newUser) {
-        logger.info("Incoming Credit Request DTO:\n {}", newUser);
+    public ResponseEntity<MessageResponse> createUser(@Valid @ModelAttribute UserCreateDto newUser) {
+        logger.info("Incoming user DTO:\n {}", newUser);
         try {
             User user = userMapper.convertFromCreateDTO(newUser);        
             logger.info("New User:\n {}", user);
             userRepository.save(user);
-            return ResponseEntity.ok(new MessageResponse("Successfully created credit user!"));
+            return ResponseEntity.ok(new MessageResponse("Successfully created user!"));
         } catch (Exception e) {
             logger.error("{}", e);
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to create credit user"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to create user"));
         }
     }
 
