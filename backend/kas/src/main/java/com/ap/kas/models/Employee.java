@@ -11,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "tblEmployees")
+@PrimaryKeyJoinColumn(name = "employeeId")
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Getter @Setter @ToString(callSuper = true)

@@ -1,6 +1,7 @@
 package com.ap.kas.models;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "tblCustomers")
+@PrimaryKeyJoinColumn(name = "customerId")
 @NoArgsConstructor 
 @EqualsAndHashCode(callSuper = true)
 @Getter @Setter @ToString(callSuper = true)

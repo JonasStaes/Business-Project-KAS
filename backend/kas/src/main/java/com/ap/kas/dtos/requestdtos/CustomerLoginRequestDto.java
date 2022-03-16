@@ -1,4 +1,4 @@
-package com.ap.kas.dtos;
+package com.ap.kas.dtos.requestdtos;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

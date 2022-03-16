@@ -1,13 +1,17 @@
 package com.ap.kas.controllers;
 
 import com.ap.kas.models.Customer;
+import com.ap.kas.models.PasswordCreateToken;
 import com.ap.kas.models.User;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CustomerRepository;
+import com.ap.kas.repositories.PasswordCreateTokenRepository;
+import com.ap.kas.services.MailSender;
 import com.ap.kas.services.mappers.UserMapper;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -36,6 +40,12 @@ public class UserController {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private PasswordCreateTokenRepository passwordCreateTokenRepository;
+
+    @Autowired
+    private MailSender mailSender;
+
     @GetMapping("/allcustomers")
     public ResponseEntity<MessageResponse> readUsers() {
         try {
@@ -58,13 +68,16 @@ public class UserController {
             customer.setActive(false);
             logger.info("New User:\n {}", customer);
             customerRepository.save(customer);
+            String token = UUID.randomUUID().toString();
+            passwordCreateTokenRepository.save(new PasswordCreateToken(token, customer));
+            String link = "http://localhost:3000/kas/change_password/" + token;
+            String message = "<a href=\"" + link + "\"> Click this link to create your password and activate your account.</a>";
+            mailSender.sendMail(newCustomer.getEmail(), "Your account at Omega has been created", message);
+
             return ResponseEntity.ok(new MessageResponse("Successfully created user!"));
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create user"));
         }
     }
-
-
-    
 }

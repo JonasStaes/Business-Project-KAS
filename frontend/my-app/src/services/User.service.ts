@@ -7,7 +7,11 @@ class UserService {
     }
 
     create(name: string, email: string, active: boolean) {
-        return http.post(`${urlBase}/`, {name, email, active})
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('active', active.toString());  
+        return http.post(`${urlBase}/`, formData)
     } 
 }
 

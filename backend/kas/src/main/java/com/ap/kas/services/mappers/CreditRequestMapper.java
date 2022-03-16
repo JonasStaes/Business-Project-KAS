@@ -17,7 +17,7 @@ public class CreditRequestMapper {
 
     public CreditRequest convertFromCreateDTO(CreditRequestCreateDto creditRequestCreateDto) {
         Condition<CreditRequestCreateDto, CreditRequest> notNull = ctx -> ctx.getSource() != null;
-        modelMapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> mapper.when(notNull).map(CreditRequestCreateDto::getCustomerId, CreditRequest::setCustomer));
+        modelMapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> mapper.when(notNull).map(CreditRequestCreateDto::getParentId, CreditRequest::setCustomer));
         return modelMapper.map(creditRequestCreateDto, CreditRequest.class);
     }
 

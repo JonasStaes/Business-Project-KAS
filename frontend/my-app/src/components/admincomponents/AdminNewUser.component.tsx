@@ -106,7 +106,7 @@ export default function NewUser() {
               </div>
             </div>
         </div>
-        </div>
+      </div>
     );
 }
 
