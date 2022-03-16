@@ -4,12 +4,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter @Setter
-@RequiredArgsConstructor
+@Data
 public class JwtResponse {
     private final String accessToken;
 

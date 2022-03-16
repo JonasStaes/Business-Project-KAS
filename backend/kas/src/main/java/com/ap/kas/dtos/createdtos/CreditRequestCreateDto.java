@@ -32,5 +32,5 @@ public class CreditRequestCreateDto {
     private List<MultipartFile> files;
 
     @NotNull
-    private String parentId;
+    private String customerId;
 }
