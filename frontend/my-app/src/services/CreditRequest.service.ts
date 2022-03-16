@@ -1,3 +1,4 @@
+import AuthService from "./Auth.service";
 import http from "./https-common"
 
 //make sure this is the same as the request mapping in the backend controller.
@@ -5,7 +6,7 @@ const urlBase: string = "credit_request"
 
 class CreditRequestService {
     getAll() {
-        return http.get(`${urlBase}/all`)
+        return http.get(`${urlBase}/all/${AuthService.getCurrentUserId()}`)
     }
 
     create(name: string, requestedAmount: number, financedAmount: number, duration: number, accountability: string, files: File[]) {
@@ -15,6 +16,7 @@ class CreditRequestService {
         formData.append('financedAmount', financedAmount.toString());
         formData.append('duration', `P${duration}M`);
         formData.append('accountability', accountability);
+        formData.append('parentId', AuthService.getCurrentUserId());
         if(files !== undefined) {
             files.forEach(file => {
                 formData.append('files', file);

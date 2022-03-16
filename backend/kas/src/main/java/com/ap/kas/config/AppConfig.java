@@ -3,11 +3,14 @@ package com.ap.kas.config;
 import java.time.Period;
 import java.util.Properties;
 
+import com.ap.kas.models.Customer;
 import com.ap.kas.models.Roles;
+import com.ap.kas.repositories.CustomerRepository;
 
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,6 +18,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class AppConfig {
+
+    @Autowired
+    private CustomerRepository customerRepository;
     
     @Bean
     public ModelMapper modelMapper() {
@@ -44,6 +50,15 @@ public class AppConfig {
             @Override
             public Roles convert(MappingContext<String, Roles> ctx) {
                 return ctx.getSource() == null ? null : Roles.getRoleByName(ctx.getSource());
+            }
+            
+        });
+
+        mapper.addConverter(new Converter<String, Customer>() {
+
+            @Override
+            public Customer convert(MappingContext<String, Customer> ctx) {
+                return ctx.getSource() == null ? null : customerRepository.getById(ctx.getSource());
             }
             
         });

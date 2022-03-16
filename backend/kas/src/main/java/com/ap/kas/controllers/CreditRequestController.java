@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,11 +46,11 @@ public class CreditRequestController {
     @Autowired
     private CreditRequestRepository creditRequestRepository;
 
-    @GetMapping("/all")
-    public ResponseEntity<MessageResponse> readCreditRequests() {
+    @GetMapping("/all/{id}")
+    public ResponseEntity<MessageResponse> readCreditRequests(@PathVariable("id") String id) {
         try {
             List<CreditRequestReadDto> creditRequests = new LinkedList<CreditRequestReadDto>();
-            creditRequestRepository.findAll().forEach(cr -> {
+            creditRequestRepository.findAllByCustomerId(id).forEach(cr -> {
                 CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(cr);
                 readDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
                 creditRequests.add(readDto);
