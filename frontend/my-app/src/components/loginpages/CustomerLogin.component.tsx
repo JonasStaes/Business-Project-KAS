@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import AuthService from "../../services/Auth.service";
 
 export default function CustomerLogin() {
     const [companyNr, setCompanyNr] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-    const loginCustomer = () => {
+    const loginCustomer = (e: FormEvent) => {
+        e.preventDefault()
         AuthService.customerLogin(companyNr, password)
             .then(data => {
                 console.log(data);
@@ -14,7 +15,11 @@ export default function CustomerLogin() {
     
     return(
         <div className="mx-auto flex flex-col py-4 items-center gap-y-8">
-            <div className="text-white flex flex-col py-4 items-center gap-y-2">
+            <form 
+                className="text-white flex flex-col py-4 items-center gap-y-2"
+                onSubmit={loginCustomer}
+                encType="multipart/form-data"
+            >
                 <div className="flex flex-col py-4 space-y-4 items-center">
                     <label className="uppercase text-2xl text-center" htmlFor="ondernemingsnummer">ondernemingsnummer</label>
                     <input 
@@ -33,13 +38,10 @@ export default function CustomerLogin() {
                         onChange={e => setPassword(e.target.value)}
                     />
                 </div>
-            </div>
-            <button 
-                className="bg-white text-black px-8 py-1 rounded shadow"
-                onClick={loginCustomer}
-                >
-                Inloggen
-            </button>
+                <input type="submit" value="Log in"
+                    className="bg-white text-black px-8 py-1 rounded shadow"
+                />
+            </form>
         </div>
     );
 }

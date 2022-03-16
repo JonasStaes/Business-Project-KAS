@@ -41,21 +41,12 @@ public class MockDataRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        creditRequestRepository.deleteAll();
-
-        List<CreditRequest> creditRequests = new LinkedList<CreditRequest>() {{
-            for (int i = 0; i < 20; i++) {
-                add(createRandomCreditRequest(i + 1));
-            }
-        }};
-
-        creditRequestRepository.saveAll(creditRequests);
-
-        creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
         customerRepository.deleteAll();
-        Customer customer = new Customer("customer", "customer@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer")), 1234567890);
-        customerRepository.save(customer);
+        Customer customer1 = new Customer("customer", "customer@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), 1234567890);
+        customerRepository.save(customer1);
+        Customer customer2 = new Customer("customer", "customer@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), 1234567891);
+        customerRepository.save(customer2);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
         employeeRepository.deleteAll();
@@ -63,10 +54,21 @@ public class MockDataRunner implements CommandLineRunner {
         employee.addRole(Roles.ADMINISTRATOR);
         employeeRepository.save(employee);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
-        
+
+        creditRequestRepository.deleteAll();
+
+        List<CreditRequest> creditRequests = new LinkedList<CreditRequest>() {{
+            for (int i = 0; i < 20; i++) {
+                add(createRandomCreditRequest(i + 1, (i % 2 == 0 ? customer1 : customer2)));
+            }
+        }};
+
+        creditRequestRepository.saveAll(creditRequests);
+
+        creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
     }
 
-    private CreditRequest createRandomCreditRequest(int i) {
-        return new CreditRequest("test " + i, (float)Math.floor(100 + Math.random() * (20000 - 100)), (float)Math.floor(100 + Math.random() * (20000 - 100)), Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i);
+    private CreditRequest createRandomCreditRequest(int i, Customer customer) {
+        return new CreditRequest("test " + i, (float)Math.floor(100 + Math.random() * (20000 - 100)), (float)Math.floor(100 + Math.random() * (20000 - 100)), Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i, customer);
     }    
 }

@@ -42,6 +42,10 @@ class AuthService {
         }
     }; 
 
+    getCurrentUserId() {
+        return this.getCurrentUser().id;
+    }
+
     getRoles() {
         return this.getCurrentUser().roles.map((role: string) => role.toUpperCase());
     }
