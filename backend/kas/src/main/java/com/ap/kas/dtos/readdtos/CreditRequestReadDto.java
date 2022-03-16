@@ -3,7 +3,6 @@ package com.ap.kas.dtos.readdtos;
 import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 

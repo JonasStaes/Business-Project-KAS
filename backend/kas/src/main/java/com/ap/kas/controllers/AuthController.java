@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.ap.kas.dtos.CustomerLoginRequestDto;
-import com.ap.kas.dtos.EmployeeLoginRequestDto;
+import com.ap.kas.dtos.requestdtos.CustomerLoginRequestDto;
+import com.ap.kas.dtos.requestdtos.EmployeeLoginRequestDto;
 import com.ap.kas.payload.response.JwtResponse;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.security.jwt.JwtUtils;

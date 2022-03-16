@@ -43,9 +43,9 @@ public class MockDataRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         customerRepository.deleteAll();
-        Customer customer1 = new Customer("customer", "customer@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), 1234567890);
+        Customer customer1 = new Customer("customer 1", "customer1@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), 1234567890);
         customerRepository.save(customer1);
-        Customer customer2 = new Customer("customer", "customer@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), 1234567891);
+        Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), 1234567891);
         customerRepository.save(customer2);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 

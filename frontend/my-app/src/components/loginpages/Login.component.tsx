@@ -21,7 +21,7 @@ export default function Login() {
 
     return(
         <div className={[
-                (active ? "bg-white" : "bg-main-0"), 
+                (active ? "bg-white" : "bg-main-0" ), 
                 "w-screen h-screen overflow-auto text-white"
             ].join(" ")}>
             <div className="mx-auto py-4 space-y-2">

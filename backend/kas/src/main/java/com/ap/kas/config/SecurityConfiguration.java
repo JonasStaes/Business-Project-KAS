@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/auth/signin/**").permitAll()
             .antMatchers("/auth/password/**").permitAll()
-            .antMatchers("/h2-console/**").hasAuthority(Roles.ADMINISTRATOR.toString())
+            .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/credit_request/**").hasAnyAuthority(Roles.KLANT.toString(), Roles.KANTOOR_MEDEWERKER.toString())
             .antMatchers("/admin/**").hasAuthority(Roles.ADMINISTRATOR.toString())
             .anyRequest().authenticated();
