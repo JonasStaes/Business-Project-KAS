@@ -35,7 +35,7 @@ export default function AdminUsers() {
           <div></div>
           <Link to="../new_user" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
             <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
-            <span className="text-xl tracking-wider mr-2 uppercase">Gebruiker</span>
+            <span className="text-xl tracking-wider mr-2 uppercase">Klant</span>
           </Link>
         </div>
         <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg border-main-0 rounded border-2 h-4/5">

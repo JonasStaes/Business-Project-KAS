@@ -9,13 +9,16 @@ import CustomerNewCreditRequest from "./customercomponents/CustomerNewCreditRequ
 import AdminHome from "./admincomponents/AdminHome.component";
 import AdminUsers from "./admincomponents/AdminUsers.component";
 import AdminNewUsers from "./admincomponents/AdminNewUser.component";
-import Login from "./loginpages/Login.component";
+import Login from "./logincomponents/Login.component";
+import PasswordHome from "./passwordcomponents/PasswordHome.component";
+import ChangePassword from "./passwordcomponents/ChangePassword.component";
+import PasswordChangeRequest from "./passwordcomponents/PasswordChangeRequest.component";
 
 
 export function CustomerRoutes() {
     return (
         <Routes>
-            <Route path="/kas/customer" element={<CustomerHome/>}>
+            <Route path="kas/customer" element={<CustomerHome/>}>
                 <Route index element={<Navigate replace to="/kas/customer/credit_requests"/>}/>
                 <Route path="credit_requests" element={<CustomerCreditRequests/>}/>
                 <Route path="new_credit_request" element={<CustomerNewCreditRequest/>}/>
@@ -28,7 +31,7 @@ export function CustomerRoutes() {
 export function AdminRoutes() {
     return(
         <Routes>
-            <Route path="/kas/admin" element={<AdminHome/>}>
+            <Route path="kas/admin" element={<AdminHome/>}>
                 <Route index element={<Navigate replace to="/kas/admin/users"/>}/>
                 <Route path ="users" element ={<AdminUsers/>}/>
                 <Route path ="new_user" element ={<AdminNewUsers/>}/>
@@ -41,7 +44,12 @@ export function AdminRoutes() {
 export function AuthRoutes() {
     return(
         <Routes>
-            <Route path="/kas/login" element={<Login/>}/>
+            <Route path="kas/login" element={<Login/>}/>
+            <Route path="kas/change_password" element={<PasswordHome/>}>
+                <Route index element={<Navigate replace to="/kas/change_password/request"/>}/>
+                <Route path=":tokenId" element={<ChangePassword/>}/>
+                <Route path="request" element={<PasswordChangeRequest/>}/>
+            </Route>
             <Route path="*" element={<Navigate replace to="/kas/login"/>} />
         </Routes>
     );

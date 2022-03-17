@@ -1,6 +1,7 @@
 import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PasswordService from "../../services/Password.service";
 import UserService from "../../services/User.service";
 
 export default function NewUser() {
@@ -34,6 +35,7 @@ export default function NewUser() {
         UserService.create(name, email, false)
           .then(res => {
             console.info(res);
+            PasswordService.passwordChangeRequest(name, email)
             navigate("../users");
           })
           .catch(e => {
