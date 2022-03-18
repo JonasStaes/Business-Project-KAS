@@ -137,7 +137,7 @@ export default function NewCreditRequest() {
                         </div>
                     </div>
                     <div className="pb-4">
-                        <div className=" relative group">
+                        <div className="relative group">
                             <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0"
                               id="financed_amount_input" 
                               type={"number"} 

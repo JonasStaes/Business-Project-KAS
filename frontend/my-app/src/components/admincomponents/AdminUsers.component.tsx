@@ -7,6 +7,7 @@ import UserService from "../../services/User.service";
 interface User {
   name: string
   email: string
+  companyNr: number
   active: boolean
 }
 
@@ -44,6 +45,7 @@ export default function AdminUsers() {
               <tr className="h-8">
                 <th>Naam</th>
                 <th>Email</th>
+                <th>Ondernemingsnummer</th>
                 <th>Actief</th>
               </tr>
             </thead>
@@ -54,6 +56,7 @@ export default function AdminUsers() {
                   <tr key={nanoid()} className="h-8">
                     <td className="text-center border-x">{usr.name}</td>
                     <td className="text-center border-x">{usr.email}</td>
+                    <td className="text-center border-x">{usr.companyNr}</td>
                     <td className="text-center border-x">{usr.active.toString()}</td>
                   </tr>
                 );
@@ -62,6 +65,7 @@ export default function AdminUsers() {
                   <tr key={nanoid()} className="bg-blue-200 h-8">
                     <td className="text-center border-x">{usr.name}</td>
                     <td className="text-center border-x">{usr.email}</td>
+                    <td className="text-center border-x">{usr.companyNr}</td>
                     <td className="text-center border-x">{usr.active.toString()}</td>
                   </tr>
                 );

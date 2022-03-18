@@ -53,15 +53,19 @@ public class UserController {
     public ResponseEntity<MessageResponse> createCustomer(@Valid @ModelAttribute CustomerCreateDto newCustomer) {
         logger.info("Incoming Credit Request DTO:\n {}", newCustomer);
         try {
+            if(customerRepository.existsByCompanyNr(newCustomer.getCompanyNr())) {
+                throw new IllegalArgumentException();
+            }
             Customer customer = userMapper.convertFromCreateDTO(newCustomer);
             customer.setActive(false);
             logger.info("New User:\n {}", customer);
             customerRepository.save(customer);
-
             return ResponseEntity.ok(new MessageResponse("Successfully created user!"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Cannot create 2 users with same company number"));
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create user"));
-        }
+        } 
     }
 }

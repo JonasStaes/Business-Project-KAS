@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer, String> {
     Optional<Customer> findByName(String name);
     Optional<Customer> findByCompanyNr(int companyNr);
+
+    boolean existsByCompanyNr(int companyNr);
 }
 
     

@@ -1,23 +1,15 @@
 import { useState } from "react";
 import { ReactComponent as Logo } from '../../resources/logo.svg';
-import AuthService from "../../services/Auth.service";
 import CustomerLogin from "./CustomerLogin.component";
 import AdminLogin from "./AdminLogin.component";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [active, setActive] = useState<boolean>(true);
-    const [principal, setPrincipal] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
     const changeLoginType = () => {
         setActive(!active)
     }
 
-    const login = () => {
-        AuthService.customerLogin(principal, password)
-            .then(data => {
-                console.log(data);
-            })
-    }
 
     return(
         <div className={[
@@ -49,6 +41,14 @@ export default function Login() {
                     </label>
                 </div>
                 {active ? <AdminLogin/> : <CustomerLogin/> }
+                <div>
+                    <Link to="/kas/change_password/request" className={[
+                            (active ? "text-black" : "text-main-1"), 
+                            "mx-auto rounded w-80 py-2 uppercase text-center flex justify-center"
+                        ].join(" ")}>
+                        Wachtwoord vergeten?
+                    </Link>
+                </div>
             </div>
         </div>
     );

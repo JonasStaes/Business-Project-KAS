@@ -11,7 +11,7 @@ export default function ChangePassword() {
     let params = useParams();
 
     const checkIfValid = useCallback(() => {
-        setValid(password == passwordCheck && password.trim().length > 0);
+        setValid(password === passwordCheck && password.trim().length > 0);
     }, [password, passwordCheck]);
   
     useEffect(() => {
