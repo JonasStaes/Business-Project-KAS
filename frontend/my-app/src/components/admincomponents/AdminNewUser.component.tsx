@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon } from "@heroicons/react/solid";
+import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordService from "../../services/Password.service";
@@ -95,7 +95,7 @@ export default function NewUser() {
                 <div className="pb-4">
                   <div className="relative group">
                     <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer"
-                      id="requested_amount_input" 
+                      id="email_input" 
                       type={"email"} 
                       required
                       onChange={handleEmailInputChange}
@@ -151,23 +151,38 @@ export default function NewUser() {
                 </button>
               </div>
         </div>
-        <Transition 
+        <Transition className="absolute inset-x-0 top-4 mx-auto max-w-lg"
           show={errorMessageOpen}
-          enter="transition-opacity duration-75"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter="transition ease-in-out duration-300 transform"
+          enterFrom="-translate-y-full"
+          enterTo="translate-y-0"
+          leave="transition ease-in-out duration-300 transform"
+          leaveFrom="translate-y-0"
+          leaveTo="-translate-y-full"
         >
-          <div className="shadow rounded-lg absolute inset-x-0 top-0 mt-4 bg-main-1 mx-auto max-w-lg p-2 flex justify-center">
-            <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2 text-main-declined"/>
-            {errorMessage}
+          <div className="shadow rounded-lg bg-main-1">
+            <button className="absolute top-0 right-0"
+              onClick={closeErrorMessage}
+            >
+              <XIcon className="h-6 w-6"/>
+            </button>
+            <div className="p-2">
+              <div className="flex justify-center">
+                <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2 text-main-declined"/>
+                {errorMessage}
+              </div>
+            </div>
+            
+            <Transition.Child
+              enter="transform transition origin-left duration-[4000ms]"
+              enterFrom="scale-x-100"
+              enterTo="scale-x-0"
+              leave="scale-x-0"
+            >
+              <div className="w-full h-2 bg-main-declined"/>
+            </Transition.Child>
           </div>
         </Transition>
       </div>
     );
 }
-
-
-  
