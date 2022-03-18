@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             .antMatchers("/auth/signin/**").permitAll()
-            .antMatchers("/auth/password/**").permitAll()
+            .antMatchers("/change_password/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/credit_request/**").hasAnyAuthority(Roles.KLANT.toString(), Roles.KANTOOR_MEDEWERKER.toString())
             .antMatchers("/admin/**").hasAuthority(Roles.ADMINISTRATOR.toString())

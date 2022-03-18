@@ -1,17 +1,15 @@
 package com.ap.kas.dtos.requestdtos;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 @Data
-public class PasswordChangeRequestDto {
+public class PasswordChangeDto {
     
-    @Email
     @NotBlank
-    private String email;
+    private String token;
 
     @NotBlank
-    private String name;
+    private String password;
 }

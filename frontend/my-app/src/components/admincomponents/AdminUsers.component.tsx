@@ -7,6 +7,7 @@ import UserService from "../../services/User.service";
 interface User {
   name: string
   email: string
+  companyNr: number
   active: boolean
 }
 
@@ -35,7 +36,7 @@ export default function AdminUsers() {
           <div></div>
           <Link to="../new_user" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
             <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
-            <span className="text-xl tracking-wider mr-2 uppercase">Gebruiker</span>
+            <span className="text-xl tracking-wider mr-2 uppercase">Klant</span>
           </Link>
         </div>
         <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg border-main-0 rounded border-2 h-4/5">
@@ -44,6 +45,7 @@ export default function AdminUsers() {
               <tr className="h-8">
                 <th>Naam</th>
                 <th>Email</th>
+                <th>Ondernemingsnummer</th>
                 <th>Actief</th>
               </tr>
             </thead>
@@ -54,6 +56,7 @@ export default function AdminUsers() {
                   <tr key={nanoid()} className="h-8">
                     <td className="text-center border-x">{usr.name}</td>
                     <td className="text-center border-x">{usr.email}</td>
+                    <td className="text-center border-x">{usr.companyNr}</td>
                     <td className="text-center border-x">{usr.active.toString()}</td>
                   </tr>
                 );
@@ -62,6 +65,7 @@ export default function AdminUsers() {
                   <tr key={nanoid()} className="bg-blue-200 h-8">
                     <td className="text-center border-x">{usr.name}</td>
                     <td className="text-center border-x">{usr.email}</td>
+                    <td className="text-center border-x">{usr.companyNr}</td>
                     <td className="text-center border-x">{usr.active.toString()}</td>
                   </tr>
                 );

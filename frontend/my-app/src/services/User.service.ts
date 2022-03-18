@@ -6,10 +6,11 @@ class UserService {
         return http.get(`${urlBase}/allcustomers`)
     }
 
-    create(name: string, email: string, active: boolean) {
+    create(name: string, email: string, companyNr: number, active: boolean) {
         let formData = new FormData();
         formData.append('name', name);
         formData.append('email', email);
+        formData.append('companyNr', companyNr.toString())
         formData.append('active', active.toString());  
         return http.post(`${urlBase}/`, formData)
     } 

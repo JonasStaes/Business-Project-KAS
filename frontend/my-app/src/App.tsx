@@ -26,7 +26,7 @@ export default function App() {
     );
   } else {
     return(
-      <div></div>
+      <div>something went horribly wrong</div>
     );
   }
 

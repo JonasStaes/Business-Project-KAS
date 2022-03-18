@@ -18,6 +18,6 @@ public class PasswordCreateTokenPurgeTask {
 
         Date now = Date.from(Instant.now());
 
-        passwordCreateTokenRepository.deleteByExpiryDateLessThan(now);
+        passwordCreateTokenRepository.deleteAllByExpiryDateLessThan(now);
     }
 }
