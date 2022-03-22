@@ -35,15 +35,19 @@ export default function AdminUsers() {
     }, [getUsers])
 
     function deactivateUser(id: string, active: boolean){
+
       if (active === false){
         alert("Deze klant is al inactief!")
       }
       else{
-        UserService.deactivate(id)
-        .then(res => {
-          console.info(res)
-          window.location.reload();       
-        })     
+        let text = "Bent u zeker dat u deze klant wil deactiveren?";
+        if(window.confirm(text) === true){
+          UserService.deactivate(id)
+          .then(res => {
+            console.info(res)
+            window.location.reload();       
+          })  
+        }           
       }
     }
 
