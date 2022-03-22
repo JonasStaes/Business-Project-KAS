@@ -78,7 +78,7 @@ public class UserController {
 
     @PutMapping(value="/allcustomers/{id}")
     public ResponseEntity<MessageResponse> deactivateCustomer(@PathVariable String id) {
-        logger.info("Incoming Credit Request DTO:\n {}", id);
+        logger.info("Incoming customer deactivation request:\n {}", id);
         try{
             Customer toBeUpdatedCustomer = customerRepository.getById(id);
             toBeUpdatedCustomer.setActive(false);
