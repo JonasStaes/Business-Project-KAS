@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
 import com.ap.kas.dtos.readdtos.CustomerReadDto;
-import com.ap.kas.models.Roles;
+import com.ap.kas.models.Role;
 import com.ap.kas.models.User;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CustomerRepository;

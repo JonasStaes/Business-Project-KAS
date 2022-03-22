@@ -1,6 +1,6 @@
 package com.ap.kas.config;
 
-import com.ap.kas.models.Roles;
+import com.ap.kas.models.Role;
 import com.ap.kas.security.jwt.AuthEntryPointJwt;
 import com.ap.kas.security.jwt.AuthTokenFilter;
 import com.ap.kas.security.services.UserDetailsServiceImpl;
@@ -55,8 +55,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/auth/signin/**").permitAll()
             .antMatchers("/change_password/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
-            .antMatchers("/credit_request/**").hasAnyAuthority(Roles.KLANT.toString(), Roles.KANTOOR_MEDEWERKER.toString())
-            .antMatchers("/admin/**").hasAuthority(Roles.ADMINISTRATOR.toString())
+            .antMatchers("/credit_request/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString())
+            .antMatchers("/admin/**").hasAuthority(Role.ADMINISTRATOR.toString())
             .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

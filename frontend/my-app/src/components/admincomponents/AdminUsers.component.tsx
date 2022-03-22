@@ -50,26 +50,15 @@ export default function AdminUsers() {
               </tr>
             </thead>
             <tbody>
-            {users.map((usr, i) => {
-              if(i % 2 === 0) {
-                return(
-                  <tr key={nanoid()} className="h-8">
-                    <td className="text-center border-x">{usr.name}</td>
-                    <td className="text-center border-x">{usr.email}</td>
-                    <td className="text-center border-x">{usr.companyNr}</td>
-                    <td className="text-center border-x">{usr.active.toString()}</td>
-                  </tr>
-                );
-              } else {
-                return(
-                  <tr key={nanoid()} className="bg-blue-200 h-8">
-                    <td className="text-center border-x">{usr.name}</td>
-                    <td className="text-center border-x">{usr.email}</td>
-                    <td className="text-center border-x">{usr.companyNr}</td>
-                    <td className="text-center border-x">{usr.active.toString()}</td>
-                  </tr>
-                );
-              }
+            {users.map(usr => {
+              return(
+                <tr key={nanoid()} className="odd:bg-blue-200 h-8">
+                  <td className="text-center border-x">{usr.name}</td>
+                  <td className="text-center border-x">{usr.email}</td>
+                  <td className="text-center border-x">{usr.companyNr}</td>
+                  <td className="text-center border-x">{usr.active.toString()}</td>
+                </tr>
+              );
             })}
             </tbody>
           </table>

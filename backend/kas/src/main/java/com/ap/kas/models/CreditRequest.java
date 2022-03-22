@@ -4,6 +4,8 @@ import java.time.Period;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,7 +36,7 @@ public class CreditRequest {
 
     private String name;
 
-    private float financedAmount; 
+    private float totalAmount; 
 
     private float requestedAmount;
 
@@ -48,9 +50,12 @@ public class CreditRequest {
     @JsonIgnore
     private Customer customer;
 
-    public CreditRequest(String name, float financedAmount, float requestedAmount, Period duration, String accountability, Customer customer) {
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String accountability, Customer customer) {
         this.name = name;
-        this.financedAmount = financedAmount;
+        this.totalAmount = totalAmount;
         this.requestedAmount = requestedAmount;
         this.duration = duration;
         this.accountability = accountability;

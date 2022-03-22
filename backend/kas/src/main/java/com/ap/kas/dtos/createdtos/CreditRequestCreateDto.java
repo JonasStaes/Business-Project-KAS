@@ -21,7 +21,7 @@ public class CreditRequestCreateDto {
     private float requestedAmount;
 
     @Positive
-    private float financedAmount; 
+    private float totalAmount; 
 
     @NotNull
     private Period duration; 

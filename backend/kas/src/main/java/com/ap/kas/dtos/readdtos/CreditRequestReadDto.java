@@ -21,7 +21,7 @@ public class CreditRequestReadDto {
 
     private float requestedAmount;
 
-    private float financedAmount; 
+    private float totalAmount; 
 
     private Period duration; 
 
@@ -29,4 +29,6 @@ public class CreditRequestReadDto {
     private String accountability;
 
     private List<FileStorage> files = new LinkedList<FileStorage>();
+
+    private String status;
 }

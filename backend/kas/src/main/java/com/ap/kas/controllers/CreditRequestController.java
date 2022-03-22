@@ -13,6 +13,7 @@ import com.ap.kas.models.FileStorage;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.FileStorageRepository;
+import com.ap.kas.services.AccountingService;
 import com.ap.kas.services.FileStorageService;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
@@ -46,6 +47,9 @@ public class CreditRequestController {
     @Autowired
     private CreditRequestRepository creditRequestRepository;
 
+    @Autowired
+    private AccountingService accountingService;
+
     @GetMapping("/all/{id}")
     public ResponseEntity<MessageResponse> readCreditRequests(@PathVariable("id") String id) {
         try {
@@ -69,9 +73,10 @@ public class CreditRequestController {
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
         logger.info("Files:\n {}", newCreditRequest.getFiles());
         try {
-            CreditRequest creditRequest = creditRequestMapper.convertFromCreateDTO(newCreditRequest);
+            CreditRequest creditRequest = accountingService.evaluateCreditRequest(creditRequestMapper.convertFromCreateDTO(newCreditRequest));
             logger.info("New Credit Request:\n {}", creditRequest);
 
+            //we get the request that was saved because this one contains an ID, which is what links a file to a credit request
             CreditRequest savedCreditRequest = creditRequestRepository.save(creditRequest);
             if(newCreditRequest.getFiles() != null) {
                 newCreditRequest.getFiles().forEach(file -> {

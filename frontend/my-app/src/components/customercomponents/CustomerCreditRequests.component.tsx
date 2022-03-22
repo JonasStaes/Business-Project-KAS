@@ -1,3 +1,4 @@
+import { Listbox } from "@headlessui/react";
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
@@ -7,11 +8,21 @@ import CreditRequestService from "../../services/CreditRequest.service";
 interface CreditRequest {
   name: string
   accountability: string
-  financedAmount: number
+  totalAmount: number
   requestedAmount: number
+  status: string
 }
 
+const statuses = [
+  "geen filter",
+  "in_behandeling",
+  "goedgekeurd",
+  "afgekeurd"
+]
+
+
 export default function CustomerCreditRequests() {
+  const [selectedStatus, setSelectedStatus] = useState<string>(statuses[0])
   const [creditRequests, setCreditRequests] = useState<Array<CreditRequest>>([]);
 
     const getCreditRequests = useCallback(() => {
@@ -26,14 +37,63 @@ export default function CustomerCreditRequests() {
         });
     }, [])
 
+    const filterRequests = () => {
+      return creditRequests.filter(cr => {
+        if(selectedStatus === statuses[0]) {
+          return cr;
+        } else {
+          if(cr.status.toLowerCase() === selectedStatus.toLowerCase()) {
+            return cr;
+          }
+        }
+      });
+    };
+
     useEffect(() => {
       getCreditRequests()
     }, [getCreditRequests])
 
+    const cleanUpStatus = (status: string) => {
+      return status.replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
+    }
+
+    const modifyStatusRow = (status: string) => {
+      let tempStyle = ""
+      switch(status.toLowerCase()) {
+        case "in_behandeling":
+          tempStyle = "text-orange-500";
+          break;
+        case "goedgekeurd":
+          tempStyle = "text-main-accepted";
+          break;
+        case "afgekeurd":
+          tempStyle = "text-main-declined"
+          break;
+      }
+      return tempStyle;
+    }
+
     return(
       <div className="mx-auto max-w-6xl py-4 h-screen">
-        <div className="flex items-center justify-between flex-wrap container pb-4">
-          <div></div>
+        <div className="flex items-center justify-end flex-wrap container pb-4 gap-16">
+          <Listbox 
+            className="py-2 w-60 relative border-b-2 border-main-0 text-lg"
+            as="div" 
+            value={selectedStatus} 
+            onChange={setSelectedStatus} 
+          >
+            <Listbox.Button>{"Filter status: " + cleanUpStatus(selectedStatus)}</Listbox.Button>
+            <Listbox.Options className="absolute right-0 top-10 z-10 shadow rounded bg-white w-40 cursor-pointer divide-y divide-gray-300">
+              {statuses.map((status) => (
+                <Listbox.Option className="py-2 px-2 hover:bg-gray-300 hover:opacity-80"
+                  key={nanoid()}
+                  value={status}
+                >
+                  {cleanUpStatus(status)}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Listbox>
           <Link to="../new_credit_request" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
             <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
             <span className="text-xl tracking-wider mr-2 uppercase">Aanvraag</span>
@@ -45,36 +105,26 @@ export default function CustomerCreditRequests() {
               <tr className="h-8">
                 <th>Naam</th>
                 <th>Verantwoording</th>
-                <th>Zelfgefinancierd (&euro;)</th>
-                <th>Gevraagd Totaal (&euro;)</th>
+                <th>Totaal Bedrag (&euro;)</th>
+                <th>Gevraagd Bedrag (&euro;)</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
-            {creditRequests.map((cr, i) => {
-              if(i % 2 === 0) {
-                return(
-                  <tr key={nanoid()} className="h-8">
-                    <td className="text-center border-x">{cr.name}</td>
-                    <td className="text-center border-x text-ellipsis">{cr.accountability}</td>
-                    <td className="text-center border-x">{cr.financedAmount}</td>
-                    <td className="text-center border-x">{cr.requestedAmount}</td>
-                  </tr>
-                );
-              } else {
-                return(
-                  <tr key={nanoid()} className="bg-blue-200 h-8">
-                    <td className="text-center border-x">{cr.name}</td>
-                    <td className="text-center border-x">{cr.accountability}</td>
-                    <td className="text-center border-x">{cr.financedAmount}</td>
-                    <td className="text-center border-x">{cr.requestedAmount}</td>
-                  </tr>
-                );
-              }
+            {filterRequests().map(cr => {
+              return(
+                <tr key={nanoid()} className="h-8 odd:bg-blue-100">
+                  <td className="text-center border-x">{cr.name}</td>
+                  <td className="text-center border-x text-ellipsis">{cr.accountability}</td>
+                  <td className="text-center border-x">{cr.totalAmount}</td>
+                  <td className="text-center border-x">{cr.requestedAmount}</td>
+                  <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{cleanUpStatus(cr.status)}</td>
+                </tr>
+              );
             })}
             </tbody>
           </table>
         </div>
       </div>
-        
     );
 }

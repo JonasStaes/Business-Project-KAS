@@ -83,7 +83,7 @@ public class CreditRequestControllerTests {
         //create dto for test
         CreditRequestCreateDto dto = new CreditRequestCreateDto();
         dto.setName(creditRequest.getName());
-        dto.setFinancedAmount(creditRequest.getFinancedAmount());
+        dto.setTotalAmount(creditRequest.getTotalAmount());
         dto.setRequestedAmount(creditRequest.getRequestedAmount());
         dto.setDuration(creditRequest.getDuration());
         dto.setAccountability(creditRequest.getAccountability());
@@ -100,7 +100,7 @@ public class CreditRequestControllerTests {
         //since the test data doesn't have an ID, and even if it did it's ID wouldn't match the DTO since they're separate entries in the repo
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
-        assertEquals(creditRequest.getFinancedAmount(), actualCreditRequest.getFinancedAmount());
+        assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
         assertEquals(creditRequest.getRequestedAmount(), actualCreditRequest.getRequestedAmount());
         assertEquals(creditRequest.getDuration(), actualCreditRequest.getDuration());
         assertEquals(creditRequest.getAccountability(), actualCreditRequest.getAccountability());
