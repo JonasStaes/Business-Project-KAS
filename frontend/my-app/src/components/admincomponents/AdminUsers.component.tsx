@@ -1,7 +1,7 @@
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserService from "../../services/User.service";
 
 interface User {
@@ -9,9 +9,15 @@ interface User {
   email: string
   companyNr: number
   active: boolean
+  id: string
 }
 
 export default function AdminUsers() {
+
+  const [timeOutID, setTimeOutID] = useState<number>(0);
+  const [errorMessageOpen, setErrorMessageOpen] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const navigate = useNavigate(); 
   const [users, setUsers] = useState<Array<User>>([]);
 
     const getUsers = useCallback(() => {
@@ -26,9 +32,34 @@ export default function AdminUsers() {
         });
     }, [])
 
+    const closeErrorMessage = () => {
+      setErrorMessageOpen(false)
+      window.clearTimeout(timeOutID);
+      setTimeOutID(0);
+    }
+
     useEffect(() => {
       getUsers()
     }, [getUsers])
+
+    function deactivateUser(id: string, active: boolean){
+      if (active == true){
+        alert("Deze klant is al inactief!")
+      }
+      else{
+        UserService.deactivate(id)
+        .then(res => {
+          console.info(res);
+          navigate("../users");         
+        })
+        .catch(e => {
+          setErrorMessage(e.response.data.message);
+          setErrorMessageOpen(true);
+          setTimeOutID(window.setTimeout(closeErrorMessage, 4000));
+        })
+        
+      }
+    }
 
     return(
       <div className="mx-auto max-w-6xl py-4 h-screen">
@@ -47,6 +78,10 @@ export default function AdminUsers() {
                 <th>Email</th>
                 <th>Ondernemingsnummer</th>
                 <th>Actief</th>
+                <th>Id</th>
+                <th></th>
+
+                
               </tr>
             </thead>
             <tbody>
@@ -58,6 +93,8 @@ export default function AdminUsers() {
                     <td className="text-center border-x">{usr.email}</td>
                     <td className="text-center border-x">{usr.companyNr}</td>
                     <td className="text-center border-x">{usr.active.toString()}</td>
+                    <td className="text-center border-x">{usr.id}</td>
+                    <td> <input type="submit" className="button" value="Deactiveren" onClick={() => deactivateUser(usr.id, usr.active)} /></td>
                   </tr>
                 );
               } else {
@@ -67,6 +104,7 @@ export default function AdminUsers() {
                     <td className="text-center border-x">{usr.email}</td>
                     <td className="text-center border-x">{usr.companyNr}</td>
                     <td className="text-center border-x">{usr.active.toString()}</td>
+                    <td className="text-center border-x">{usr.id}</td>
                   </tr>
                 );
               }
