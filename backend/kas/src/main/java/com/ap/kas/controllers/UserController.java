@@ -13,6 +13,9 @@ import javax.validation.Valid;
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
 import com.ap.kas.dtos.readdtos.CustomerReadDto;
 
+import lombok.*;
+
+import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("admin")
@@ -67,5 +74,21 @@ public class UserController {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create user"));
         } 
+    }
+
+    @PutMapping(value="/allcustomers/{id}")
+    public ResponseEntity<MessageResponse> deactivateCustomer(@PathVariable String id) {
+        logger.info("Incoming customer deactivation request:\n {}", id);
+        try{
+            Customer toBeUpdatedCustomer = customerRepository.getById(id);
+            toBeUpdatedCustomer.setActive(false);
+            customerRepository.save(toBeUpdatedCustomer);
+            logger.info("Customer deactivated");
+            return ResponseEntity.ok(new MessageResponse("Succesfully deactivated customer!"));
+        } catch(Exception e){
+            logger.error("{}", e);
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to deactivate customer"));
+        }
+        
     }
 }
