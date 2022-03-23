@@ -13,7 +13,11 @@ class UserService {
         formData.append('companyNr', companyNr.toString())
         formData.append('active', active.toString());  
         return http.post(`${urlBase}/`, formData)
-    } 
+    }
+
+    deactivate(id: string){
+        return http.put(`${urlBase}/allcustomers/${id}`)
+    }
 }
 
 export default new UserService();

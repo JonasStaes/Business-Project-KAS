@@ -9,9 +9,11 @@ interface User {
   email: string
   companyNr: number
   active: boolean
+  id: string
 }
 
 export default function AdminUsers() {
+
   const [users, setUsers] = useState<Array<User>>([]);
 
     const getUsers = useCallback(() => {
@@ -26,9 +28,28 @@ export default function AdminUsers() {
         });
     }, [])
 
+
+
     useEffect(() => {
       getUsers()
     }, [getUsers])
+
+    function deactivateUser(id: string, active: boolean){
+
+      if (active === false){
+        alert("Deze klant is al inactief!")
+      }
+      else{
+        let text = "Bent u zeker dat u deze klant wil deactiveren?";
+        if(window.confirm(text) === true){
+          UserService.deactivate(id)
+          .then(res => {
+            console.info(res)
+            window.location.reload();       
+          })  
+        }           
+      }
+    }
 
     return(
       <div className="mx-auto max-w-6xl py-4 h-screen">
@@ -47,6 +68,7 @@ export default function AdminUsers() {
                 <th>Email</th>
                 <th>Ondernemingsnummer</th>
                 <th>Actief</th>
+                <th></th>  
               </tr>
             </thead>
             <tbody>
@@ -57,6 +79,7 @@ export default function AdminUsers() {
                   <td className="text-center border-x">{usr.email}</td>
                   <td className="text-center border-x">{usr.companyNr}</td>
                   <td className="text-center border-x">{usr.active.toString()}</td>
+                  <td> <input type="button" className="button" value="Deactiveren" onClick={() => deactivateUser(usr.id, usr.active)} /></td>
                 </tr>
               );
             })}
