@@ -1,7 +1,7 @@
 package com.ap.kas.services.mappers;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
-import com.ap.kas.dtos.readdtos.CustomerReadDto;
+import com.ap.kas.dtos.readdtos.UserReadDto;
 import com.ap.kas.models.Customer;
 
 import org.modelmapper.ModelMapper;
@@ -14,11 +14,13 @@ public class UserMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Customer convertFromCreateDTO(CustomerCreateDto customerCreateDto) {
+    public Customer createCustomerFromDto(CustomerCreateDto customerCreateDto) {
         return modelMapper.map(customerCreateDto, Customer.class);
     }
 
-    public CustomerReadDto convertToReadDto(Customer customer) {
-        return modelMapper.map(customer, CustomerReadDto.class);
+    public UserReadDto convertCustomerToUserReadDto(Customer customer) {
+        UserReadDto output = modelMapper.map(customer, UserReadDto.class);
+        output.addRole(customer.getRole());
+        return output;
     }
 }

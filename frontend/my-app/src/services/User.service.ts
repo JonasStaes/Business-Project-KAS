@@ -3,7 +3,7 @@ import http from "./https-common"
 const urlBase: string = "admin"
 class UserService {
     getAll() {
-        return http.get(`${urlBase}/allcustomers`)
+        return http.get(`${urlBase}/allusers`)
     }
 
     create(name: string, email: string, companyNr: number, active: boolean) {
@@ -13,11 +13,7 @@ class UserService {
         formData.append('companyNr', companyNr.toString())
         formData.append('active', active.toString());  
         return http.post(`${urlBase}/`, formData)
-    }
-
-    deactivate(id: string){
-        return http.put(`${urlBase}/allcustomers/${id}`)
-    }
+    } 
 }
 
 export default new UserService();

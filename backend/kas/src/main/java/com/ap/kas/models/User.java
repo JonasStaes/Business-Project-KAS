@@ -34,7 +34,7 @@ public class User{
 
     protected String password;
     
-    public User(String name, String email, Boolean active, String password ){
+    public User(String name, String email, Boolean active, String password){
         this.name = name;
         this.email = email;
         this.active = active;

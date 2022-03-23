@@ -8,7 +8,7 @@ import CustomerCreditRequests from "./customercomponents/CustomerCreditRequests.
 import CustomerNewCreditRequest from "./customercomponents/CustomerNewCreditRequest.component";
 import AdminHome from "./admincomponents/AdminHome.component";
 import AdminUsers from "./admincomponents/AdminUsers.component";
-import AdminNewUsers from "./admincomponents/AdminNewUser.component";
+import AdminNewCustomer from "./admincomponents/AdminNewCustomer.component";
 import Login from "./logincomponents/Login.component";
 import PasswordHome from "./passwordcomponents/PasswordHome.component";
 import ChangePassword from "./passwordcomponents/ChangePassword.component";
@@ -34,7 +34,8 @@ export function AdminRoutes() {
             <Route path="kas/admin" element={<AdminHome/>}>
                 <Route index element={<Navigate replace to="/kas/admin/users"/>}/>
                 <Route path ="users" element ={<AdminUsers/>}/>
-                <Route path ="new_user" element ={<AdminNewUsers/>}/>
+                <Route path ="new_customer" element ={<AdminNewCustomer/>}/>
+                {/*<Route path ="new_employee" element ={<AdminNewUsers/>}/>*/}
             </Route>
             <Route path="*" element={<Navigate replace to="/kas/admin"/>}/>
         </Routes>
