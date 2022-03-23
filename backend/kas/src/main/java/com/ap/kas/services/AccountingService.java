@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 public class AccountingService {
     
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest) {
-        if(creditRequest.getTotalAmount() - creditRequest.getRequestedAmount() > creditRequest.getTotalAmount() / 1.5){
+        if(creditRequest.getTotalAmount() - creditRequest.getFinancedAmount() > creditRequest.getTotalAmount() / 1.5){
             creditRequest.setStatus(Status.AFGEKEURD);
-        } else if(creditRequest.getTotalAmount() - creditRequest.getRequestedAmount() < 500) {
+        } else if(creditRequest.getTotalAmount() - creditRequest.getFinancedAmount() < 500) {
             creditRequest.setStatus(Status.GOEDGEKEURD);
         } else {
             creditRequest.setStatus(Status.IN_BEHANDELING);

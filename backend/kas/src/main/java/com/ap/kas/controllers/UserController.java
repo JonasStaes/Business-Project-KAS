@@ -11,7 +11,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
-import com.ap.kas.dtos.readdtos.CustomerReadDto;
+import com.ap.kas.dtos.readdtos.UserReadDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +35,14 @@ public class UserController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @GetMapping("/allcustomers")
+    @GetMapping("/allusers")
     public ResponseEntity<MessageResponse> readUsers() {
         try {
-            List<CustomerReadDto> customers = new LinkedList<CustomerReadDto>();
+            List<UserReadDto> users = new LinkedList<UserReadDto>();
             customerRepository.findAll().forEach(cr -> {
-                customers.add(userMapper.convertToReadDto(cr));
+                users.add(userMapper.convertCustomerToUserReadDto(cr));
             });
-            return ResponseEntity.ok(new MessageResponse("Got all users!", customers));
+            return ResponseEntity.ok(new MessageResponse("Got all users!", users));
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a user"));
@@ -56,7 +56,7 @@ public class UserController {
             if(customerRepository.existsByCompanyNr(newCustomer.getCompanyNr())) {
                 throw new IllegalArgumentException();
             }
-            Customer customer = userMapper.convertFromCreateDTO(newCustomer);
+            Customer customer = userMapper.createCustomerFromDto(newCustomer);
             customer.setActive(false);
             logger.info("New User:\n {}", customer);
             customerRepository.save(customer);

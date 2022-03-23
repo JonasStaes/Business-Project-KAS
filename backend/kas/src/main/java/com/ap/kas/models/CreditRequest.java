@@ -38,7 +38,7 @@ public class CreditRequest {
 
     private float totalAmount; 
 
-    private float requestedAmount;
+    private float financedAmount;
 
     private Period duration; 
 
@@ -56,7 +56,7 @@ public class CreditRequest {
     public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String accountability, Customer customer) {
         this.name = name;
         this.totalAmount = totalAmount;
-        this.requestedAmount = requestedAmount;
+        this.financedAmount = requestedAmount;
         this.duration = duration;
         this.accountability = accountability;
         this.customer = customer;

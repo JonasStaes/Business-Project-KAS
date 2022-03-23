@@ -9,12 +9,12 @@ interface CreditRequest {
   name: string
   accountability: string
   totalAmount: number
-  requestedAmount: number
+  financedAmount: number
   status: string
 }
 
 const statuses = [
-  "geen filter",
+  "geen_filter",
   "in_behandeling",
   "goedgekeurd",
   "afgekeurd"
@@ -106,7 +106,7 @@ export default function CustomerCreditRequests() {
                 <th>Naam</th>
                 <th>Verantwoording</th>
                 <th>Totaal Bedrag (&euro;)</th>
-                <th>Gevraagd Bedrag (&euro;)</th>
+                <th>Zelf Gefinancierd Bedrag (&euro;)</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -117,7 +117,7 @@ export default function CustomerCreditRequests() {
                   <td className="text-center border-x">{cr.name}</td>
                   <td className="text-center border-x text-ellipsis">{cr.accountability}</td>
                   <td className="text-center border-x">{cr.totalAmount}</td>
-                  <td className="text-center border-x">{cr.requestedAmount}</td>
+                  <td className="text-center border-x">{cr.financedAmount}</td>
                   <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{cleanUpStatus(cr.status)}</td>
                 </tr>
               );

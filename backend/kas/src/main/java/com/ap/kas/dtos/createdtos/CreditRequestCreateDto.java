@@ -17,11 +17,12 @@ public class CreditRequestCreateDto {
     @NotBlank
     private String name;
 
-    @Positive
-    private float requestedAmount;
-
+    
     @Positive
     private float totalAmount; 
+
+    @Positive
+    private float financedAmount;
 
     @NotNull
     private Period duration; 
