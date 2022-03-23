@@ -8,7 +8,7 @@ import com.ap.kas.config.Profiles;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
-import com.ap.kas.models.Roles;
+import com.ap.kas.models.Role;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
@@ -39,6 +39,9 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AccountingService accountingService;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -51,7 +54,7 @@ public class MockDataRunner implements CommandLineRunner {
 
         employeeRepository.deleteAll();
         Employee employee = new Employee("employee", "employee@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
-        employee.addRole(Roles.ADMINISTRATOR);
+        employee.addRole(Role.ADMINISTRATOR);
         employeeRepository.save(employee);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
 
@@ -69,6 +72,8 @@ public class MockDataRunner implements CommandLineRunner {
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
-        return new CreditRequest("test " + i, (float)Math.floor(100 + Math.random() * (20000 - 100)), (float)Math.floor(100 + Math.random() * (20000 - 100)), Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i, customer);
+        float totalAmount = (float)Math.floor(100 + Math.random() * (20000 - 100));
+        float requestedAmount = (float)Math.floor(100 + Math.random() * (totalAmount - 100));
+        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, Period.ofMonths(Math.toIntExact((long)Math.floor(1 + Math.random() * (24 - 1)))), "this is a test accountability for test credit request " + i, customer));
     }    
 }

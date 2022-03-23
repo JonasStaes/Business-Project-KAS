@@ -28,17 +28,17 @@ import lombok.ToString;
 @Getter @Setter @ToString(callSuper = true)
 public class Employee extends User {
     
-    @ElementCollection(targetClass = Roles.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "tblRoles", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    protected Set<Roles> roles = new HashSet<Roles>(); 
+    protected Set<Role> roles = new HashSet<Role>(); 
 
     public Employee(String name, String email, Boolean active, String password) {
         super(name, email, active, password);
     }
 
-    public void addRole(Roles role) {
+    public void addRole(Role role) {
         this.roles.add(role);
     }
 }

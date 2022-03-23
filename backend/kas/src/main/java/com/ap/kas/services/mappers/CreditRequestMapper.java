@@ -22,6 +22,8 @@ public class CreditRequestMapper {
     }
 
     public CreditRequestReadDto convertToReadDto(CreditRequest creditRequest) {
+        Condition<CreditRequest, CreditRequestReadDto> notNull = ctx -> ctx.getSource() != null;
+        modelMapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(mapper -> mapper.when(notNull).map(CreditRequest::getStatus, CreditRequestReadDto::setStatus));
         return modelMapper.map(creditRequest, CreditRequestReadDto.class);
     }
 }

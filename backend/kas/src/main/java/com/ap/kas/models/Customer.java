@@ -21,7 +21,7 @@ public class Customer extends User {
     
     private int companyNr;
 
-    private final Roles role = Roles.KLANT;
+    private final Role role = Role.KLANT;
 
     public Customer(String name, String email, Boolean active, String password, int companyNr) {
         super(name, email, active, password);

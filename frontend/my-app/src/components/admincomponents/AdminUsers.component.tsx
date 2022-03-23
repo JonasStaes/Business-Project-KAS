@@ -68,34 +68,20 @@ export default function AdminUsers() {
                 <th>Email</th>
                 <th>Ondernemingsnummer</th>
                 <th>Actief</th>
-                <th></th>
-
-                
+                <th></th>  
               </tr>
             </thead>
             <tbody>
-            {users.map((usr, i) => {
-              if(i % 2 === 0) {
-                return(
-                  <tr key={nanoid()} className="h-8">
-                    <td className="text-center border-x">{usr.name}</td>
-                    <td className="text-center border-x">{usr.email}</td>
-                    <td className="text-center border-x">{usr.companyNr}</td>
-                    <td className="text-center border-x">{usr.active.toString()}</td>
-                    <td> <input type="button" className="button" value="Deactiveren" onClick={() => deactivateUser(usr.id, usr.active)} /></td>
-                  </tr>
-                );
-              } else {
-                return(
-                  <tr key={nanoid()} className="bg-blue-200 h-8">
-                    <td className="text-center border-x">{usr.name}</td>
-                    <td className="text-center border-x">{usr.email}</td>
-                    <td className="text-center border-x">{usr.companyNr}</td>
-                    <td className="text-center border-x">{usr.active.toString()}</td>
-                    <td> <input type="button" className="button" value="Deactiveren" onClick={() => deactivateUser(usr.id, usr.active)} /></td>
-                  </tr>
-                );
-              }
+            {users.map(usr => {
+              return(
+                <tr key={nanoid()} className="odd:bg-blue-200 h-8">
+                  <td className="text-center border-x">{usr.name}</td>
+                  <td className="text-center border-x">{usr.email}</td>
+                  <td className="text-center border-x">{usr.companyNr}</td>
+                  <td className="text-center border-x">{usr.active.toString()}</td>
+                  <td> <input type="button" className="button" value="Deactiveren" onClick={() => deactivateUser(usr.id, usr.active)} /></td>
+                </tr>
+              );
             })}
             </tbody>
           </table>

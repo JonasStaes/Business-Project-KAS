@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
-import com.ap.kas.dtos.readdtos.CustomerReadDto;
-import com.ap.kas.models.Roles;
+import com.ap.kas.dtos.readdtos.UserReadDto;
+import com.ap.kas.models.Role;
 import com.ap.kas.models.User;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CustomerRepository;
@@ -58,14 +58,14 @@ public class UserControllerTests {
         final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all", MessageResponse.class);
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
 
-        List<CustomerReadDto> expectedList = new LinkedList<CustomerReadDto>();
+        List<UserReadDto> expectedList = new LinkedList<UserReadDto>();
         userRepository.findAll().forEach(cr -> {
-            expectedList.add(userMapper.convertToReadDto(cr));
+            expectedList.add(userMapper.convertCustomerToUserReadDto(cr));
         });
 
-        List<CustomerReadDto> actualList = new LinkedList<CustomerReadDto>();
+        List<UserReadDto> actualList = new LinkedList<UserReadDto>();
         ((List<Object>)forEntity.getBody().getData()).forEach(o -> {
-            actualList.add(modelMapper.map(o, CustomerReadDto.class));
+            actualList.add(modelMapper.map(o, UserReadDto.class));
         });
         assertIterableEquals(expectedList, actualList);
     }

@@ -52,8 +52,8 @@ public class CreditRequestControllerTests {
         //initialize test data
         creditRequest = new CreditRequest();
         creditRequest.setName("Test Request");
-        creditRequest.setRequestedAmount(100.0f);
-        creditRequest.setRequestedAmount(200.0f);
+        creditRequest.setFinancedAmount(100.0f);
+        creditRequest.setTotalAmount(200.0f);
         creditRequest.setDuration(Period.ofMonths(2));
         creditRequest.setAccountability("Test Accountability");
     }
@@ -83,8 +83,8 @@ public class CreditRequestControllerTests {
         //create dto for test
         CreditRequestCreateDto dto = new CreditRequestCreateDto();
         dto.setName(creditRequest.getName());
+        dto.setTotalAmount(creditRequest.getTotalAmount());
         dto.setFinancedAmount(creditRequest.getFinancedAmount());
-        dto.setRequestedAmount(creditRequest.getRequestedAmount());
         dto.setDuration(creditRequest.getDuration());
         dto.setAccountability(creditRequest.getAccountability());
         //dto.setFiles(fileStorageRepository.findAllByCreditRequest(creditRequest));
@@ -100,8 +100,8 @@ public class CreditRequestControllerTests {
         //since the test data doesn't have an ID, and even if it did it's ID wouldn't match the DTO since they're separate entries in the repo
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
+        assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
         assertEquals(creditRequest.getFinancedAmount(), actualCreditRequest.getFinancedAmount());
-        assertEquals(creditRequest.getRequestedAmount(), actualCreditRequest.getRequestedAmount());
         assertEquals(creditRequest.getDuration(), actualCreditRequest.getDuration());
         assertEquals(creditRequest.getAccountability(), actualCreditRequest.getAccountability());
     }

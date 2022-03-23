@@ -4,7 +4,8 @@ import java.time.Period;
 import java.util.Properties;
 
 import com.ap.kas.models.Customer;
-import com.ap.kas.models.Roles;
+import com.ap.kas.models.Role;
+import com.ap.kas.models.Status;
 import com.ap.kas.repositories.CustomerRepository;
 
 import org.modelmapper.Converter;
@@ -40,20 +41,38 @@ public class AppConfig {
             
         });
 
-        mapper.addConverter(new Converter<Roles, String>() {
+        mapper.addConverter(new Converter<String, Status>() {
 
             @Override
-            public String convert(MappingContext<Roles, String> ctx) {
+            public Status convert(MappingContext<String, Status> ctx) {
+                return ctx.getSource() == null ? null : Status.getStatusByName(ctx.getSource());
+            }
+            
+        });
+
+        mapper.addConverter(new Converter<Status, String>() {
+
+            @Override
+            public String convert(MappingContext<Status, String> ctx) {
                 return ctx.getSource() == null ? null : ctx.getSource().name().toLowerCase();
             }
             
         });
 
-        mapper.addConverter(new Converter<String, Roles>() {
+        mapper.addConverter(new Converter<Role, String>() {
 
             @Override
-            public Roles convert(MappingContext<String, Roles> ctx) {
-                return ctx.getSource() == null ? null : Roles.getRoleByName(ctx.getSource());
+            public String convert(MappingContext<Role, String> ctx) {
+                return ctx.getSource() == null ? null : ctx.getSource().name().toLowerCase();
+            }
+            
+        });
+
+        mapper.addConverter(new Converter<String, Role>() {
+
+            @Override
+            public Role convert(MappingContext<String, Role> ctx) {
+                return ctx.getSource() == null ? null : Role.getRoleByName(ctx.getSource());
             }
             
         });
