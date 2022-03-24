@@ -3,10 +3,6 @@ package com.ap.kas.dtos.readdtos;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.ap.kas.models.Role;
 
 import lombok.Data;

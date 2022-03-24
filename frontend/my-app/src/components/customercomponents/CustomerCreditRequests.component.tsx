@@ -1,7 +1,7 @@
 import { Listbox } from "@headlessui/react";
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { CheckIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { nanoid } from "nanoid";
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CreditRequestService from "../../services/CreditRequest.service";
 
@@ -54,7 +54,7 @@ export default function CustomerCreditRequests() {
     }, [getCreditRequests])
 
     const cleanUpStatus = (status: string) => {
-      return status.replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
+      return status.toLowerCase().replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
     }
 
     const modifyStatusRow = (status: string) => {
@@ -77,19 +77,29 @@ export default function CustomerCreditRequests() {
       <div className="mx-auto max-w-6xl py-4 h-screen">
         <div className="flex items-center justify-end flex-wrap container pb-4 gap-16">
           <Listbox 
-            className="py-2 w-60 relative border-b-2 border-main-0 text-lg"
+            className="space-y-2 w-56 relative border-b-2 border-main-0 text-lg"
             as="div" 
-            value={selectedStatus} 
+            value={selectedStatus}
             onChange={setSelectedStatus} 
           >
-            <Listbox.Button>{"Filter status: " + cleanUpStatus(selectedStatus)}</Listbox.Button>
-            <Listbox.Options className="absolute right-0 top-10 z-10 shadow rounded bg-white w-40 cursor-pointer divide-y divide-gray-300">
+            <Listbox.Label>Filter status: </Listbox.Label>
+            <Listbox.Button>{cleanUpStatus(selectedStatus)}</Listbox.Button>
+            <Listbox.Options className="absolute right-0 top-10 z-10 shadow rounded bg-white cursor-pointer divide-y divide-gray-300">
               {statuses.map((status) => (
-                <Listbox.Option className="py-2 px-2 hover:bg-gray-300 hover:opacity-80"
-                  key={nanoid()}
+                <Listbox.Option
+                  key={status}
                   value={status}
+                  as={Fragment}
                 >
-                  {cleanUpStatus(status)}
+                  {({selected}) => (
+                    <li className={[
+                        "py-2 px-2 hover:bg-gray-300 hover:opacity-80 flex",
+                        (selected ? "bg-main-0 text-white" : "bg-transparent text-black")
+                    ].join(" ")}>
+                      {selected && <CheckIcon className="fill-current h-7 w-7 mr-2"/>}
+                      {cleanUpStatus(status)}
+                    </li>
+                  )}
                 </Listbox.Option>
               ))}
             </Listbox.Options>
@@ -111,17 +121,15 @@ export default function CustomerCreditRequests() {
               </tr>
             </thead>
             <tbody>
-            {filterRequests().map(cr => {
-              return(
-                <tr key={nanoid()} className="h-8 odd:bg-blue-100">
+            {filterRequests().map(cr => (
+                <tr key={JSON.stringify(cr)} className="h-8 odd:bg-blue-100">
                   <td className="text-center border-x">{cr.name}</td>
                   <td className="text-center border-x text-ellipsis">{cr.accountability}</td>
                   <td className="text-center border-x">{cr.totalAmount}</td>
                   <td className="text-center border-x">{cr.financedAmount}</td>
                   <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{cleanUpStatus(cr.status)}</td>
                 </tr>
-              );
-            })}
+              ))}
             </tbody>
           </table>
         </div>

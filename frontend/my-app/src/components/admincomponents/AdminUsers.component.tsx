@@ -15,7 +15,7 @@ export default function AdminUsers() {
   const [users, setUsers] = useState<Array<User>>([]);
 
     const getUsers = useCallback(() => {
-      UserService.getAll()
+      UserService.getAllUsers()
         .then(res => {
           setUsers(res.data.data);
           console.log(res.data);
@@ -27,7 +27,7 @@ export default function AdminUsers() {
     }, [])
 
     const cleanUpRoles = (roles: Array<string>) => {
-      return roles.map(role => cleanUpRole(role));
+      return roles.map(role => cleanUpRole(role)).join(", ");
     }
 
     const cleanUpRole = (role: string) => {
@@ -36,6 +36,7 @@ export default function AdminUsers() {
 
     useEffect(() => {
       getUsers()
+      UserService.getAllRoles().then(res => console.log(res.data))
     }, [getUsers])
 
     return(
@@ -62,16 +63,14 @@ export default function AdminUsers() {
               </tr>
             </thead>
             <tbody>
-            {users.map(usr => {
-              return(
-                <tr key={nanoid()} className="odd:bg-blue-200 h-8">
+            {users.map(usr => (
+                <tr key={JSON.stringify(usr)} className="odd:bg-blue-200 h-8">
                   <td className="text-center border-x">{usr.name}</td>
                   <td className="text-center border-x">{usr.email}</td>
-                  <td className="text-center border-x">{cleanUpRoles(usr.roles)}</td>
+                  <td className="text-center border-x truncate">{cleanUpRoles(usr.roles)}</td>
                   <td className="text-center border-x">{usr.active.toString()}</td>
                 </tr>
-              );
-            })}
+              ))}
             </tbody>
           </table>
         </div>
