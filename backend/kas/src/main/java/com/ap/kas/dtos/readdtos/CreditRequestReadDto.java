@@ -21,7 +21,7 @@ public class CreditRequestReadDto {
 
     private Period duration; 
 
-    private String accountability;
+    private String investmentType;
 
     private List<FileStorage> files = new LinkedList<FileStorage>();
 

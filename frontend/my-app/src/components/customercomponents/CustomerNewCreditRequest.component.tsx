@@ -1,7 +1,21 @@
+import { Listbox } from "@headlessui/react";
 import { ArrowCircleLeftIcon, DocumentAddIcon, PlusCircleIcon } from "@heroicons/react/solid";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreditRequestService from "../../services/CreditRequest.service";
+import { StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
+
+interface investmentType {
+  name: string,
+  min: number,
+  max: number
+}
+
+const investmentTypes = [
+  { name: "Rollend materieel", min: 1, max: 5},
+  { name: "Onroerende goederen", min: 1, max: 25},
+  { name: "Professionele uitrusting", min: 1, max: 15}
+]
 
 export default function NewCreditRequest() {
   const navigate = useNavigate(); 
@@ -11,9 +25,9 @@ export default function NewCreditRequest() {
   const [name, setName] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [financedAmount, setFinancedAmount] = useState(0);
-  const [sliderValue, setSliderValue] = useState(12);
-  const [accountability, setAccountability] = useState("");
+  const [sliderValue, setSliderValue] = useState(1);
   const [files, setFiles] = useState<Array<File>>([]);
+  const [selectedInvestment, setSelectedInvestment] = useState<investmentType>(investmentTypes[0]);
   
 
     function handleNameInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -44,14 +58,6 @@ export default function NewCreditRequest() {
       setSliderValue(parseInt(e.target.value));
     }
 
-    function handleAccountabilityInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-      if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-        setAccountability(e.target.value);
-      } else {
-        setAccountability("");
-      }
-    }
-
     function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
       if(e.target.validity.valid && e.target!.files!) {
         for (let i = 0; i < e.target!.files!.length; i++) {
@@ -61,13 +67,21 @@ export default function NewCreditRequest() {
       }
     }
 
+    const handleSelectedInvestmentChange = (value: investmentType) => {
+      if(sliderValue > value.max) {
+        setSliderValue(value.max)
+      }
+
+      setSelectedInvestment(value);
+    }
+
     const calculateTotalValue = useCallback(() => {
       setRequestedAmount(totalAmount - financedAmount);
     }, [totalAmount, financedAmount])
 
     const checkIfFormFilled = useCallback(() => {
-      setFormFilled(name !== "" && totalAmount > 0 && financedAmount > 0 && accountability !== "");
-    }, [name, totalAmount, financedAmount, accountability])
+      setFormFilled(name !== "" && totalAmount > 0 && financedAmount > 0);
+    }, [name, totalAmount, financedAmount])
 
     useEffect(() => {
       calculateTotalValue();
@@ -75,8 +89,8 @@ export default function NewCreditRequest() {
     }, [calculateTotalValue, checkIfFormFilled])
 
     function submitCreditRequest() {
-      if(name !== "" && totalAmount > 0 && financedAmount > 0 && accountability !== "") {
-        CreditRequestService.create(name, totalAmount, financedAmount, sliderValue, accountability, files)
+      if(name !== "" && totalAmount > 0 && financedAmount > 0) {
+        CreditRequestService.create(name, totalAmount, financedAmount, sliderValue, selectedInvestment.name, files)
           .then(res => {
             console.info(res);
             navigate("../credit_requests");
@@ -88,126 +102,75 @@ export default function NewCreditRequest() {
     }
 
     return(
-        <div className="mx-auto max-w-7xl py-8 min-h-full">
+        <div className="mx-auto max-w-3xl py-8 min-h-full">
             <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6">
                 <div className="flex justify-between gap-8">
-                  <div className="w-72">
-                    <div className="pb-4">
-                        <div className="relative group">
-                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0" 
-                              id="name_input"
-                              type={"text"} 
-                              required
-                              onChange={handleNameInputChange}
-                            />
-                            <label className={[
-                              "text-2xl uppercase",
-                              "transform transition-all absolute top-0 left-0 h-full flex items-center pl-2",
-                              "group-focus-within:text-xs peer-valid:text-xs",
-                              "group-focus-within:h-1/2 peer-valid:h-1/2",
-                              "group-focus-within:-translate-y-full peer-valid:-translate-y-full",
-                              "group-focus-within:pl-0 peer-valid:pl-0"
-                              ].join(" ")}
-                              htmlFor="name_input" 
-                            >
-                                Projectnaam
-                            </label>
-                        </div>
-                    </div>
-                    <div className="pb-4">
-                        <div className="relative group">
-                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0"
-                              id="total_amount_input" 
-                              type={"number"} 
-                              required
-                              onChange={handleTotalAmountInputChange}
-                            />
-                            <label className={[
-                              "text-2xl uppercase",
-                              "transform transition-all absolute top-0 left-0 h-full flex items-center pl-2",
-                              "group-focus-within:text-xs peer-valid:text-xs",
-                              "group-focus-within:h-1/2 peer-valid:h-1/2",
-                              "group-focus-within:-translate-y-full peer-valid:-translate-y-full",
-                              "group-focus-within:pl-0 peer-valid:pl-0"
-                              ].join(" ")}
-                              htmlFor="total_amount_input"
-                            >
-                                Totaal bedrag
-                            </label>
-                        </div>
-                    </div>
-                    <div className="pb-4">
-                        <div className="relative group">
-                            <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer focus:ring-0"
-                              id="financed_amount_input" 
-                              type={"number"} 
-                              required
-                              onChange={handleFinancedAmountInputChange}
-                            />
-                            <label className={[
-                              "text-2xl uppercase",
-                              "transform transition-all absolute top-0 left-0 h-full flex items-center pl-2",
-                              "group-focus-within:text-xs peer-valid:text-xs",
-                              "group-focus-within:h-1/2 peer-valid:h-1/2",
-                              "group-focus-within:-translate-y-full peer-valid:-translate-y-full",
-                              "group-focus-within:pl-0 peer-valid:pl-0"
-                              ].join(" ")}
-                              htmlFor="financed_amount_input" 
-                            >
-                                Zelf gefinancierd
-                            </label>
-                        </div>
-                    </div>
-                    <div className="container pl-2 flex flex-col py-4 space-y-2">
+                  <div className="w-72 p-2">
+                   <StyledInputWithLabel id="name" type="text" text="Projectnaam" validateChange={handleNameInputChange}/>
+                   <StyledInputWithLabel id="totalAmount" type="number" text="Totaal bedrag" validateChange={handleTotalAmountInputChange}/>
+                   <StyledInputWithLabel id="financedAmount" type="number" text="Zelf gefinancierd" validateChange={handleFinancedAmountInputChange}/>
+                    <div className="container pl-2 flex flex-col space-y-2">
                       <label className="text-2xl uppercase" htmlFor="total_value">Gevraagd bedrag:</label>
-                      <input className="bg-main-input rounded border-0"
+                      <input className="bg-main-input rounded border-0 p-2"
                         id="total_value"
                         type="text" 
                         disabled
                         value={requestedAmount}
                       />
                     </div>
-                    <div className="container pl-2 flex flex-col py-4 space-y-2">
+                  </div>
+                  <div className="flex flex-col gap-x-2 justify-between w-72 p-2">
+                    <Listbox as="div" value={selectedInvestment} onChange={handleSelectedInvestmentChange} className="shadow p-2 rounded border border-gray-300 text-black">
+                      <Listbox.Button className="w-full text-left">{selectedInvestment.name}</Listbox.Button>
+                      <Listbox.Options className="absolute z-10 bg-main-1 rounded divide-y-2 mt-4 shadow border border-gray-300">
+                        {investmentTypes.map(investmentType => (
+                          <Listbox.Option
+                            as={Fragment}
+                            key={investmentType.name}
+                            value={investmentType}
+                          >
+                            {({selected}) => (
+                              <li className={[
+                                "p-2 hover:bg-gray-300 hover:opacity-80",
+                                (selected ? "bg-main-0 text-white" : "bg-transparent text-black")
+                              ].join(" ")}>
+                                {investmentType.name}
+                              </li>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Listbox>
+                    <div className="pl-2 flex flex-col space-y-2">
                       <label className="text-2xl uppercase" htmlFor="period_input">Looptijd: </label>
                       <input className="form-range"
                         id="period_input"
                         type="range" 
-                        min="2" 
-                        max="24" 
+                        min={selectedInvestment.min}
+                        max={selectedInvestment.max}
                         value={sliderValue}
                         onChange={handleSliderChange}
                       />
-                      <div className="mx-auto">{sliderValue} maanden</div>
+                      <div className="mx-auto">{sliderValue} jaren</div>
                     </div>
-                  </div>
-                  <div className="grow flex flex-row-reverse gap-x-2">
-                    <div className="w-3/5 flex flex-col">
-                      <label className="text-2xl uppercase"
-                        htmlFor="accountability_input">
-                        Verantwoording aanvraag
-                      </label>
-                      <textarea className="resize-none bg-main-input border-2 border-main-0 rounded grow"
-                        id="accountability_input"
-                        onChange={handleAccountabilityInputChange}
-                      />
-                    </div>
-                    <div className="flex flex-col-reverse">
+                    <div className="self-end">
                       <label className="uppercase text-lg flex justify-center text-main-1 bg-main-0 shadow rounded w-40 py-2" 
-                      htmlFor="file_input">
-                        Upload File
-                        <DocumentAddIcon className="fill-current h-7 w-7 ml-2"/>
-                        <input  className="hidden"
-                        id="file_input"
-                        multiple
-                        accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        type={"file"}
-                        onChange={handleFileInputChange}
-                        />
+                          htmlFor="file_input"
+                        >
+                          Upload File
+                          <DocumentAddIcon className="fill-current h-7 w-7 ml-2"/>
+                          <input  className="hidden"
+                          id="file_input"
+                          multiple
+                          accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                          type={"file"}
+                          onChange={handleFileInputChange}
+                          />
                       </label>
                     </div>
                   </div>
               </div>
-              <div className="w-full flex justify-between">
+              <div className="w-full flex justify-between pr-2 pl-4">
                 <Link to="../credit_requests" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
                   <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
                   Terug

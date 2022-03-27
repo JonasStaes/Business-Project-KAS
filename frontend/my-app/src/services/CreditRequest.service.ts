@@ -9,14 +9,15 @@ class CreditRequestService {
         return http.get(`${urlBase}/all/${AuthService.getCurrentUserId()}`)
     }
 
-    create(name: string, totalAmount: number, financedAmount: number, duration: number, accountability: string, files: File[]) {
+    create(name: string, totalAmount: number, financedAmount: number, duration: number, investmentType: string, files: File[]) {
+        console.log(investmentType)
         let formData = new FormData();
         formData.append('name', name);
         formData.append('financedAmount', financedAmount.toString());
         formData.append('totalAmount', totalAmount.toString());
-        formData.append('duration', `P${duration}M`);
-        formData.append('accountability', accountability);
+        formData.append('duration', `P${duration}Y`);
         formData.append('parentId', AuthService.getCurrentUserId());
+        formData.append("investmentType", investmentType);
         if(files !== undefined) {
             files.forEach(file => {
                 formData.append('files', file);
