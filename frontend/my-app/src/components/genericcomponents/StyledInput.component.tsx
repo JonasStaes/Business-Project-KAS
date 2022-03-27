@@ -1,15 +1,40 @@
-import { ChangeEventHandler } from "react";
+import { FC, HTMLProps } from "react";
 import PropTypes, { InferProps } from "prop-types";
 
-export default function StyledInput({id, inputType, validateChange, text} : InferProps<typeof StyledInput.propTypes>) {
+interface StyledInputPropTypes extends HTMLProps<HTMLInputElement> {
+    validateChange: typeof PropTypes.func.isRequired,
+}
+
+export const StyledInput: FC<InferProps<StyledInputPropTypes>>  = ({id, type, validateChange, children}) => {
+    return(
+        <div className="pb-4">
+            <div className="relative group">
+                {children}
+                <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer" 
+                    id={id}
+                    type={type} 
+                    required
+                    onChange={validateChange}
+                />
+            </div>
+        </div>
+    );
+}
+
+interface StyledInputWithLabelPropTypes extends StyledInputPropTypes {
+    text: typeof PropTypes.string.isRequired
+}
+
+export const StyledInputWithLabel: FC<InferProps<StyledInputWithLabelPropTypes>>  = ({id, type, validateChange, text, value}) => {
     return(
         <div className="pb-4">
             <div className="relative group">
                 <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer" 
                     id={id}
-                    type={inputType} 
+                    type={type} 
                     required
                     onChange={validateChange}
+                    value={value}
                 />
                 <label className={[
                     "text-2xl uppercase",
@@ -22,15 +47,8 @@ export default function StyledInput({id, inputType, validateChange, text} : Infe
                     htmlFor={id} 
                 >
                     {text}
-                </label>
+                </label> 
             </div>
         </div>
     );
-}
-
-StyledInput.propTypes = {
-    id: PropTypes.string.isRequired,
-    inputType: PropTypes.string.isRequired,
-    validateChange: PropTypes.func.isRequired,
-    text: PropTypes.string.isRequired
 }

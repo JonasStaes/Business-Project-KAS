@@ -2,9 +2,9 @@ import { Listbox, Transition } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
 import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserService from "../../services/User.service";
+import AdminService from "../../services/Admin.service";
 import MultipleSelect from "../genericcomponents/MultipleSelect.component";
-import StyledInput from "../genericcomponents/StyledInput.component";
+import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
 
 export default function NewEmployee() {
     const navigate = useNavigate(); 
@@ -31,7 +31,7 @@ export default function NewEmployee() {
     }
 
     const getRoles = useCallback(() => {
-      UserService.getAllRoles()
+      AdminService.getAllRoles()
         .then(res => {
           console.log(res.data)
           setRoles(res.data.data)
@@ -47,7 +47,7 @@ export default function NewEmployee() {
 
     function submitEmployee() {
       if(name !== "" && email !== "" && selectedValues.length > 0) {
-        UserService.createEmployee(name, email, selectedValues)
+        AdminService.createEmployee(name, email, selectedValues)
           .then(res => {
             console.info(res);
             //PasswordService.passwordChangeRequest(name, email)
@@ -65,8 +65,8 @@ export default function NewEmployee() {
           <div className="flex justify-between gap-8">
             <div className="w-full flex flex-row justify-between">
               <div>
-                <StyledInput id="name" inputType="text" validateChange={handleNameInputChange} text="naam"/>
-                <StyledInput id="email" inputType="email" validateChange={handleEmailInputChange} text="e-mail"/>
+                <StyledInputWithLabel id="name" type="text" validateChange={handleNameInputChange} text="naam"/>
+                <StyledInputWithLabel id="email" type="email" validateChange={handleEmailInputChange} text="e-mail"/>
               </div>
               <div className="w-80">
                 <MultipleSelect inputValues={roles} selectedValues={selectedValues} setSelectedValues={setSelectedValues}/>

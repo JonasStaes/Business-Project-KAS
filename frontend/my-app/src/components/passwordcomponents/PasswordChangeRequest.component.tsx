@@ -42,7 +42,7 @@ export default function PasswordChangeRequest() {
     }
 
     return(
-        <div className="mx-auto flex flex-col py-4 items-center gap-y-8">
+        <div className="mx-auto flex flex-col py-4 items-center gap-y-8 bg-main-1 rounded shadow">
             <form  
                 className="text-black flex flex-col py-4 items-center gap-y-2"
                 onSubmit={requestPasswordChange}

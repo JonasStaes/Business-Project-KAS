@@ -1,35 +1,34 @@
 package com.ap.kas.controllers;
 
 import com.ap.kas.models.Customer;
-import com.ap.kas.models.Employee;
-import com.ap.kas.models.Role;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CustomerRepository;
-import com.ap.kas.repositories.EmployeeRepository;
+import com.ap.kas.services.MailSender;
 import com.ap.kas.services.mappers.UserMapper;
+import com.ap.kas.repositories.UserUpdateTokenRepository;
+import com.ap.kas.models.UserUpdateToken;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import com.ap.kas.dtos.createdtos.CustomerCreateDto;
-import com.ap.kas.dtos.createdtos.EmployeeCreateDto;
-import com.ap.kas.dtos.readdtos.UserReadDto;
+import com.ap.kas.dtos.requestdtos.CustomerFinalizationRequest;
+import com.ap.kas.dtos.updatedtos.CustomerInfoDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("admin")
+@RequestMapping("user")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -41,68 +40,46 @@ public class UserController {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private UserUpdateTokenRepository userUpdateTokenRepository;
 
-    @GetMapping("/allusers")
-    public ResponseEntity<MessageResponse> readUsers() {
+    @Autowired
+    private MailSender mailSender;
+
+    @PostMapping("/requestCustomer")
+    public ResponseEntity<MessageResponse> requestCustomerFinalization(@ModelAttribute CustomerFinalizationRequest customerFinalizationRequest) {
         try {
-            List<UserReadDto> users = new LinkedList<UserReadDto>();
-            customerRepository.findAll().forEach(customer -> {
-                users.add(userMapper.convertCustomerToUserReadDto(customer));
-            });
+            Customer customer = customerRepository.findByCompanyNr(customerFinalizationRequest.getCompanyNr()).orElseThrow();
+            String token = UUID.randomUUID().toString();
+            userUpdateTokenRepository.save(new UserUpdateToken(token, customer));
+            mailSender.sendCustomerFinalizationMail(customer.getEmail(), token);
 
-            employeeRepository.findAll().forEach(employee -> {
-                users.add(userMapper.convertEmployeeToUserReadDto(employee));
-            });
-            
-            return ResponseEntity.ok(new MessageResponse("Got all users!", users));
+            return ResponseEntity.ok(new MessageResponse("Successfully sent customer finalization request!"));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Cannot request information of non existent customer"));
         } catch (Exception e) {
             logger.error("{}", e);
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a user"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to request customer finalization"));
         }
     }
 
-    @GetMapping("/allroles")
-    public ResponseEntity<MessageResponse> readRoles() {
+    @Transactional
+    @PutMapping("/finalizeCustomer")
+    public ResponseEntity<MessageResponse> finalizeCustomer(@Valid @ModelAttribute CustomerInfoDto customerInfoDto) {
+        logger.info("Incoming customer finalization data:\n {}", customerInfoDto);
         try {
-            return ResponseEntity.ok(new MessageResponse("Got all roles!", Arrays.asList(Role.values())));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to get all roles"));
-        }
-    }
-
-    @PostMapping("/newCustomer")
-    public ResponseEntity<MessageResponse> createCustomer(@Valid @ModelAttribute CustomerCreateDto newCustomer) {
-        logger.info("Incoming Customer Create DTO:\n {}", newCustomer);
-        try {
-            if(customerRepository.existsByCompanyNr(newCustomer.getCompanyNr())) {
-                throw new IllegalArgumentException();
-            }
-            Customer customer = userMapper.createCustomerFromDto(newCustomer);
-            customer.setActive(false);
-            logger.info("New Customer:\n {}", customer);
+            UserUpdateToken userUpdateToken = userUpdateTokenRepository.findByToken(customerInfoDto.getToken()).orElseThrow();
+            Customer customer = userMapper.addCustomerInformationFromDto(customerInfoDto, (Customer)userUpdateToken.getUser());
+            customer.setActive(true);
+            logger.info("finalized customer {}", customer);
             customerRepository.save(customer);
-            return ResponseEntity.ok(new MessageResponse("Successfully created customer!"));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Cannot create 2 customers with same company number"));
-        } catch (Exception e) {
+            userUpdateTokenRepository.delete(userUpdateToken);
+            return ResponseEntity.ok(new MessageResponse("Successfully finalized customer!"));
+        } catch (NoSuchElementException e) {
             logger.error("{}", e);
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to create customer"));
-        } 
-    }
-
-    @PostMapping("/newEmployee")
-    public ResponseEntity<MessageResponse> createEmployee(@Valid @ModelAttribute EmployeeCreateDto newEmployee) {
-        logger.info("Incoming Employee Create DTO:\n {}", newEmployee);
-        try {
-            Employee employee = userMapper.createEmployeeFromDto(newEmployee);
-            employee.setActive(false);
-            logger.info("New Employee:\n {}", employee);
-            employeeRepository.save(employee);
-            return ResponseEntity.ok(new MessageResponse("Successfully created employee!"));
-        } catch (Exception e){
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid token"));
+        } catch(Exception e) {
             logger.error("{}", e);
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to create employee"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to finalize customer"));
         }
     }
 }

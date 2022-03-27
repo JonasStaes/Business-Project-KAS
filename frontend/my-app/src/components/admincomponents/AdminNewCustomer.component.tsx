@@ -2,9 +2,9 @@ import { Transition } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import PasswordService from "../../services/Password.service";
+import AdminService from "../../services/Admin.service";
 import UserService from "../../services/User.service";
-import StyledInput from "../genericcomponents/StyledInput.component";
+import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
 
 export default function NewCustomer() {
   const navigate = useNavigate(); 
@@ -50,12 +50,12 @@ export default function NewCustomer() {
       setTimeOutID(0);
     }
 
-    function submitUser() {
+    function submitCustomer() {
       if(name !== "" && email !== "") {
-        UserService.createCustomer(name, email, companyNr)
+        AdminService.createCustomer(name, email, companyNr)
           .then(res => {
             console.info(res);
-            PasswordService.passwordChangeRequest(name, email)
+            UserService.requestUserFinalization(companyNr);
             navigate("../users");
           })
           .catch(e => {
@@ -71,9 +71,9 @@ export default function NewCustomer() {
           <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6">
             <div className="flex justify-between gap-8">
               <div className="w-full">
-                <StyledInput id="name" inputType="text" validateChange={handleNameInputChange} text="naam"/>
-                <StyledInput id="email" inputType="email" validateChange={handleEmailInputChange} text="e-mail"/>
-                <StyledInput id="ondernemingsnummer" inputType="text" validateChange={handleCompanyNrChange} text="ondernemingsnummer"/>
+                <StyledInputWithLabel id="name" type="text" validateChange={handleNameInputChange} text="naam"/>
+                <StyledInputWithLabel  id="email" type="email" validateChange={handleEmailInputChange} text="e-mail"/>
+                <StyledInputWithLabel  id="ondernemingsnummer" type="text" validateChange={handleCompanyNrChange} text="ondernemingsnummer"/>
               </div>
             </div>
             <div className="w-full flex justify-between">
@@ -82,7 +82,7 @@ export default function NewCustomer() {
                   Terug
                 </Link>
                 <button className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center"
-                  onClick={submitUser}
+                  onClick={submitCustomer}
                 >
                   <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
                   Volgende

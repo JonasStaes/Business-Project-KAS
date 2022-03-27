@@ -18,7 +18,7 @@ public class MailSender {
 
     Logger logger = LoggerFactory.getLogger(MailSender.class);
 
-    public void sendMail(String to, String subject, String body) {
+    private void sendMail(String to, String subject, String body) {
 
         MimeMessage message = javaMailSender.createMimeMessage();
 
@@ -38,5 +38,15 @@ public class MailSender {
         } catch (MessagingException e) {
             logger.error("", e);
         }
+    }
+
+    public void sendPasswordRecoveryMail(String email, String token) {
+        String message = "Click <a href=\"http://localhost:3000/kas/change_password/" + token + "\">this link</a> to change your password.";
+        sendMail(email, "Omega: Request for password recovery", message);
+    }
+
+    public void sendCustomerFinalizationMail(String email, String token) {
+        String message = "Click <a href=\"http://localhost:3000/kas/finalize_account/customer/" + token + "\">this link</a> to fill in your customer information and start banking with Omega!.";
+        sendMail(email, "Omega: account created for you", message);
     }
 }

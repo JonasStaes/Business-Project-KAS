@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Order(2)
 @Configuration
 @EnableWebSecurity
 @Profile({Profiles.PRODUCTION, Profiles.DEMO})
@@ -52,8 +54,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
-            .antMatchers("/auth/signin/**").permitAll()
+            .antMatchers("/signin/**").permitAll()
             .antMatchers("/change_password/**").permitAll()
+            .antMatchers("/user/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/credit_request/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString())
             .antMatchers("/admin/**").hasAuthority(Role.ADMINISTRATOR.toString())

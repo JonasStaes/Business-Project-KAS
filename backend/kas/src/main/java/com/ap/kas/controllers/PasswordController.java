@@ -1,9 +1,9 @@
 package com.ap.kas.controllers;
 
-import com.ap.kas.models.PasswordCreateToken;
+import com.ap.kas.models.UserUpdateToken;
 import com.ap.kas.models.User;
 import com.ap.kas.payload.response.MessageResponse;
-import com.ap.kas.repositories.PasswordCreateTokenRepository;
+import com.ap.kas.repositories.UserUpdateTokenRepository;
 import com.ap.kas.repositories.UserRepository;
 import com.ap.kas.services.MailSender;
 
@@ -13,8 +13,8 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import com.ap.kas.dtos.requestdtos.PasswordChangeDto;
 import com.ap.kas.dtos.requestdtos.PasswordChangeRequestDto;
+import com.ap.kas.dtos.updatedtos.PasswordChangeDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,24 +37,24 @@ public class PasswordController {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordCreateTokenRepository passwordCreateTokenRepository;
+    private UserUpdateTokenRepository userUpdateTokenRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private MailSender mailSender;
-    
+
     @PostMapping("/request")
     public ResponseEntity<MessageResponse> createPasswordRequest(@Valid @ModelAttribute PasswordChangeRequestDto passwordChangeRequest) {
         logger.info("Incoming Password Change Request DTO:\n {}", passwordChangeRequest);
         try {
-            User user = userRepository.findByNameAndEmail(passwordChangeRequest.getName(), passwordChangeRequest.getEmail()).orElseThrow();
+            User user = userRepository
+                    .findByNameAndEmail(passwordChangeRequest.getName(), passwordChangeRequest.getEmail())
+                    .orElseThrow();
             String token = UUID.randomUUID().toString();
-            passwordCreateTokenRepository.save(new PasswordCreateToken(token, user));
-            String link = "http://localhost:3000/kas/change_password/" + token;
-            String message = "<a href=\"" + link + "\"> Click this link to create your password and activate your account.</a>";
-            mailSender.sendMail(user.getEmail(), "Your account at Omega has been created", message);
+            userUpdateTokenRepository.save(new UserUpdateToken(token, user));
+            mailSender.sendPasswordRecoveryMail(user.getEmail(), token);
 
             return ResponseEntity.ok(new MessageResponse("Successfully sent password change request!"));
         } catch (NoSuchElementException e) {
@@ -63,17 +63,17 @@ public class PasswordController {
         }
     }
 
-    @PutMapping("/")
     @Transactional
+    @PutMapping("/change")
     public ResponseEntity<MessageResponse> changePassword(@Valid @ModelAttribute PasswordChangeDto passwordChangeDto) {
         try {
-            PasswordCreateToken passwordCreateToken = passwordCreateTokenRepository.findByToken(passwordChangeDto.getToken()).orElseThrow();
+            UserUpdateToken passwordCreateToken = userUpdateTokenRepository
+                    .findByToken(passwordChangeDto.getToken()).orElseThrow();
             User user = passwordCreateToken.getUser();
             user.setPassword(passwordEncoder.encode(new StringBuffer(passwordChangeDto.getPassword())));
-            user.setActive(true);
             userRepository.save(user);
-            passwordCreateTokenRepository.deleteByToken(passwordChangeDto.getToken());
-            return ResponseEntity.ok(new MessageResponse("Successfully set password!"));
+            userUpdateTokenRepository.deleteByToken(passwordChangeDto.getToken());
+            return ResponseEntity.ok(new MessageResponse("Successfully changed password!"));
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid token"));
         }
