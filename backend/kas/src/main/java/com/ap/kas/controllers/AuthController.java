@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("signin")
 public class AuthController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
     
-    @PostMapping("/signin/customer")
+    @PostMapping("/customer")
     public ResponseEntity<JwtResponse> authenticateCustomer(@Valid @ModelAttribute CustomerLoginRequestDto loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getCompanyNr(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -59,7 +59,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), roles));
     }
 
-    @PostMapping("/signin/employee")
+    @PostMapping("/employee")
     public ResponseEntity<JwtResponse> authenticateEmployee(@Valid @ModelAttribute EmployeeLoginRequestDto loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);

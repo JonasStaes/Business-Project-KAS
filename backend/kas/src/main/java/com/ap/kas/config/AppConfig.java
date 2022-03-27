@@ -1,5 +1,6 @@
 package com.ap.kas.config;
 
+import java.time.LocalDate;
 import java.time.Period;
 import java.util.Properties;
 
@@ -15,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+@Order(1)
 @Configuration
 @EnableScheduling
 @ComponentScan({"com.ap.kas.tasks"})
@@ -85,7 +88,14 @@ public class AppConfig {
             }
             
         });
-        
+
+        mapper.addConverter(new Converter<String, LocalDate>() {
+            @Override
+            public LocalDate convert(MappingContext<String, LocalDate> ctx) {
+                return ctx.getSource() == null ? null : LocalDate.parse(ctx.getSource());
+            }
+        });
+
         return mapper;
     }
 

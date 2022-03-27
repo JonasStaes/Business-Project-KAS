@@ -1,13 +1,13 @@
 import http from "./https-common"
 
-const urlBase: string = "auth"
+const urlBase: string = "signin"
 
 class AuthService {
     customerLogin(companyNr: string, password: string) {
         let formData = new FormData();
         formData.append('companyNr', companyNr)
         formData.append('password', password)
-        return http.post(`${urlBase}/signin/customer`, formData)
+        return http.post(`${urlBase}/customer`, formData)
             .then(res => {
                 if(res.data.accessToken) {
                     localStorage.setItem("user", JSON.stringify(res.data));
@@ -20,7 +20,7 @@ class AuthService {
         let formData = new FormData();
         formData.append('email', email)
         formData.append('password', password)
-        return http.post(`${urlBase}/signin/employee`, formData)
+        return http.post(`${urlBase}/employee`, formData)
             .then(res => {
                 if(res.data.accessToken) {
                     localStorage.setItem("user", JSON.stringify(res.data));

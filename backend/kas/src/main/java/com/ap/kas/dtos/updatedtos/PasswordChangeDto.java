@@ -1,4 +1,4 @@
-package com.ap.kas.dtos.requestdtos;
+package com.ap.kas.dtos.updatedtos;
 
 import javax.validation.constraints.NotBlank;
 

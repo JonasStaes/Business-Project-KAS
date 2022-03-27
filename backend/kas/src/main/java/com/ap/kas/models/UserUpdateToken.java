@@ -25,10 +25,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "tblPasswordTokens")
-public class PasswordCreateToken {
+public class UserUpdateToken {
 
     @Id
-    @Column(name = "credit_request_id")
+    @Column(name = "password_token_id")
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
@@ -41,18 +41,18 @@ public class PasswordCreateToken {
     private String token;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
 
     private Date expiryDate;
 
-    public PasswordCreateToken(String token, User user) {
+    public UserUpdateToken(String token, User user) {
         Calendar rightNow = Calendar.getInstance();
         rightNow.add(Calendar.SECOND, EXPIRATION);
+        this.expiryDate = rightNow.getTime();
         this.token = token;
         this.user = user;
-        this.expiryDate = rightNow.getTime();
     }
 }
