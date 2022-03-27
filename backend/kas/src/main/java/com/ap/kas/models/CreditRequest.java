@@ -42,7 +42,7 @@ public class CreditRequest {
 
     private Period duration; 
 
-    private String accountability; 
+    private String investmentType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -53,12 +53,12 @@ public class CreditRequest {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String accountability, Customer customer) {
+    public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String investmentType, Customer customer) {
         this.name = name;
         this.totalAmount = totalAmount;
         this.financedAmount = requestedAmount;
+        this.investmentType = investmentType;
         this.duration = duration;
-        this.accountability = accountability;
         this.customer = customer;
     }
 }

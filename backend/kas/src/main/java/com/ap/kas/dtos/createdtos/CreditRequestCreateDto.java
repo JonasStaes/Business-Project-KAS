@@ -28,7 +28,7 @@ public class CreditRequestCreateDto {
     private Period duration; 
 
     @NotBlank
-    private String accountability; 
+    private String investmentType;
 
     private List<MultipartFile> files;
 

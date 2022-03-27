@@ -1,13 +1,12 @@
 import { Listbox } from "@headlessui/react";
 import { CheckIcon, PlusCircleIcon } from "@heroicons/react/solid";
-import { nanoid } from "nanoid";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CreditRequestService from "../../services/CreditRequest.service";
 
 interface CreditRequest {
   name: string
-  accountability: string
+  investmentType: string
   totalAmount: number
   financedAmount: number
   status: string
@@ -114,7 +113,7 @@ export default function CustomerCreditRequests() {
             <thead className="bg-gray-300 sticky top-0">
               <tr className="h-8">
                 <th>Naam</th>
-                <th>Verantwoording</th>
+                <th>Investeringstype</th>
                 <th>Totaal Bedrag (&euro;)</th>
                 <th>Zelf Gefinancierd Bedrag (&euro;)</th>
                 <th>Status</th>
@@ -124,7 +123,7 @@ export default function CustomerCreditRequests() {
             {filterRequests().map(cr => (
                 <tr key={JSON.stringify(cr)} className="h-8 odd:bg-blue-100">
                   <td className="text-center border-x">{cr.name}</td>
-                  <td className="text-center border-x text-ellipsis">{cr.accountability}</td>
+                  <td className="text-center border-x text-ellipsis">{cr.investmentType}</td>
                   <td className="text-center border-x">{cr.totalAmount}</td>
                   <td className="text-center border-x">{cr.financedAmount}</td>
                   <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{cleanUpStatus(cr.status)}</td>

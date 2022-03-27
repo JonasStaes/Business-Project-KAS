@@ -55,7 +55,6 @@ public class CreditRequestControllerTests {
         creditRequest.setFinancedAmount(100.0f);
         creditRequest.setTotalAmount(200.0f);
         creditRequest.setDuration(Period.ofMonths(2));
-        creditRequest.setAccountability("Test Accountability");
     }
 
     @Test
@@ -86,7 +85,6 @@ public class CreditRequestControllerTests {
         dto.setTotalAmount(creditRequest.getTotalAmount());
         dto.setFinancedAmount(creditRequest.getFinancedAmount());
         dto.setDuration(creditRequest.getDuration());
-        dto.setAccountability(creditRequest.getAccountability());
         //dto.setFiles(fileStorageRepository.findAllByCreditRequest(creditRequest));
 
         //get actual result from mock API call
@@ -103,6 +101,5 @@ public class CreditRequestControllerTests {
         assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
         assertEquals(creditRequest.getFinancedAmount(), actualCreditRequest.getFinancedAmount());
         assertEquals(creditRequest.getDuration(), actualCreditRequest.getDuration());
-        assertEquals(creditRequest.getAccountability(), actualCreditRequest.getAccountability());
     }
 }

@@ -59,7 +59,7 @@ export default function MultipleSelect({inputValues, selectedValues, setSelected
                         value={value}
                       >
                           <li className={[
-                            "py-2 px-2 hover:bg-gray-300 hover:opacity-80 flex",
+                            "p-2 hover:bg-gray-300 hover:opacity-80 flex",
                             (selected ? "bg-main-0 text-white" : "bg-transparent text-black"),
                           ].join(" ")}>
                             <span className={[
