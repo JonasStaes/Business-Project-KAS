@@ -2,9 +2,9 @@ import { Transition } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AdminService from "../../services/Admin.service";
-import UserService from "../../services/User.service";
-import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
+import AdminService from "../../../services/Admin.service";
+import UserService from "../../../services/User.service";
+import { StyledInput, StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
 
 export default function NewCustomer() {
   const navigate = useNavigate(); 

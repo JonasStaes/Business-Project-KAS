@@ -1,11 +1,13 @@
-import '../../App.css'
+import { FC } from 'react';
 import AuthenticatedHome from '../genericcomponents/HomeMenuAuthenticated.component';
 import UserMenu from '../genericcomponents/UserMenu.component';
 
-export default function AdminHome() {
+const EmployeeHome: FC = ({}) => {
     return(
         <AuthenticatedHome>
             <UserMenu/>
         </AuthenticatedHome>
     );
 }
+
+export default EmployeeHome;

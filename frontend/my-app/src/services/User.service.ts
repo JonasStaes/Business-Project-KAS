@@ -33,6 +33,19 @@ class UserService {
             formData.append("socialRegistryNr", socialRegistryNr.toString());
             return http.put(`${urlBase}/finalizeCustomer`, formData);
     }
+
+    requestEmployeeFinalization(email: string) {
+        let formData = new FormData();
+        formData.append("email", email)
+        http.post(`${urlBase}/requestEmployee`, formData)
+    }
+
+    finalizeEmployee(token: string, password: string) {
+        let formData = new FormData();
+        formData.append("token", token)
+        formData.append("password", password);
+        return http.put(`${urlBase}/finalizeEmployee`, formData);
+    }
 }
 
 export default new UserService();
