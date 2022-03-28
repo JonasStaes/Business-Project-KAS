@@ -1,10 +1,11 @@
-import { Listbox, Transition } from "@headlessui/react";
+import { Transition } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
 import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AdminService from "../../services/Admin.service";
-import MultipleSelect from "../genericcomponents/MultipleSelect.component";
-import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
+import AdminService from "../../../services/Admin.service";
+import UserService from "../../../services/User.service";
+import MultipleSelect from "../../genericcomponents/MultipleSelect.component";
+import { StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
 
 export default function NewEmployee() {
     const navigate = useNavigate(); 
@@ -50,7 +51,7 @@ export default function NewEmployee() {
         AdminService.createEmployee(name, email, selectedValues)
           .then(res => {
             console.info(res);
-            //PasswordService.passwordChangeRequest(name, email)
+            UserService.requestEmployeeFinalization(email);
             navigate("../users");
           })
           .catch(e => {

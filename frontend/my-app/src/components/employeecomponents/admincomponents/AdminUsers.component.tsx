@@ -1,8 +1,7 @@
 import { PlusCircleIcon } from "@heroicons/react/solid";
-import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AdminService from "../../services/Admin.service";
+import AdminService from "../../../services/Admin.service";
 
 interface User {
   name: string

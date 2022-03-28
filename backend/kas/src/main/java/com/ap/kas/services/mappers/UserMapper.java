@@ -6,6 +6,7 @@ import com.ap.kas.dtos.createdtos.CustomerCreateDto;
 import com.ap.kas.dtos.createdtos.EmployeeCreateDto;
 import com.ap.kas.dtos.readdtos.UserReadDto;
 import com.ap.kas.dtos.updatedtos.CustomerInfoDto;
+import com.ap.kas.dtos.updatedtos.EmployeeInfoDto;
 import com.ap.kas.models.Address;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
@@ -25,6 +26,12 @@ public class UserMapper {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public UserReadDto convertCustomerToUserReadDto(Customer customer) {
+        UserReadDto output = modelMapper.map(customer, UserReadDto.class);
+        output.addRole(customer.getRole());
+        return output;
+    }
+
     public Customer createCustomerFromDto(CustomerCreateDto customerCreateDto) {
         return modelMapper.map(customerCreateDto, Customer.class);
     }
@@ -36,17 +43,16 @@ public class UserMapper {
         return customer;
     }
 
-    public UserReadDto convertCustomerToUserReadDto(Customer customer) {
-        UserReadDto output = modelMapper.map(customer, UserReadDto.class);
-        output.addRole(customer.getRole());
-        return output;
-    }
-
     public UserReadDto convertEmployeeToUserReadDto(Employee employee) {
         return modelMapper.map(employee, UserReadDto.class);
     }
 
     public Employee createEmployeeFromDto(@Valid EmployeeCreateDto employeeCreateDto) {
         return modelMapper.map(employeeCreateDto, Employee.class);
+    }
+
+    public Employee addEmployeeInformationFromDto(EmployeeInfoDto employeeInfoDto, Employee employee) {
+        employee.setPassword(passwordEncoder.encode(new StringBuffer(employeeInfoDto.getPassword())));
+        return employee;
     }
 }

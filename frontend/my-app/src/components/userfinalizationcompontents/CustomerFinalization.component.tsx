@@ -104,16 +104,6 @@ export default function CustomerFinalization() {
 
     const sendCustomerData = (e: FormEvent) => {
         e.preventDefault()
-        console.log("token: " + params.tokenId!)
-        console.log("password: " + password)
-        console.log("township: " + township)
-        console.log("homeNumber: " + homeNumber) 
-        console.log("streetName: " + streetName) 
-        console.log("postalCode: " + postalCode) 
-        console.log("birthplace: " + birthplace) 
-        console.log("birthDate: " + birthDate.toString())
-        console.log("phoneNr: " + phoneNr) 
-        console.log("socialRegistryNr: " + socialRegistryNr)
         UserService.finalizeCustomer(params.tokenId!, password, township, homeNumber, streetName, postalCode, birthplace, birthDate.toISOString().substring(0,10), phoneNr, socialRegistryNr)
             .then(res => {
                 navigate('../../kas/login');

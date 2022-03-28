@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router } from "react-router-dom";
-import { AdminRoutes, AuthRoutes, CustomerRoutes } from './components/Router';
+import { EmployeeRoutes, AuthRoutes, CustomerRoutes } from './components/Router';
 import AuthService from './services/Auth.service';
 
 export default function App() {
@@ -21,7 +21,7 @@ export default function App() {
   } else if(AuthService.isAdmin()) {
     return(
       <Router>
-        <AdminRoutes/>
+        <EmployeeRoutes/>
       </Router>
     );
   } else {
