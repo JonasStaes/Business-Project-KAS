@@ -3,7 +3,6 @@ import {
     Route,
     Navigate
 } from "react-router-dom";
-import CustomerHome from "./customercomponents/CustomerHome.component";
 import CustomerCreditRequests from "./customercomponents/CustomerCreditRequests.component";
 import CustomerNewCreditRequest from "./customercomponents/CustomerNewCreditRequest.component";
 import AdminUsers from "./employeecomponents/admincomponents/AdminUsers.component";
@@ -17,12 +16,14 @@ import UnauthenticatedHome from "./genericcomponents/HomeMenuUnauthenticated.com
 import EmployeeHome from "./employeecomponents/EmployeeHome.component";
 import AuthService from "../services/Auth.service";
 import EmployeeFinalization from "./userfinalizationcompontents/EmployeeFinalization.component";
+import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/RatingAgentOverview.component";
+import AuthenticatedHome from "./genericcomponents/HomeMenuAuthenticated.component";
 
 
 export function CustomerRoutes() {
     return (
         <Routes>
-            <Route path="kas/customer" element={<CustomerHome/>}>
+            <Route path="kas/customer" element={<AuthenticatedHome/>}>
                 <Route index element={<Navigate replace to="/kas/customer/credit_requests"/>}/>
                 <Route path="credit_requests" element={<CustomerCreditRequests/>}/>
                 <Route path="new_credit_request" element={<CustomerNewCreditRequest/>}/>
@@ -42,6 +43,12 @@ export function EmployeeRoutes() {
                         <Route path ="users" element ={<AdminUsers/>}/>
                         <Route path ="new_customer" element ={<AdminNewCustomer/>}/>
                         <Route path ="new_employee" element ={<AdminNewEmployee/>}/>
+                    </Route>
+                }
+                {AuthService.isRatingAgent() && 
+                    <Route path="rating_agent">
+                        <Route index element={<Navigate replace to="/kas/employee/rating_agent/credit_requests"/>}/>
+                        <Route path="credit_requests" element={<RatingAgentOverview/>}/>
                     </Route>
                 }
             </Route>

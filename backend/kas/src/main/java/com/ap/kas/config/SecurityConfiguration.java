@@ -60,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/credit_request/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString())
             .antMatchers("/admin/**").hasAuthority(Role.ADMINISTRATOR.toString())
+            .antMatchers("/rating_agent/**").hasAuthority(Role.KREDIET_BEOORDELAAR.toString())
             .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
