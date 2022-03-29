@@ -29,6 +29,10 @@ class AdminService {
         } 
         return http.post(`${urlBase}/newEmployee`, formData)
     }
+
+    deactivate(id: string){
+        return http.put(`${urlBase}/users/${id}`)
+    }
 }
 
 export default new AdminService();

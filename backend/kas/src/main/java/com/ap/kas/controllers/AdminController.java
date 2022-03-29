@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
@@ -24,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -105,4 +108,32 @@ public class AdminController {
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create employee"));
         }
     }
+
+    @PutMapping(value="/users/{id}")
+    public ResponseEntity<MessageResponse> deactivateUser(@PathVariable String id) {
+        logger.info("Incoming deactivation request:\n {}", id);
+        try{
+            if(customerRepository.existsById(id)){
+                Customer toBeUpdatedCustomer = customerRepository.getById(id);
+                toBeUpdatedCustomer.setActive(false);
+                customerRepository.save(toBeUpdatedCustomer);
+                logger.info("Customer deactivated");
+            }
+            else{
+                Employee toBeUpdatedEmployee = employeeRepository.getById(id);
+                toBeUpdatedEmployee.setActive(false);
+                employeeRepository.save(toBeUpdatedEmployee);
+                logger.info("Employee deactivated");
+            }
+            
+            return ResponseEntity.ok(new MessageResponse("Succesfully deactivated user!"));
+        } catch(Exception e){
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to create user"));
+        }
+    }
+
+    
+
+
+
 }
