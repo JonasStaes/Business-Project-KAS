@@ -46,6 +46,8 @@ class UserService {
         formData.append("password", password);
         return http.put(`${urlBase}/finalizeEmployee`, formData);
     }
+
+    
 }
 
 export default new UserService();
