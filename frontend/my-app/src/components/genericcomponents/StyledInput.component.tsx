@@ -29,7 +29,7 @@ export const StyledInputWithLabel: FC<InferProps<StyledInputWithLabelPropTypes>>
     return(
         <div className="pb-4">
             <div className="relative group">
-                <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-xl peer" 
+                <input className="border-x-0 border-t-0 border-b-2 border-main-0 bg-transparent w-full h-10 px-4 text-lg peer" 
                     id={id}
                     type={type} 
                     required

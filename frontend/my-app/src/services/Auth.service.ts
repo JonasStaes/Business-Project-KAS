@@ -51,11 +51,15 @@ class AuthService {
     }
 
     isCustomer() {
-        return this.getRoles().includes(("KLANT"))
+        return this.getRoles().includes("KLANT")
     }
 
     isAdmin() {
-        return this.getRoles().includes(("ADMINISTRATOR"))
+        return this.getRoles().includes("ADMINISTRATOR")
+    }
+
+    isRatingAgent() {
+        return this.getRoles().includes("KREDIET_BEOORDELAAR")
     }
 }
 

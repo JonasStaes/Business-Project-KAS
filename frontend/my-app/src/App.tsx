@@ -18,17 +18,13 @@ export default function App() {
         <CustomerRoutes/>
       </Router>
     );
-  } else if(AuthService.isAdmin()) {
+  } else  {
     return(
       <Router>
         <EmployeeRoutes/>
       </Router>
     );
-  } else {
-    return(
-      <div>something went horribly wrong</div>
-    );
-  }
+  } 
 
 } 
 

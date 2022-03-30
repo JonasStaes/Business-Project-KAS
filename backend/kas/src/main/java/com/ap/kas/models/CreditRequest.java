@@ -53,6 +53,8 @@ public class CreditRequest {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    private String approvalNote;
+
     public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String investmentType, Customer customer) {
         this.name = name;
         this.totalAmount = totalAmount;
