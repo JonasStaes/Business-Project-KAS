@@ -1,5 +1,5 @@
 import { number } from "prop-types";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserService from "../../services/User.service";
 import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
@@ -9,6 +9,8 @@ export default function CustomerFinalization() {
     let params = useParams();
 
     const [password, setPassword] = useState<string>("");
+    const [passwordCheck, setPasswordCheck] = useState<string>("");
+    const [passwordValid, setPasswordValid] = useState<boolean>(false);
 
     const [township, setTownship] = useState<string>("");
 
@@ -21,18 +23,33 @@ export default function CustomerFinalization() {
 
     const [birthplace, setBirthplace] = useState<string>("");
 
-    //const [birthDate, setBirthDate] = useState<Date>(new Date());
     const [birthDate, setBirthDate] = useState<Date>(new Date());
 
     const [phoneNr, setPhoneNr] = useState<number>(0);
 
     const [socialRegistryNr, setSocialRegistryNr] = useState<number>(0);
 
+    const checkIfPasswordValid = useCallback(() => {
+        setPasswordValid(password === passwordCheck && password.trim().length > 0);
+    }, [password, passwordCheck]);
+  
+    useEffect(() => {
+        checkIfPasswordValid();
+    }, [checkIfPasswordValid]);
+
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         if(e.target.validity.valid && e.target.value.trim().length !== 0) {
             setPassword(e.target.value)
         } else {
             setPassword("")
+        }
+    }
+
+    const handlePasswordCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
+            setPasswordCheck(e.target.value)
+        } else {
+            setPasswordCheck("")
         }
     }
 
@@ -115,21 +132,20 @@ export default function CustomerFinalization() {
     }
 
     return(
-        <div className="mx-auto flex flex-col py-4 items-center w-9/12 bg-main-1 rounded shadow">
+        <div className="mx-auto flex flex-col py-4 items-center w-11/12 bg-main-1 rounded shadow">
             <form
-                className="text-black py-4 px-4 w-full"
+                className="text-black p-4 w-full"
                 onSubmit={sendCustomerData}
                 encType="multipart/form-data"
             >
                 <div className="flex flex-row gap-x-8">
-                    <div>
-                        <StyledInputWithLabel id="password" type="password" inputMode="text" validateChange={handlePasswordChange} text="wachtwoord"/>
+                    <div className="grow">
                         <StyledInputWithLabel id="township" type="text" inputMode="text" validateChange={handleTownShipChange} text="gemeente"/>
                         <StyledInputWithLabel id="homenumber" type="number" inputMode="numeric" validateChange={handleHomeNumberChange} text="huisnummer"/>
                         <StyledInputWithLabel id="streetname" type="text" inputMode="text" validateChange={handleStreetNameChange} text="straatnaam"/>
                         <StyledInputWithLabel id="postalcode" type="number" inputMode="numeric" validateChange={handlePostalCodeChange} text="postcode"/>
                     </div>
-                    <div>
+                    <div className="grow">
                         <StyledInputWithLabel id="birthplace" type="string" inputMode="text" validateChange={handleBirthplaceChange} text="geboorteplaats"/>
                         <StyledInput id="birthdate" type="date" inputMode="numeric" validateChange={handleBirthDateChange}>
                             <label className="before:content-['geboortedatum'] uppercase text-xs absolute -top-4"/>
@@ -138,8 +154,17 @@ export default function CustomerFinalization() {
                         <StyledInputWithLabel id="socialregistrynr" type="number" inputMode="numeric" validateChange={handleSocialRegistryNrChange} text="rijksregisternr"/>
                     </div>
                 </div>
+                <div className="flex flex-row gap-x-8">
+                    <div className="grow">
+                        <StyledInputWithLabel id="password" type="password" inputMode="text" validateChange={handlePasswordChange} text="wachtwoord"/>
+                    </div>
+                    <div className="grow">
+                        <StyledInputWithLabel id="password check" type="password" inputMode="text" validateChange={handlePasswordCheckChange} text="herhaal wachtwoord"/>
+                    </div>
+                </div>
                 <input type="submit" value="Activeer account"
-                    className="bg-main-accepted text-white px-8 py-1 rounded shadow w-full"
+                    className="bg-main-accepted text-white px-8 py-1 rounded shadow w-full disabled:bg-gray-400 disabled:opacity-50"
+                    disabled={!passwordValid}
                 />
             </form>
         </div>

@@ -18,6 +18,7 @@ import AuthService from "../services/Auth.service";
 import EmployeeFinalization from "./userfinalizationcompontents/EmployeeFinalization.component";
 import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/RatingAgentOverview.component";
 import AuthenticatedHome from "./genericcomponents/HomeMenuAuthenticated.component";
+import RateCreditRequest from "./employeecomponents/ratingagentcomponents/RatingAgentRateRequest.component";
 
 
 export function CustomerRoutes() {
@@ -49,6 +50,7 @@ export function EmployeeRoutes() {
                     <Route path="rating_agent">
                         <Route index element={<Navigate replace to="/kas/employee/rating_agent/credit_requests"/>}/>
                         <Route path="credit_requests" element={<RatingAgentOverview/>}/>
+                        <Route path="credit_request/:Id" element={<RateCreditRequest/>}/>
                     </Route>
                 }
             </Route>

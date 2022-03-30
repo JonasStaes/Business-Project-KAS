@@ -1,9 +1,11 @@
 import { Listbox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/solid";
 import { FC, Fragment, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import RatingAgentService from "../../../services/RatingAgent.service";
 
 interface CreditRequest {
+    id: string
     name: string
     investmentType: string
     totalAmount: number
@@ -19,6 +21,8 @@ const statuses = [
   ]
 
 const RatingAgentOverview: FC = ({}) => {
+    const navigate = useNavigate();
+
     const [selectedStatus, setSelectedStatus] = useState<string>(statuses[0])
     const [creditRequests, setCreditRequests] = useState<Array<CreditRequest>>([]);
   
@@ -70,6 +74,10 @@ const RatingAgentOverview: FC = ({}) => {
         return tempStyle;
     }
 
+    const handleRowClick = (id: string) => {
+        navigate(`.././credit_request/${id}`);
+    }
+
     return(
         <div className="mx-auto max-w-6xl py-4 h-screen">
             <div className="flex items-center justify-end flex-wrap container pb-4 gap-16">
@@ -116,7 +124,7 @@ const RatingAgentOverview: FC = ({}) => {
             </thead>
             <tbody>
             {filterRequests().map(cr => (
-                <tr key={JSON.stringify(cr)} className="h-8 odd:bg-blue-100">
+                <tr key={JSON.stringify(cr)} className="h-8 odd:bg-blue-100" onClick={() => handleRowClick(cr.id)}>
                   <td className="text-center border-x">{cr.name}</td>
                   <td className="text-center border-x text-ellipsis">{cr.investmentType}</td>
                   <td className="text-center border-x">{cr.totalAmount}</td>

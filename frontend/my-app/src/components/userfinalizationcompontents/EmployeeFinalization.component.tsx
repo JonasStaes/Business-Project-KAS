@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserService from "../../services/User.service";
 import { StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
@@ -8,12 +8,30 @@ export default function EmployeeFinalization() {
     let params = useParams();
 
     const [password, setPassword] = useState<string>("");
+    const [passwordCheck, setPasswordCheck] = useState<string>("");
+    const [passwordValid, setPasswordValid] = useState<boolean>(false);
+
+    const checkIfPasswordValid = useCallback(() => {
+        setPasswordValid(password === passwordCheck && password.trim().length > 0);
+    }, [password, passwordCheck]);
+  
+    useEffect(() => {
+        checkIfPasswordValid();
+    }, [checkIfPasswordValid]);
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         if(e.target.validity.valid && e.target.value.trim().length !== 0) {
             setPassword(e.target.value)
         } else {
             setPassword("")
+        }
+    }
+
+    const handlePasswordCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
+            setPasswordCheck(e.target.value)
+        } else {
+            setPasswordCheck("")
         }
     }
 
@@ -38,9 +56,11 @@ export default function EmployeeFinalization() {
             >
                 <div className="flex flex-row gap-x-8">
                     <StyledInputWithLabel id="password" type="password" inputMode="text" validateChange={handlePasswordChange} text="wachtwoord"/>
+                    <StyledInputWithLabel id="password check" type="password" inputMode="text" validateChange={handlePasswordCheckChange} text="herhaal wachtwoord"/>
                 </div>
                 <input type="submit" value="Activeer account"
                     className="bg-main-accepted text-white px-8 py-1 rounded shadow w-full"
+                    disabled={!passwordValid}
                 />
             </form>
         </div>
