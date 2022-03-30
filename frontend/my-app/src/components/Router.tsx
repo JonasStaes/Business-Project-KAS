@@ -13,7 +13,7 @@ import ChangePassword from "./passwordcomponents/ChangePassword.component";
 import PasswordChangeRequest from "./passwordcomponents/PasswordChangeRequest.component";
 import CustomerFinalization from "./userfinalizationcompontents/CustomerFinalization.component";
 import UnauthenticatedHome from "./genericcomponents/HomeMenuUnauthenticated.component";
-import EmployeeHome from "./employeecomponents/EmployeeHome.component";
+import EmployeeHomeLinks, { EmployeeHome } from "./employeecomponents/EmployeeHome.component";
 import AuthService from "../services/Auth.service";
 import EmployeeFinalization from "./userfinalizationcompontents/EmployeeFinalization.component";
 import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/RatingAgentOverview.component";
@@ -37,7 +37,8 @@ export function CustomerRoutes() {
 export function EmployeeRoutes() {
     return(
         <Routes>
-            <Route path="kas/employee" element={<EmployeeHome/>}>
+            <Route path="kas/employee" element={<EmployeeHomeLinks/>}>
+                <Route index element={<EmployeeHome/>}/>
                 {AuthService.isAdmin() &&
                     <Route path="admin">
                         <Route index element={<Navigate replace to="/kas/employee/admin/users"/>}/>

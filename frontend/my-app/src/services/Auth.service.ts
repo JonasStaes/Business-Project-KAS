@@ -61,6 +61,14 @@ class AuthService {
     isRatingAgent() {
         return this.getRoles().includes("KREDIET_BEOORDELAAR")
     }
+
+    isCompliance() {
+        return this.getRoles().includes("COMPLIANCE")
+    }
+
+    isCommercialDirection() {
+        return this.getRoles().includes("COMMERCIELE_DIRECTIE")
+    }
 }
 
 export default new AuthService();
