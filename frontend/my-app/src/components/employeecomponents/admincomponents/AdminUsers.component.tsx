@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { ExclamationCircleIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminService from "../../../services/Admin.service";
@@ -41,7 +41,7 @@ export default function AdminUsers() {
       AdminService.getAllRoles().then(res => console.log(res.data))
     }, [getUsers])
 
-    function deactivateUser(id: string, active: boolean){
+    const deactivateUser = (id: string, active: boolean) => {
 
       if (active === false){
         alert("Deze klant is al inactief!")
@@ -91,7 +91,12 @@ export default function AdminUsers() {
                   <td className="text-center border-x">{usr.email}</td>
                   <td className="text-center border-x truncate">{cleanUpRoles(usr.roles)}</td>
                   <td className="text-center border-x">{usr.active.toString()}</td>
-                  <td> <input type="button" className="button" value="Deactiveren" onClick={() => deactivateUser(usr.id, usr.active)} /></td>
+                  <td className="p-2 flex justify-center">
+                    <button className="bg-yellow-300 px-2 rounded flex flex-row items-center" onClick={() => deactivateUser(usr.id, usr.active)}>
+                      <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
+                      Deactiveren
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

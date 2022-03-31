@@ -1,10 +1,9 @@
 import { Transition } from "@headlessui/react";
-import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
-import { useState, useCallback, useEffect } from "react";
+import { ArrowCircleLeftIcon, CheckCircleIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
+import { useState, useCallback, useEffect, ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AdminService from "../../../services/Admin.service";
 import UserService from "../../../services/User.service";
-import MultipleSelect from "../../genericcomponents/MultipleSelect.component";
 import { StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
 
 export default function NewEmployee() {
@@ -44,7 +43,8 @@ export default function NewEmployee() {
 
     useEffect(() => {
       getRoles();
-    }, [getRoles]);
+      console.log(selectedValues)
+    }, [selectedValues, getRoles]);
 
     function submitEmployee() {
       if(name !== "" && email !== "" && selectedValues.length > 0) {
@@ -60,19 +60,45 @@ export default function NewEmployee() {
       }
     }
 
+    const cleanUpRole = (role: string) => {
+      return role.toLowerCase().replaceAll(/_/g, " ")
+    }
+
+    const handleCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const { value, checked } = e.target;
+
+      if(checked) {
+        setSelectedValues([...selectedValues, value])
+      } else {
+        setSelectedValues(selectedValues.filter((selectedValue) => selectedValue !== value))
+      }
+    } 
+
     return(
-      <div className="mx-auto max-w-3xl py-8">
-        <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6">
-          <div className="flex justify-between gap-8">
-            <div className="w-full flex flex-row justify-between">
-              <div>
+      <div className="container w-full py-8">
+        <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6 w-3/5 h-1/3 mx-auto">
+          <div className="container flex flex-row gap-8">
+              <div className="container">
                 <StyledInputWithLabel id="name" type="text" validateChange={handleNameInputChange} text="naam"/>
                 <StyledInputWithLabel id="email" type="email" validateChange={handleEmailInputChange} text="e-mail"/>
               </div>
-              <div className="w-80">
-                <MultipleSelect inputValues={roles} selectedValues={selectedValues} setSelectedValues={setSelectedValues}/>
+              <div className="flex flex-row flex-wrap gap-2">
+                {roles.map(role => (
+                  <div key={role}>
+                    <input type="checkbox" id={role} value={role} className="peer hidden w-full" onChange={handleCheckChange}/>  
+                    <label htmlFor={role} className={[ 
+                      "peer-checked:bg-main-0 peer-checked:fill-current peer-checked:text-main-1",
+                      "bg-gray-400 fill-gray-400 text-black",
+                      "px-4 py-2 rounded-3xl border-2 border-main-0",
+                      "flex flex-row items-center capitalize "
+                      ].join(" ")}
+                    >
+                      <CheckCircleIcon className="h-7 w-7 mr-2 fill-inherit"/>
+                      {cleanUpRole(role)}
+                    </label>
+                  </div>
+                ))}
               </div>
-            </div>
           </div>
           <div className="w-full flex justify-between">
               <Link to="../users" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
