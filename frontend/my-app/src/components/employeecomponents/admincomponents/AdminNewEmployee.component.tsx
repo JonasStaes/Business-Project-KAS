@@ -31,7 +31,7 @@ export default function NewEmployee() {
     }
 
     const getRoles = useCallback(() => {
-      AdminService.getAllRoles()
+      AdminService.getEmployeeRoles()
         .then(res => {
           console.log(res.data)
           setRoles(res.data.data)

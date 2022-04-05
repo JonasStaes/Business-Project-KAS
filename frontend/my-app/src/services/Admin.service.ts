@@ -7,7 +7,15 @@ class AdminService {
     }
 
     getAllRoles() {
-        return http.get(`${urlBase}/allroles`);
+        return http.get(`${urlBase}/allRoles`)
+    }
+
+    getCustomerRoles() {
+        return http.get(`${urlBase}/customerRoles`);
+    }
+
+    getEmployeeRoles() {
+        return http.get(`${urlBase}/employeeRoles`);
     }
 
     createCustomer(name: string, email: string, companyNr: number) {

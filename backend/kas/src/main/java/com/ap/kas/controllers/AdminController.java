@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
@@ -60,17 +59,35 @@ public class AdminController {
             
             return ResponseEntity.ok(new MessageResponse("Got all users!", users));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("Failed to map a user", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a user"));
         }
     }
 
-    @GetMapping("/allroles")
+    @GetMapping("/allRoles")
     public ResponseEntity<MessageResponse> readRoles() {
         try {
             return ResponseEntity.ok(new MessageResponse("Got all roles!", Arrays.asList(Role.values())));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to get all roles"));
+        }
+    }
+
+    @GetMapping("/employeeRoles")
+    public ResponseEntity<MessageResponse> readEmployeeRoles() {
+        try {
+            return ResponseEntity.ok(new MessageResponse("Got employee roles!", Role.getEmployeeRoles()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to get employee roles"));
+        }
+    }
+
+    @GetMapping("/customerRoles")
+    public ResponseEntity<MessageResponse> readCustomerRoles() {
+        try {
+            return ResponseEntity.ok(new MessageResponse("Got customer roles!", Role.getCustomerRoles()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to get customer roles"));
         }
     }
 
