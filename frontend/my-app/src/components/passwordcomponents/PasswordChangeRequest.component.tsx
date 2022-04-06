@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import PasswordService from "../../services/Password.service";
+import PasswordService from "../../services/api/Password.service";
 
 export default function PasswordChangeRequest() {
     const [name, setName] = useState<string>("");

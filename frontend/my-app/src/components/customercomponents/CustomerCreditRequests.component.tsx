@@ -2,7 +2,8 @@ import { Listbox } from "@headlessui/react";
 import { CheckIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import CreditRequestService from "../../services/CreditRequest.service";
+import CreditRequestService from "../../services/api/CreditRequest.service";
+import TextParserService from "../../services/frontend/TextParser.service";
 
 interface CreditRequest {
   name: string
@@ -52,10 +53,6 @@ export default function CustomerCreditRequests() {
       getCreditRequests()
     }, [getCreditRequests])
 
-    const cleanUpStatus = (status: string) => {
-      return status.toLowerCase().replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
-    }
-
     const modifyStatusRow = (status: string) => {
       let tempStyle = ""
       switch(status.toLowerCase()) {
@@ -82,7 +79,7 @@ export default function CustomerCreditRequests() {
             onChange={setSelectedStatus} 
           >
             <Listbox.Label>Filter status: </Listbox.Label>
-            <Listbox.Button>{cleanUpStatus(selectedStatus)}</Listbox.Button>
+            <Listbox.Button>{TextParserService.cleanUpStatus(selectedStatus)}</Listbox.Button>
             <Listbox.Options className="absolute right-0 top-10 z-10 shadow rounded bg-white cursor-pointer divide-y divide-gray-300">
               {statuses.map((status) => (
                 <Listbox.Option
@@ -96,7 +93,7 @@ export default function CustomerCreditRequests() {
                         (selected ? "bg-main-0 text-white" : "bg-transparent text-black")
                     ].join(" ")}>
                       {selected && <CheckIcon className="fill-current h-7 w-7 mr-2"/>}
-                      {cleanUpStatus(status)}
+                      {TextParserService.cleanUpStatus(status)}
                     </li>
                   )}
                 </Listbox.Option>
@@ -126,7 +123,7 @@ export default function CustomerCreditRequests() {
                   <td className="text-center border-x text-ellipsis">{cr.investmentType}</td>
                   <td className="text-center border-x">{cr.totalAmount}</td>
                   <td className="text-center border-x">{cr.financedAmount}</td>
-                  <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{cleanUpStatus(cr.status)}</td>
+                  <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{TextParserService.cleanUpStatus(cr.status)}</td>
                 </tr>
               ))}
             </tbody>

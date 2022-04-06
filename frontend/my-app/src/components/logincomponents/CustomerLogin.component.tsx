@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import AuthService from "../../services/Auth.service";
+import AuthService from "../../services/api/Auth.service";
 
 export default function CustomerLogin() {
     const [companyNr, setCompanyNr] = useState<string>("");

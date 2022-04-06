@@ -1,9 +1,8 @@
 import { ExclamationCircleIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AdminService from "../../../services/Admin.service";
-import UserService from "../../../services/User.service";
-
+import AdminService from "../../../services/api/Admin.service";
+import TextParserService from "../../../services/frontend/TextParser.service";
 
 interface User {
   id: string
@@ -27,14 +26,6 @@ export default function AdminUsers() {
           console.error(e);
         });
     }, [])
-
-    const cleanUpRoles = (roles: Array<string>) => {
-      return roles.map(role => cleanUpRole(role)).join(", ");
-    }
-
-    const cleanUpRole = (role: string) => {
-      return role.replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
-    }
 
     useEffect(() => {
       getUsers()
@@ -89,7 +80,7 @@ export default function AdminUsers() {
                 <tr key={JSON.stringify(usr)} className="odd:bg-blue-200 h-8">
                   <td className="text-center border-x">{usr.name}</td>
                   <td className="text-center border-x">{usr.email}</td>
-                  <td className="text-center border-x truncate">{cleanUpRoles(usr.roles)}</td>
+                  <td className="text-center border-x truncate">{TextParserService.cleanUpRoles(usr.roles)}</td>
                   <td className="text-center border-x">{usr.active.toString()}</td>
                   <td className="p-2 flex justify-center">
                     <button className="bg-yellow-300 px-2 rounded flex flex-row items-center" onClick={() => deactivateUser(usr.id, usr.active)}>

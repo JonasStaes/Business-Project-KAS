@@ -1,9 +1,9 @@
-import { Transition } from "@headlessui/react";
-import { ArrowCircleLeftIcon, CheckCircleIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
+import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { useState, useCallback, useEffect, ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AdminService from "../../../services/Admin.service";
-import UserService from "../../../services/User.service";
+import AdminService from "../../../services/api/Admin.service";
+import UserService from "../../../services/api/User.service";
+import SelectChip from "../../genericcomponents/SelectChip.component";
 import { StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
 
 export default function NewEmployee() {
@@ -43,7 +43,6 @@ export default function NewEmployee() {
 
     useEffect(() => {
       getRoles();
-      console.log(selectedValues)
     }, [selectedValues, getRoles]);
 
     function submitEmployee() {
@@ -58,10 +57,6 @@ export default function NewEmployee() {
             console.error(e);
           })
       }
-    }
-
-    const cleanUpRole = (role: string) => {
-      return role.toLowerCase().replaceAll(/_/g, " ")
     }
 
     const handleCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,19 +79,7 @@ export default function NewEmployee() {
               </div>
               <div className="flex flex-row flex-wrap gap-2">
                 {roles.map(role => (
-                  <div key={role}>
-                    <input type="checkbox" id={role} value={role} className="peer hidden w-full" onChange={handleCheckChange}/>  
-                    <label htmlFor={role} className={[ 
-                      "peer-checked:bg-main-0 peer-checked:fill-current peer-checked:text-main-1",
-                      "bg-gray-400 fill-gray-400 text-black",
-                      "px-4 py-2 rounded-3xl border-2 border-main-0",
-                      "flex flex-row items-center capitalize "
-                      ].join(" ")}
-                    >
-                      <CheckCircleIcon className="h-7 w-7 mr-2 fill-inherit"/>
-                      {cleanUpRole(role)}
-                    </label>
-                  </div>
+                  <SelectChip key={role} role={role} onCheckChange={handleCheckChange}/>
                 ))}
               </div>
           </div>
@@ -113,38 +96,6 @@ export default function NewEmployee() {
               </button>
           </div>
       </div>
-      <Transition className="absolute inset-x-0 top-4 mx-auto max-w-lg"
-        show={false}
-        enter="transition ease-in-out duration-300 transform"
-        enterFrom="-translate-y-full"
-        enterTo="translate-y-0"
-        leave="transition ease-in-out duration-300 transform"
-        leaveFrom="translate-y-0"
-        leaveTo="-translate-y-full"
-      >
-        <div className="shadow rounded-lg bg-main-1">
-          <button className="absolute top-0 right-0"
-            
-          >
-            <XIcon className="h-6 w-6"/>
-          </button>
-          <div className="p-2">
-            <div className="flex justify-center">
-              <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2 text-main-declined"/>
-              
-            </div>
-          </div>
-          
-          <Transition.Child
-            enter="transform transition origin-left duration-[4000ms]"
-            enterFrom="scale-x-100"
-            enterTo="scale-x-0"
-            leave="scale-x-0"
-          >
-            <div className="w-full h-2 bg-main-declined"/>
-          </Transition.Child>
-        </div>
-      </Transition>
     </div>
     );
 }

@@ -1,6 +1,6 @@
 import { UserCircleIcon } from '@heroicons/react/solid';
 import { Menu } from '@headlessui/react';
-import AuthService from '../../services/Auth.service';
+import AuthService from '../../services/api/Auth.service';
 import { FC } from 'react';
 
 const UserMenu: FC = ({}) => {

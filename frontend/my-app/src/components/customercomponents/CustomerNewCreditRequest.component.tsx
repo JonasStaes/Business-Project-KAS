@@ -2,7 +2,7 @@ import { Listbox } from "@headlessui/react";
 import { ArrowCircleLeftIcon, DocumentAddIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import React, { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import CreditRequestService from "../../services/CreditRequest.service";
+import CreditRequestService from "../../services/api/CreditRequest.service";
 import { StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
 
 interface investmentType {

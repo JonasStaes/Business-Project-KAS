@@ -1,24 +1,19 @@
-import { Transition } from "@headlessui/react";
-import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
+import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AdminService from "../../../services/Admin.service";
-import UserService from "../../../services/User.service";
-import { StyledInput, StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
+import AdminService from "../../../services/api/Admin.service";
+import UserService from "../../../services/api/User.service";
+import AlertToast from "../../genericcomponents/AlertToast.component";
+import { StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
 
 export default function NewCustomer() {
-  const navigate = useNavigate(); 
- 
+    const navigate = useNavigate(); 
 
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [companyNr, setCompanyNr] = useState<number>(0);
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [companyNr, setCompanyNr] = useState<number>(0);
 
-  const [timeOutID, setTimeOutID] = useState<number>(0);
-  const [errorMessageOpen, setErrorMessageOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     function handleNameInputChange(e: React.ChangeEvent<HTMLInputElement>) {
       if(e.target.validity.valid && e.target.value.trim().length !== 0) {
@@ -44,12 +39,6 @@ export default function NewCustomer() {
       }
     }
 
-    const closeErrorMessage = () => {
-      setErrorMessageOpen(false)
-      window.clearTimeout(timeOutID);
-      setTimeOutID(0);
-    }
-
     function submitCustomer() {
       if(name !== "" && email !== "") {
         AdminService.createCustomer(name, email, companyNr)
@@ -59,11 +48,13 @@ export default function NewCustomer() {
             navigate("../users");
           })
           .catch(e => {
-            setErrorMessage(e.response.data.message);
-            setErrorMessageOpen(true);
-            setTimeOutID(window.setTimeout(closeErrorMessage, 4000));
+            openErrorMessage(e.response.data.message);
           })
       }
+    }
+
+    const openErrorMessage = (message: string) => {
+      setErrorMessage(message);
     }
 
     return(
@@ -89,38 +80,7 @@ export default function NewCustomer() {
                 </button>
               </div>
         </div>
-        <Transition className="absolute inset-x-0 top-4 mx-auto max-w-lg"
-          show={errorMessageOpen}
-          enter="transition ease-in-out duration-300 transform"
-          enterFrom="-translate-y-full"
-          enterTo="translate-y-0"
-          leave="transition ease-in-out duration-300 transform"
-          leaveFrom="translate-y-0"
-          leaveTo="-translate-y-full"
-        >
-          <div className="shadow rounded-lg bg-main-1">
-            <button className="absolute top-0 right-0"
-              onClick={closeErrorMessage}
-            >
-              <XIcon className="h-6 w-6"/>
-            </button>
-            <div className="p-2">
-              <div className="flex justify-center">
-                <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2 text-main-declined"/>
-                {errorMessage}
-              </div>
-            </div>
-            
-            <Transition.Child
-              enter="transform transition origin-left duration-[4000ms]"
-              enterFrom="scale-x-100"
-              enterTo="scale-x-0"
-              leave="scale-x-0"
-            >
-              <div className="w-full h-2 bg-main-declined"/>
-            </Transition.Child>
-          </div>
-        </Transition>
+        <AlertToast error={errorMessage} setError={setErrorMessage}/>
       </div>
     );
 }

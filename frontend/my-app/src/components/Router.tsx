@@ -14,7 +14,7 @@ import PasswordChangeRequest from "./passwordcomponents/PasswordChangeRequest.co
 import CustomerFinalization from "./userfinalizationcompontents/CustomerFinalization.component";
 import UnauthenticatedHome from "./genericcomponents/HomeMenuUnauthenticated.component";
 import EmployeeHomeLinks, { EmployeeHome } from "./employeecomponents/EmployeeHome.component";
-import AuthService from "../services/Auth.service";
+import AuthService from "../services/api/Auth.service";
 import EmployeeFinalization from "./userfinalizationcompontents/EmployeeFinalization.component";
 import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/RatingAgentOverview.component";
 import AuthenticatedHome from "./genericcomponents/HomeMenuAuthenticated.component";

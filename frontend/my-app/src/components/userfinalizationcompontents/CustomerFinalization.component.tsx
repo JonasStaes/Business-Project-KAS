@@ -1,7 +1,7 @@
 import { number } from "prop-types";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import UserService from "../../services/User.service";
+import UserService from "../../services/api/User.service";
 import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
 
 export default function CustomerFinalization() {

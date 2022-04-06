@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import AuthService from '../../services/Auth.service';
+import AuthService from '../../services/api/Auth.service';
 import AuthenticatedHome from '../genericcomponents/HomeMenuAuthenticated.component';
 
 const EmployeeHomeLinks: FC = ({}) => {

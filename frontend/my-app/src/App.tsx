@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router } from "react-router-dom";
 import { EmployeeRoutes, AuthRoutes, CustomerRoutes } from './components/Router';
-import AuthService from './services/Auth.service';
+import AuthService from './services/api/Auth.service';
 
 export default function App() {
   
