@@ -9,6 +9,7 @@ const EmployeeHomeLinks: FC = ({}) => {
             <div className="space-x-4">
                 {AuthService.isAdmin() && <Link to="/kas/employee/admin" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Admin</Link>}
                 {AuthService.isRatingAgent() && <Link to="/kas/employee/rating_agent" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Kredietbeoordelaar</Link>}
+                {AuthService.isCompliance() && <Link to="/kas/employee/compliance" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Compliance medewerker</Link>}
             </div>
         </AuthenticatedHome>
     );
@@ -39,9 +40,9 @@ export const EmployeeHome: FC = ({}) => {
             </div>}
             {AuthService.isCompliance() && 
             <div className="grow bg-main-1 rounded shadow p-2 flex flex-col">       
-                <div className="text-center text-lg capitalize underline">compliance</div>
+                <div className="text-center text-lg capitalize underline">Compliance medewerker</div>
                 <Link className="bg-gray-400 opacity-80 text-white px-8 py-1 rounded shadow mx-auto"
-                    to=""
+                    to="./compliance/suspicious_credit_requests"
                 >
                     Open Dashboard
                 </Link>

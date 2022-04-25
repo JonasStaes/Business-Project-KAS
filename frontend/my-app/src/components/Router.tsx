@@ -19,6 +19,7 @@ import EmployeeFinalization from "./userfinalizationcompontents/EmployeeFinaliza
 import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/RatingAgentOverview.component";
 import AuthenticatedHome from "./genericcomponents/HomeMenuAuthenticated.component";
 import RateCreditRequest from "./employeecomponents/ratingagentcomponents/RatingAgentRateRequest.component";
+import ComplianceOverview from "./employeecomponents/compliancecomponents/ComplianceOverview.component";
 
 
 export function CustomerRoutes() {
@@ -52,6 +53,12 @@ export function EmployeeRoutes() {
                         <Route index element={<Navigate replace to="/kas/employee/rating_agent/credit_requests"/>}/>
                         <Route path="credit_requests" element={<RatingAgentOverview/>}/>
                         <Route path="credit_request/:Id" element={<RateCreditRequest/>}/>
+                    </Route>
+                }
+                {AuthService.isCompliance() && 
+                    <Route path="compliance">
+                        <Route index element={<Navigate replace to="/kas/employee/compliance/suspicious_credit_requests"/>}/>
+                        <Route path="suspicious_credit_requests" element={<ComplianceOverview/>}/>
                     </Route>
                 }
             </Route>
