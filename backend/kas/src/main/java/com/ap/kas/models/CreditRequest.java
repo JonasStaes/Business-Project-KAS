@@ -55,6 +55,8 @@ public class CreditRequest {
 
     private String approvalNote;
 
+    private boolean isSuspicious;
+
     public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String investmentType, Customer customer) {
         this.name = name;
         this.totalAmount = totalAmount;
