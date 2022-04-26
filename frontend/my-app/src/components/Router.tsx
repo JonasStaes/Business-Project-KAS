@@ -22,6 +22,7 @@ import { ComplianceOverview } from "./employeecomponents/compliancecomponents/Co
 import { useSelector } from "react-redux";
 import { selectIsAdmin, selectIsCompliance, selectIsRatingAgent } from "../redux/features/auth/authSlice";
 
+
 export const CustomerRoutes = () => {
 
     return (
@@ -58,6 +59,12 @@ export const EmployeeRoutes = () => {
                         <Route index element={<Navigate replace to="/kas/employee/rating_agent/credit_requests"/>}/>
                         <Route path="credit_requests" element={<RatingAgentOverview/>}/>
                         <Route path="credit_request/:id" element={<RateCreditRequest/>}/>
+                    </Route>
+                }
+                {isCompliance && 
+                    <Route path="compliance">
+                        <Route index element={<Navigate replace to="/kas/employee/compliance/suspicious_credit_requests"/>}/>
+                        <Route path="suspicious_credit_requests" element={<ComplianceOverview/>}/>
                     </Route>
                 }
                 {isCompliance && 

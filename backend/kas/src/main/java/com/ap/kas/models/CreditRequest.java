@@ -57,6 +57,7 @@ public class CreditRequest {
 
     private boolean isSuspicious;
 
+
     public CreditRequest(String name, float totalAmount, float financedAmount, Period duration, InvestmentType investmentType, Customer customer) {
         this.name = name;
         this.totalAmount = totalAmount;

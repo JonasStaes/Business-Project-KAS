@@ -50,7 +50,7 @@ export const EmployeeHome: FC = () => {
             </div>}
             {isCompliance && 
             <div className="grow bg-main-1 rounded shadow p-2 flex flex-col">       
-                <div className="text-center text-lg capitalize underline">compliance</div>
+                <div className="text-center text-lg capitalize underline">Compliance medewerker</div>
                 <Link className="bg-gray-400 opacity-80 text-white px-8 py-1 rounded shadow mx-auto"
                     to="./compliance/suspicious_credit_requests"
                 >
