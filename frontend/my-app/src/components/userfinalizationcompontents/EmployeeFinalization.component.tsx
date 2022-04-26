@@ -1,67 +1,61 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
+import { CheckIcon } from "@heroicons/react/solid";
+import { FormEvent, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import UserService from "../../services/User.service";
-import { StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
+import { EmployeeFinalizationDto } from "../../redux/features/api/types";
+import { useFinalizeEmployeeMutation } from "../../redux/features/api/user";
+import { validateStateObject } from "../../services/frontend/StateObjectUpdater.service";
+import { handlePasswordChange } from "../../services/frontend/Validator.service";
+import { StyledUnmaskableInput } from "../genericcomponents/StyledInputs.component";
 
 export default function EmployeeFinalization() {
     const navigate = useNavigate(); 
     let params = useParams();
+    const [finalize] = useFinalizeEmployeeMutation();
 
-    const [password, setPassword] = useState<string>("");
-    const [passwordCheck, setPasswordCheck] = useState<string>("");
-    const [passwordValid, setPasswordValid] = useState<boolean>(false);
-
-    const checkIfPasswordValid = useCallback(() => {
-        setPasswordValid(password === passwordCheck && password.trim().length > 0);
-    }, [password, passwordCheck]);
-  
-    useEffect(() => {
-        checkIfPasswordValid();
-    }, [checkIfPasswordValid]);
-
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setPassword(e.target.value)
-        } else {
-            setPassword("")
-        }
-    }
-
-    const handlePasswordCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setPasswordCheck(e.target.value)
-        } else {
-            setPasswordCheck("")
-        }
-    }
+    const [employeeInfo, setEmployeeInfo] = useState<EmployeeFinalizationDto>({
+        token: params.tokenId!,
+        password: { value: "", valid: true, errorValue: "" }
+    })
 
     const sendEmployeeData = (e: FormEvent) => {
         e.preventDefault()
-        UserService.finalizeEmployee(params.tokenId!, password)
-            .then(res => {
-                navigate('../../kas/login');
-            })
-            .catch(e => {
-                console.error(e);
-            });
-        
+        finalize({
+            employeeFinalizationDto: employeeInfo,
+            callback: () => navigate("../login")
+        })
     }
 
     return(
-        <div className="mx-auto flex flex-col py-4 items-center w-9/12 bg-main-1 rounded shadow">
-            <form
-                className="text-black py-4 px-4 w-full"
+        <div className="mx-auto flex flex-col py-4 items-center w-11/12 bg-main-1 rounded shadow">
+            <form className="text-black p-4 w-full space-y-4"
                 onSubmit={sendEmployeeData}
-                encType="multipart/form-data"
             >
-                <div className="flex flex-row gap-x-8">
-                    <StyledInputWithLabel id="password" type="password" inputMode="text" validateChange={handlePasswordChange} text="wachtwoord"/>
-                    <StyledInputWithLabel id="password check" type="password" inputMode="text" validateChange={handlePasswordCheckChange} text="herhaal wachtwoord"/>
+                <div className="flex flex-row gap-x-8 space-y-4">
+                    <div className="grow-[1] pt-4">
+                        <StyledUnmaskableInput 
+                            id={"password"} 
+                            text={"wachtwoord"} 
+                            value={employeeInfo.password} 
+                            validateChange={handlePasswordChange} 
+                            stateObjectSetter={setEmployeeInfo} 
+                            stateObject={employeeInfo}
+                        />
+                    </div>
+                    <div className="grow-[1] pt-4">
+                        <div>
+                            <input className="hidden peer" id="submit" 
+                                type="submit"
+                                disabled={!validateStateObject(employeeInfo)}
+                            />
+                            <label className="bg-main-accepted text-main-1 shadow rounded w-full py-2 uppercase text-md flex justify-center peer-disabled:bg-main-input"
+                                htmlFor="submit"
+                            >
+                                <CheckIcon className="fill-current h-7 w-7 mr-2"/>
+                                Activeer account
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <input type="submit" value="Activeer account"
-                    className="bg-main-accepted text-white px-8 py-1 rounded shadow w-full"
-                    disabled={!passwordValid}
-                />
             </form>
         </div>
     );

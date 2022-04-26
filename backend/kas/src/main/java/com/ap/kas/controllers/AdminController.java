@@ -8,11 +8,9 @@ import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
 import com.ap.kas.services.mappers.UserMapper;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CustomerCreateDto;
@@ -46,7 +44,7 @@ public class AdminController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @GetMapping("/allusers")
+    @GetMapping("/allUsers")
     public ResponseEntity<MessageResponse> readUsers() {
         try {
             List<UserReadDto> users = new LinkedList<UserReadDto>();
@@ -60,17 +58,26 @@ public class AdminController {
             
             return ResponseEntity.ok(new MessageResponse("Got all users!", users));
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error("Failed to map a user", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a user"));
         }
     }
 
-    @GetMapping("/allroles")
-    public ResponseEntity<MessageResponse> readRoles() {
+    @GetMapping("/employeeRoles")
+    public ResponseEntity<MessageResponse> readEmployeeRoles() {
         try {
-            return ResponseEntity.ok(new MessageResponse("Got all roles!", Arrays.asList(Role.values())));
+            return ResponseEntity.ok(new MessageResponse("Got employee roles!", Role.getEmployeeRoles()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to get all roles"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to get employee roles"));
+        }
+    }
+
+    @GetMapping("/customerRoles")
+    public ResponseEntity<MessageResponse> readCustomerRoles() {
+        try {
+            return ResponseEntity.ok(new MessageResponse("Got customer roles!", Role.getCustomerRoles()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to get customer roles"));
         }
     }
 
@@ -79,14 +86,15 @@ public class AdminController {
         logger.info("Incoming Customer Create DTO:\n {}", newCustomer);
         try {
             if(customerRepository.existsByCompanyNr(newCustomer.getCompanyNr())) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("CompanyNr already in use");
             }
             Customer customer = userMapper.createCustomerFromDto(newCustomer);
             customer.setActive(false);
             logger.info("New Customer:\n {}", customer);
             customerRepository.save(customer);
-            return ResponseEntity.ok(new MessageResponse("Successfully created customer!"));
+            return ResponseEntity.ok(new MessageResponse("Successfully created customer!", userMapper.convertCustomerToUserReadDto(customer)));
         } catch (IllegalArgumentException e) {
+            logger.error("Cannot create 2 customers with same company number", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Cannot create 2 customers with same company number"));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -102,14 +110,14 @@ public class AdminController {
             employee.setActive(false);
             logger.info("New Employee:\n {}", employee);
             employeeRepository.save(employee);
-            return ResponseEntity.ok(new MessageResponse("Successfully created employee!"));
+            return ResponseEntity.ok(new MessageResponse("Successfully created employee!", userMapper.convertEmployeeToUserReadDto(employee)));
         } catch (Exception e){
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create employee"));
         }
     }
 
-    @PutMapping(value="/users/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<MessageResponse> deactivateUser(@PathVariable String id) {
         logger.info("Incoming deactivation request:\n {}", id);
         try{
@@ -131,9 +139,4 @@ public class AdminController {
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to create user"));
         }
     }
-
-    
-
-
-
 }

@@ -1,16 +1,20 @@
 import { FormEvent, useState } from "react";
-import AuthService from "../../services/Auth.service";
+import { useLoginCustomerMutation } from "../../redux/features/api/auth";
+import { CustomerLoginRequest } from "../../redux/features/api/types";
+import { handleCompanyNrChange, handlePasswordChange } from "../../services/frontend/Validator.service";
+import { StyledLoginInput } from "../genericcomponents/StyledInputs.component";
 
 export default function CustomerLogin() {
-    const [companyNr, setCompanyNr] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [login] = useLoginCustomerMutation();
 
-    const loginCustomer = (e: FormEvent) => {
+    const [loginInfo, setLoginInfo] = useState<CustomerLoginRequest>({
+        companyNr: { value: "", valid: true, errorValue: "" },
+        password: { value: "", valid: true, errorValue: "" }
+    })
+
+    const loginCustomer = async (e: FormEvent) => {
         e.preventDefault()
-        AuthService.customerLogin(companyNr.replace(/\D/g, ''), password)
-            .then(data => {
-                console.log(data);
-            })
+        login(loginInfo);
     }
     
     return(
@@ -18,28 +22,28 @@ export default function CustomerLogin() {
             <form 
                 className="text-white flex flex-col py-4 items-center gap-y-2"
                 onSubmit={loginCustomer}
-                encType="multipart/form-data"
             >
-                <div className="flex flex-col py-4 space-y-4 items-center">
-                    <label className="uppercase text-2xl text-center" htmlFor="ondernemingsnummer">ondernemingsnummer</label>
-                    <input 
-                        type="text"
-                        className="bg-main-input rounded h-8 w-56 outline-none px-1" 
-                        id="ondernemingsnummer"
-                        onChange={e => setCompanyNr(e.target.value)}
-                    />
-                </div>
-                <div className="flex flex-col py-4 space-y-4 items-center">
-                    <label className="uppercase text-2xl text-center" htmlFor="wachtwoord">Wachtwoord</label>
-                    <input 
-                        type="password" 
-                        className="bg-main-input rounded h-8 w-56 outline-none px-1" 
-                        id="wachtwoord"
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                </div>
+                <StyledLoginInput className="bg-main-input rounded h-8 w-56 outline-none px-1 border-2 border-inherit"
+                    id={"companyNr"} 
+                    text={"ondernemingsnummer"} 
+                    value={loginInfo.companyNr} 
+                    type="text"
+                    validateChange={handleCompanyNrChange} 
+                    stateObjectSetter={setLoginInfo} 
+                    stateObject={loginInfo}                
+                />
+                <StyledLoginInput className="bg-main-input rounded h-8 w-56 outline-none px-1 border-2 border-inherit"
+                    id={"password"} 
+                    text={"Wachtwoord"} 
+                    type="password"
+                    value={loginInfo.password} 
+                    validateChange={handlePasswordChange} 
+                    stateObjectSetter={setLoginInfo} 
+                    stateObject={loginInfo}
+                />
                 <input type="submit" value="Log in"
                     className="bg-white text-black px-8 py-1 rounded shadow"
+                    
                 />
             </form>
         </div>

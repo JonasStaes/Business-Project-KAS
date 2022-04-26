@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/tw-elements/dist/js/**/*.js"],
   theme: {
@@ -10,6 +12,9 @@ module.exports = {
         "main-input": "#C1C1C15F",
         "main-accepted": "#5AC129",
         "main-declined": "#C33212"
+      },
+      transitionProperty: {
+        'width': 'width'
       },
     },
   },

@@ -8,6 +8,7 @@ import com.ap.kas.config.Profiles;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
+import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
@@ -46,9 +47,9 @@ public class MockDataRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         customerRepository.deleteAll();
-        Customer customer1 = new Customer("customer 1", "customer1@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), 1234567890);
+        Customer customer1 = new Customer("customer 1", "customer1@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), "1234567890", Role.KLANT);
         customerRepository.save(customer1);
-        Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), 1234567891);
+        Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891", Role.KLANT);
         customerRepository.save(customer2);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
@@ -81,6 +82,7 @@ public class MockDataRunner implements CommandLineRunner {
         float totalAmount = (float)Math.floor(100 + Math.random() * (20000 - 100));
         float requestedAmount = (float)Math.floor(100 + Math.random() * (totalAmount - 100));
         Period period = Period.ofYears(Math.toIntExact((long)Math.floor(1 + Math.random() * (25 - 1))));
-        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, "test", customer));
+        InvestmentType investmentType = InvestmentType.values()[Math.toIntExact((long)Math.floor(0 + Math.random() * (InvestmentType.values().length - 0)))];
+        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, investmentType, customer));
     }    
 }

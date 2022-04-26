@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import com.ap.kas.dtos.requestdtos.CustomerLoginRequestDto;
 import com.ap.kas.dtos.requestdtos.EmployeeLoginRequestDto;
 import com.ap.kas.payload.response.JwtResponse;
+import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.security.jwt.JwtUtils;
 import com.ap.kas.security.services.CustomerDetailsImpl;
@@ -46,21 +47,25 @@ public class AuthController {
     JwtUtils jwtUtils;
     
     @PostMapping("/customer")
-    public ResponseEntity<JwtResponse> authenticateCustomer(@Valid @ModelAttribute CustomerLoginRequestDto loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getCompanyNr(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+    public ResponseEntity<MessageResponse> authenticateCustomer(@Valid @ModelAttribute CustomerLoginRequestDto loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getCompanyNr(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        CustomerDetailsImpl userDetails = (CustomerDetailsImpl)authentication.getPrincipal();
-        Set<String> roles = userDetails.getAuthorities().stream()
-            .map(item -> item.getAuthority())
-            .collect(Collectors.toSet());
+            CustomerDetailsImpl userDetails = (CustomerDetailsImpl)authentication.getPrincipal();
+            Set<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toSet());
 
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), roles));
+            return ResponseEntity.ok(new MessageResponse("Successfully logged in!", new JwtResponse(jwt, userDetails.getId(), roles)));
+        } catch (Error e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Something went wrong"));
+        }
     }
 
     @PostMapping("/employee")
-    public ResponseEntity<JwtResponse> authenticateEmployee(@Valid @ModelAttribute EmployeeLoginRequestDto loginRequest) {
+    public ResponseEntity<MessageResponse> authenticateEmployee(@Valid @ModelAttribute EmployeeLoginRequestDto loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -70,6 +75,6 @@ public class AuthController {
             .map(item -> item.getAuthority())
             .collect(Collectors.toSet());
 
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), roles));
+        return ResponseEntity.ok(new MessageResponse("Successfully logged in!", new JwtResponse(jwt, userDetails.getId(), roles)));
     }
 }

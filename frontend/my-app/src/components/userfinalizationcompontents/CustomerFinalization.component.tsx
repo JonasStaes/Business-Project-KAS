@@ -1,171 +1,172 @@
-import { number } from "prop-types";
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
+import { CheckIcon } from "@heroicons/react/solid";
+import { FormEvent, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import UserService from "../../services/User.service";
-import { StyledInput, StyledInputWithLabel } from "../genericcomponents/StyledInput.component";
+import { CustomerFinalizationDto } from "../../redux/features/api/types";
+import { useFinalizeCustomerMutation } from "../../redux/features/api/user";
+import { validateStateObject } from "../../services/frontend/StateObjectUpdater.service";
+import { handleBirthDateChange, handleBirthplaceChange, handleHomeNumberChange, handlePasswordChange, handlePhoneNrChange, handlePostalCodeChange, handleSocialRegistryNrChange, handleStreetNameChange, handleTownShipChange } from "../../services/frontend/Validator.service";
+import { StyledAppInput, StyledUnmaskableInput } from "../genericcomponents/StyledInputs.component";
 
 export default function CustomerFinalization() {
+    const params = useParams();
     const navigate = useNavigate(); 
-    let params = useParams();
+    const [finalize] = useFinalizeCustomerMutation();
 
-    const [password, setPassword] = useState<string>("");
-    const [passwordCheck, setPasswordCheck] = useState<string>("");
-    const [passwordValid, setPasswordValid] = useState<boolean>(false);
-
-    const [township, setTownship] = useState<string>("");
-
-    const [homeNumber, setHomeNumber] = useState<number>(0);
-    const [homeNumberValid, setHomeNumbervalid] = useState<boolean>(true);
-
-    const [streetName, setStreetName] = useState<string>("");
-
-    const [postalCode, setPostalCode] = useState<number>(0);
-
-    const [birthplace, setBirthplace] = useState<string>("");
-
-    const [birthDate, setBirthDate] = useState<Date>(new Date());
-
-    const [phoneNr, setPhoneNr] = useState<number>(0);
-
-    const [socialRegistryNr, setSocialRegistryNr] = useState<number>(0);
-
-    const checkIfPasswordValid = useCallback(() => {
-        setPasswordValid(password === passwordCheck && password.trim().length > 0);
-    }, [password, passwordCheck]);
-  
-    useEffect(() => {
-        checkIfPasswordValid();
-    }, [checkIfPasswordValid]);
-
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setPassword(e.target.value)
-        } else {
-            setPassword("")
-        }
+    const getEighteenYearsAgo = () => {
+        let now = new Date();
+        now.setFullYear(now.getFullYear() - 18)
+        return now;
     }
 
-    const handlePasswordCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setPasswordCheck(e.target.value)
-        } else {
-            setPasswordCheck("")
-        }
+    const convertDateToYMDString = (date: Date) => {
+        return date.toISOString().split('T')[0];
     }
 
-    const handleTownShipChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setTownship(e.target.value)
-        } else {
-            setTownship("")
-        }
-    }
-
-    const handleHomeNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setHomeNumber(parseInt(e.target.value));
-            setHomeNumbervalid(true);
-        } else {
-            setHomeNumber(0);
-            setHomeNumbervalid(false);
-        }
-    }
-
-    const handleStreetNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setStreetName(e.target.value);
-        } else {
-            setStreetName("");
-        }
-    }
-
-    const handlePostalCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setPostalCode(parseInt(e.target.value));
-        } else {
-            setPostalCode(0);
-        }
-    }
-
-    const handleBirthplaceChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setBirthplace(e.target.value);
-        } else {
-            setBirthplace("");
-        }
-    }
-
-    const handleBirthDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setBirthDate(new Date(e.target.value));
-        } else {
-            setBirthDate(new Date());
-        }
-    }
-
-    const handlePhoneNrChange  = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setPhoneNr(parseInt(e.target.value));
-        } else {
-            setPhoneNr(0);
-        }
-    }
-
-    const handleSocialRegistryNrChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-            setSocialRegistryNr(parseInt(e.target.value));
-        } else {
-            setSocialRegistryNr(0);
-        }
-    }
+    const [finalizationData, setFinalizationData] = useState<CustomerFinalizationDto>({
+        token: params.tokenId!,
+        password: { value: "", valid: true, errorValue: "" },
+        township: { value: "", valid: true, errorValue: "" },
+        homeNumber: { value: 0, valid: true, errorValue: "" },
+        streetName: { value: "", valid: true, errorValue: "" },
+        postalCode: { value: 0, valid: true, errorValue: "" },
+        birthplace: { value: "", valid: true, errorValue: "" },
+        birthDate: { value: getEighteenYearsAgo(), valid: true, errorValue: "" },
+        phoneNr: { value: 0, valid: true, errorValue: "" },
+        socialRegistryNr: { value: 0, valid: true, errorValue: "" }
+    });
 
     const sendCustomerData = (e: FormEvent) => {
         e.preventDefault()
-        UserService.finalizeCustomer(params.tokenId!, password, township, homeNumber, streetName, postalCode, birthplace, birthDate.toISOString().substring(0,10), phoneNr, socialRegistryNr)
-            .then(res => {
-                navigate('../../kas/login');
-            })
-            .catch(e => {
-                console.error(e);
-            });
-        
+        finalize({ 
+            customerFinalizationDto: finalizationData, 
+            callback: () => navigate("../login")
+        });        
     }
 
     return(
         <div className="mx-auto flex flex-col py-4 items-center w-11/12 bg-main-1 rounded shadow">
             <form
-                className="text-black p-4 w-full"
+                className="text-black p-4 w-full space-y-4"
                 onSubmit={sendCustomerData}
-                encType="multipart/form-data"
             >
                 <div className="flex flex-row gap-x-8">
-                    <div className="grow">
-                        <StyledInputWithLabel id="township" type="text" inputMode="text" validateChange={handleTownShipChange} text="gemeente"/>
-                        <StyledInputWithLabel id="homenumber" type="number" inputMode="numeric" validateChange={handleHomeNumberChange} text="huisnummer"/>
-                        <StyledInputWithLabel id="streetname" type="text" inputMode="text" validateChange={handleStreetNameChange} text="straatnaam"/>
-                        <StyledInputWithLabel id="postalcode" type="number" inputMode="numeric" validateChange={handlePostalCodeChange} text="postcode"/>
+                    <div className="grow space-y-4">
+                        <StyledAppInput 
+                            id={"township"} 
+                            text={"gemeente"} 
+                            type="text"
+                            inputMode="text"
+                            minLength={2}
+                            pattern={"[a-zA-Z-]{2,}"}
+                            value={finalizationData.township}
+                            validateChange={handleTownShipChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}
+                        />
+                        <StyledAppInput 
+                            id={"homeNumber"} 
+                            text={"huisnr."}
+                            type="number"
+                            min={1} 
+                            value={finalizationData.homeNumber}
+                            validateChange={handleHomeNumberChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}                        
+                        />
+                        <StyledAppInput 
+                            id={"streetName"} 
+                            text={"straatnaam"} 
+                            type="text"
+                            minLength={2}
+                            inputMode="text"
+                            value={finalizationData.streetName}
+                            validateChange={handleStreetNameChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}                         
+                        />
+                        <StyledAppInput 
+                            id={"postalCode"} 
+                            text={"postcode"} 
+                            type="number"
+                            min={1000}
+                            max={9999}
+                            value={finalizationData.postalCode}
+                            validateChange={handlePostalCodeChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}                           
+                        />
                     </div>
-                    <div className="grow">
-                        <StyledInputWithLabel id="birthplace" type="string" inputMode="text" validateChange={handleBirthplaceChange} text="geboorteplaats"/>
-                        <StyledInput id="birthdate" type="date" inputMode="numeric" validateChange={handleBirthDateChange}>
-                            <label className="before:content-['geboortedatum'] uppercase text-xs absolute -top-4"/>
-                        </StyledInput>
-                        <StyledInputWithLabel id="phonenr" type="tel" inputMode="tel" validateChange={handlePhoneNrChange} text="telefoonnr"/>
-                        <StyledInputWithLabel id="socialregistrynr" type="number" inputMode="numeric" validateChange={handleSocialRegistryNrChange} text="rijksregisternr"/>
+                    <div className="grow space-y-4">
+                        <StyledAppInput 
+                            id={"birthDate"} 
+                            text={"geboortedatum"} 
+                            type="date"
+                            max={convertDateToYMDString(getEighteenYearsAgo())}
+                            value={finalizationData.birthDate}
+                            validateChange={handleBirthDateChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}
+                        />
+                        <StyledAppInput 
+                            id={"birthplace"} 
+                            text={"geboorteplaats"} 
+                            type="text"
+                            minLength={2}
+                            value={finalizationData.birthplace}
+                            validateChange={handleBirthplaceChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}                       
+                        />
+                        <StyledAppInput 
+                            id={"phoneNr"} 
+                            text={"telefoonnr."} 
+                            type="tel"
+                            inputMode="tel"
+                            pattern="(?:\+\d{2}|\(?\d{3}\)?)\s?\d{2,3}\s?(?:\d{7}|(?:\d{2}\s?){2})"
+                            value={finalizationData.phoneNr}
+                            validateChange={handlePhoneNrChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}
+                        />
+                        <StyledAppInput 
+                            id={"socialRegistryNr"} 
+                            text={"rijksregisternr."} 
+                            type="text"
+                            pattern="(?:\d{2}.?){3}-?\d{3}.?\d{2}"
+                            value={finalizationData.socialRegistryNr}
+                            validateChange={handleSocialRegistryNrChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-row gap-x-8">
                     <div className="grow">
-                        <StyledInputWithLabel id="password" type="password" inputMode="text" validateChange={handlePasswordChange} text="wachtwoord"/>
+                        <StyledUnmaskableInput
+                            id={"password"} 
+                            text={"wachtwoord"} 
+                            type="password"
+                            value={finalizationData.password}
+                            validateChange={handlePasswordChange} 
+                            stateObjectSetter={setFinalizationData} 
+                            stateObject={finalizationData}  
+                        />
                     </div>
-                    <div className="grow">
-                        <StyledInputWithLabel id="password check" type="password" inputMode="text" validateChange={handlePasswordCheckChange} text="herhaal wachtwoord"/>
+                    <div className="grow pt-4">
+                        <div>
+                            <input className="hidden peer" id="submit" 
+                                type="submit"
+                                disabled={!validateStateObject(finalizationData)}
+                            />
+                            <label className="bg-main-accepted text-main-1 shadow rounded w-full py-2 uppercase text-md flex justify-center peer-disabled:bg-main-input"
+                                htmlFor="submit"
+                            >
+                                <CheckIcon className="fill-current h-7 w-7 mr-2"/>
+                                Activeer account
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <input type="submit" value="Activeer account"
-                    className="bg-main-accepted text-white px-8 py-1 rounded shadow w-full disabled:bg-gray-400 disabled:opacity-50"
-                    disabled={!passwordValid}
-                />
             </form>
         </div>
     );

@@ -73,13 +73,17 @@ public class RatingAgentController {
 
     @PutMapping("/confirm_status")
     public ResponseEntity<MessageResponse> confirmStatus(@Valid @ModelAttribute CreditRequestStatusConfirmationDto confirmationDto) {
+        logger.info("Incoming confirmation: \n {}", confirmationDto);
         try {
             CreditRequest creditRequest = creditRequestRepository.findById(confirmationDto.getId()).orElseThrow();
             creditRequestRepository.save(creditRequestMapper.confirmStatus(confirmationDto, creditRequest));
 
             logger.info("Confirmed Credit Request: \n {}", creditRequest);
-            return ResponseEntity.ok(new MessageResponse("Confirmed credit request status as " + creditRequest.getStatus()));
+            return ResponseEntity.ok(new MessageResponse("Confirmed credit request status as " + creditRequest.getStatus(), creditRequest));
         } catch(NoSuchElementException e) {
+            logger.error("{}", e);
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to find credit request"));
+        } catch(Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to find credit request"));
         }

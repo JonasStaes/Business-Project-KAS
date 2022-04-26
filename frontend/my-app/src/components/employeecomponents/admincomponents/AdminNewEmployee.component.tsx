@@ -1,124 +1,89 @@
-import { Transition } from "@headlessui/react";
-import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, XIcon } from "@heroicons/react/solid";
-import { useState, useCallback, useEffect } from "react";
+import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AdminService from "../../../services/Admin.service";
-import UserService from "../../../services/User.service";
-import MultipleSelect from "../../genericcomponents/MultipleSelect.component";
-import { StyledInputWithLabel } from "../../genericcomponents/StyledInput.component";
+import { useCreateEmployeeMutation, useGetEmployeeRolesQuery } from "../../../redux/features/api/admin";
+import { EmployeeCreateDto } from "../../../redux/features/api/types";
+import { useRequestEmployeeFinalizationQuery } from "../../../redux/features/api/user";
+import { validateStateObject } from "../../../services/frontend/StateObjectUpdater.service";
+import { handleEmailChange, handleNameChange } from "../../../services/frontend/Validator.service";
+import ChipMenu from "../../genericcomponents/ChipMenu.component";
+import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
+import { StyledAppInput } from "../../genericcomponents/StyledInputs.component";
 
 export default function NewEmployee() {
-    const navigate = useNavigate(); 
-    const [roles, setRoles] = useState<Array<string>>([]);
+  const navigate = useNavigate(); 
+  const [skip, setSkip] = useState<boolean>(true);
+  const { data: roles, isLoading } = useGetEmployeeRolesQuery();
+  const [createEmployee, { data: employeeData }] = useCreateEmployeeMutation();
+  useRequestEmployeeFinalizationQuery(employeeData === undefined ? "" : employeeData.id, { skip }) 
 
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [selectedValues, setSelectedValues] = useState<Array<string>>([]);
+  const [employeeInfo, setEmployeeInfo] = useState<EmployeeCreateDto>({
+    name: { value: "", valid: true, errorValue: ""},
+    email: { value: "", valid: true, errorValue: ""},
+    roles: { value: [], valid: true, errorValue: ""},
+  })
 
-    function handleNameInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-      if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-        setName(e.target.value);
-      } else {
-        setName("");
+  const submitEmployee = (e: FormEvent) => {
+    e.preventDefault()
+    createEmployee({ 
+      employeeCreateDto: employeeInfo,
+      callback: () => {
+        setSkip(false);
+        navigate("../users"); 
       }
-    }
+    })
+  }
 
-    function handleEmailInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-      if(e.target.validity.valid && e.target.value.trim().length !== 0) {
-        setEmail(e.target.value);
-      } else {
-        setEmail("");
-      }
-    }
-
-    const getRoles = useCallback(() => {
-      AdminService.getAllRoles()
-        .then(res => {
-          console.log(res.data)
-          setRoles(res.data.data)
-        })
-        .catch(e => {
-          console.error(e)
-        })
-    }, []) 
-
-    useEffect(() => {
-      getRoles();
-    }, [getRoles]);
-
-    function submitEmployee() {
-      if(name !== "" && email !== "" && selectedValues.length > 0) {
-        AdminService.createEmployee(name, email, selectedValues)
-          .then(res => {
-            console.info(res);
-            UserService.requestEmployeeFinalization(email);
-            navigate("../users");
-          })
-          .catch(e => {
-            console.error(e);
-          })
-      }
-    }
-
-    return(
-      <div className="mx-auto max-w-3xl py-8">
-        <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6">
-          <div className="flex justify-between gap-8">
-            <div className="w-full flex flex-row justify-between">
-              <div>
-                <StyledInputWithLabel id="name" type="text" validateChange={handleNameInputChange} text="naam"/>
-                <StyledInputWithLabel id="email" type="email" validateChange={handleEmailInputChange} text="e-mail"/>
-              </div>
-              <div className="w-80">
-                <MultipleSelect inputValues={roles} selectedValues={selectedValues} setSelectedValues={setSelectedValues}/>
-              </div>
-            </div>
-          </div>
-          <div className="w-full flex justify-between">
-              <Link to="../users" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
-                <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
-                Terug
-              </Link>
-              <button className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center"
-                onClick={submitEmployee}
-              >
-                <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
-                Volgende
-              </button>
-          </div>
-      </div>
-      <Transition className="absolute inset-x-0 top-4 mx-auto max-w-lg"
-        show={false}
-        enter="transition ease-in-out duration-300 transform"
-        enterFrom="-translate-y-full"
-        enterTo="translate-y-0"
-        leave="transition ease-in-out duration-300 transform"
-        leaveFrom="translate-y-0"
-        leaveTo="-translate-y-full"
+  return(
+    <div className="container w-full py-8">
+      <form className="bg-main-1 shadow overflow-hidden container sm:rounded-lg px-8 py-10 space-y-6 w-3/5 h-1/3 mx-auto"
+        onSubmit={submitEmployee}
       >
-        <div className="shadow rounded-lg bg-main-1">
-          <button className="absolute top-0 right-0"
-            
-          >
-            <XIcon className="h-6 w-6"/>
-          </button>
-          <div className="p-2">
-            <div className="flex justify-center">
-              <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2 text-main-declined"/>
-              
-            </div>
+        <div className="container flex flex-row gap-8">
+          <div className="container space-y-4">
+            <StyledAppInput id={"name"} text={"naam"} 
+              type="text"
+              value={employeeInfo.name} 
+              validateChange={handleNameChange} 
+              stateObjectSetter={setEmployeeInfo} 
+              stateObject={employeeInfo}
+              minLength={3}  
+            />
+            <StyledAppInput id={"email"} text={"e-mail"} 
+              type="email"
+              value={employeeInfo.email} 
+              validateChange={handleEmailChange} 
+              stateObjectSetter={setEmployeeInfo} 
+              stateObject={employeeInfo}
+            />
           </div>
-          
-          <Transition.Child
-            enter="transform transition origin-left duration-[4000ms]"
-            enterFrom="scale-x-100"
-            enterTo="scale-x-0"
-            leave="scale-x-0"
-          >
-            <div className="w-full h-2 bg-main-declined"/>
-          </Transition.Child>
+          {(isLoading || roles === undefined) ? <LoadingSpinner/> : 
+          <ChipMenu id={"roles"} 
+            values={roles} 
+            selectedValues={employeeInfo.roles.value} 
+            stateObjectSetter={setEmployeeInfo} 
+            stateObject={employeeInfo}
+          />}
         </div>
-      </Transition>
+        <div className="w-full flex justify-between">
+          <Link to="../users" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
+            <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
+            Terug
+          </Link>
+          <div>
+            <input className="hidden peer" id="submit" 
+              type="submit"
+              disabled={!validateStateObject(employeeInfo)}
+            />
+            <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
+              htmlFor="submit"
+            >
+              <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
+              Volgende
+            </label>
+          </div>
+        </div>
+      </form>
     </div>
-    );
+  );
 }

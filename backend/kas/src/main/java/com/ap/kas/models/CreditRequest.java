@@ -42,7 +42,7 @@ public class CreditRequest {
 
     private Period duration; 
 
-    private String investmentType;
+    private InvestmentType investmentType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -57,10 +57,11 @@ public class CreditRequest {
 
     private boolean isSuspicious;
 
-    public CreditRequest(String name, float totalAmount, float requestedAmount, Period duration, String investmentType, Customer customer) {
+
+    public CreditRequest(String name, float totalAmount, float financedAmount, Period duration, InvestmentType investmentType, Customer customer) {
         this.name = name;
         this.totalAmount = totalAmount;
-        this.financedAmount = requestedAmount;
+        this.financedAmount = financedAmount;
         this.investmentType = investmentType;
         this.duration = duration;
         this.customer = customer;

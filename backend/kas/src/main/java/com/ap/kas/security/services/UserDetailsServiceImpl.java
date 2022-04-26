@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Could not find employee with email: " + principal));
             return (UserDetails)EmployeeDetailsImpl.build(employee);
         } else {
-            Customer customer = customerRepository.findByCompanyNr(Integer.parseInt(principal))
+            Customer customer = customerRepository.findByCompanyNr(principal)
                 .orElseThrow(() -> new UsernameNotFoundException("Could not find customer with companyNr: " + principal));
             return (UserDetails)CustomerDetailsImpl.build(customer);
         }

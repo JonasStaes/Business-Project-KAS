@@ -1,74 +1,53 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import PasswordService from "../../services/Password.service";
+import { useRequestPasswordChangeMutation } from "../../redux/features/api/password";
+import { PasswordChangeRequestDto } from "../../redux/features/api/types";
+import { validateStateObject } from "../../services/frontend/StateObjectUpdater.service";
+import { handleEmailChange, handleNameChange } from "../../services/frontend/Validator.service";
+import { StyledLoginInput } from "../genericcomponents/StyledInputs.component";
 
 export default function PasswordChangeRequest() {
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [valid, setValid] = useState<boolean>(false);
-
     const navigate = useNavigate(); 
-
-    const validate = (name: string, email: string) => {
-        return {
-            name: name.trim().length > 0,
-            email: email.toLowerCase().match(
-                /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-                )
-        };
-    }
-
-    const checkIfValid = useCallback(() => {
-        const validFields = validate(name, email);
-        const noErrors = Object.keys(validFields).every(x => validFields[x as keyof Object])
-        setValid(noErrors);
-    }, [email, name]);
+    const [requestPasswordChange] = useRequestPasswordChangeMutation();
+    const [passwordChangeData, setPasswordChangeData] = useState<PasswordChangeRequestDto>({
+        name: { value: "", valid: true, errorValue: "" },
+        email: { value: "", valid: true, errorValue: "" }
+    })
   
-    useEffect(() => {
-        checkIfValid();
-    }, [checkIfValid]);
-
-    const requestPasswordChange = (e: FormEvent) => {
+    const submitRequest = (e: FormEvent) => {
         e.preventDefault()
-        PasswordService.passwordChangeRequest(name, email)
-            .then(res => {
-                console.log(res.data.data);
-                navigate('../../kas/login')
-            })
-            .catch(e => {
-                console.error(e);
-            });
-        
+        requestPasswordChange({
+            passwordChangeRequestDto: passwordChangeData,
+            callback: () => navigate('../../kas/login')
+        });
     }
 
     return(
         <div className="mx-auto flex flex-col py-4 items-center gap-y-8 bg-main-1 rounded shadow">
             <form  
                 className="text-black flex flex-col py-4 items-center gap-y-2"
-                onSubmit={requestPasswordChange}
-                encType="multipart/form-data"
+                onSubmit={submitRequest}
             >
-                <div className="flex flex-col py-4 space-y-4 items-center">
-                    <label className="uppercase text-2xl text-center" htmlFor="naam">Naam</label>
-                    <input 
-                        type="text"
-                        className="bg-gray-300 opacity-80 rounded h-8 w-56 outline-none px-1" 
-                        id="naam"
-                        onChange={e => setName(e.target.value)}
-                    />
-                </div>
-                <div className="flex flex-col py-4 space-y-4 items-center">
-                    <label className="uppercase text-2xl text-center" htmlFor="email">E-mail</label>
-                    <input 
-                        type="email"
-                        className="bg-gray-300 opacity-80 rounded h-8 w-56 outline-none px-1" 
-                        id="email"
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                </div>
+                <StyledLoginInput className="bg-gray-300 opacity-80 rounded h-8 w-56 outline-none px-1" 
+                    id={"name"} 
+                    text={"naam"} 
+                    value={passwordChangeData.name} 
+                    validateChange={handleNameChange} 
+                    stateObjectSetter={setPasswordChangeData} 
+                    stateObject={passwordChangeData}
+                />
+                <StyledLoginInput
+                    className="bg-gray-300 opacity-80 rounded h-8 w-56 outline-none px-1" 
+                    id={"email"} 
+                    text={"e-mail"} 
+                    value={passwordChangeData.email} 
+                    validateChange={handleEmailChange} 
+                    stateObjectSetter={setPasswordChangeData} 
+                    stateObject={passwordChangeData}
+                />
                 <input type="submit" value="Reset Wachtwoord"
                     className="bg-main-0 text-white px-8 py-1 rounded shadow disabled:bg-gray-400 disabled:opacity-50"
-                    disabled={!valid}
+                    disabled={!validateStateObject(passwordChangeData)}
                 />
             </form>
         </div>

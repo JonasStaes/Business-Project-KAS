@@ -25,14 +25,14 @@ public class CustomerDetailsImpl implements UserDetails {
 
     private Boolean active;
 
-    private int companyNr;
+    private String companyNr;
 
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomerDetailsImpl(String id, String name, Boolean active, int companyNr, String password, List<GrantedAuthority> authorities) {
+    public CustomerDetailsImpl(String id, String name, Boolean active, String companyNr, String password, List<GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.companyNr = companyNr;
@@ -51,7 +51,7 @@ public class CustomerDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return Integer.toString(getCompanyNr());
+        return getCompanyNr();
     }
 
     @Override

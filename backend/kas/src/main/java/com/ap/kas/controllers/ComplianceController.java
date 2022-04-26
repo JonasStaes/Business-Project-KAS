@@ -3,7 +3,6 @@ package com.ap.kas.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +12,6 @@ import java.util.List;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
-import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.slf4j.Logger;
@@ -30,9 +28,6 @@ public class ComplianceController {
 
     @Autowired
     private CreditRequestMapper creditRequestMapper;
-
-    @Autowired
-    private FileStorageRepository fileStorageRepository;
 
     @GetMapping("/all")
     public ResponseEntity<MessageResponse> readSuspiciousRequests() {
