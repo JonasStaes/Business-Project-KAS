@@ -67,12 +67,6 @@ export const EmployeeRoutes = () => {
                         <Route path="suspicious_credit_requests" element={<ComplianceOverview/>}/>
                     </Route>
                 }
-                {isCompliance && 
-                    <Route path="compliance">
-                        <Route index element={<Navigate replace to="/kas/employee/compliance/suspicious_credit_requests"/>}/>
-                        <Route path="suspicious_credit_requests" element={<ComplianceOverview/>}/>
-                    </Route>
-                }
             </Route>
             <Route path="*" element={<Navigate replace to="/kas/employee"/>}/>
         </Routes>
