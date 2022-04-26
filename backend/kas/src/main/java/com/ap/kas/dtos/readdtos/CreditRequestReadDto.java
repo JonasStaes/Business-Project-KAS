@@ -26,4 +26,6 @@ public class CreditRequestReadDto {
     private List<FileStorage> files = new LinkedList<FileStorage>();
 
     private String status;
+
+    private boolean isSuspicious;
 }

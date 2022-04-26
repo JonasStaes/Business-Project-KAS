@@ -3,6 +3,7 @@ package com.ap.kas.models;
 import java.util.stream.Stream;
 
 public enum Status {
+    GEEN_STATUS,
     GOEDGEKEURD,
     IN_BEHANDELING,
     AFGEKEURD;

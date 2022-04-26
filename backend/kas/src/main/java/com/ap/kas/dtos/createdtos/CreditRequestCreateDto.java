@@ -17,7 +17,6 @@ public class CreditRequestCreateDto {
     @NotBlank
     private String name;
 
-    
     @Positive
     private float totalAmount; 
 

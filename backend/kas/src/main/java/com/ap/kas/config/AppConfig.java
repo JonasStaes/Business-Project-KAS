@@ -17,9 +17,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Order(1)
 @Configuration
@@ -97,6 +100,14 @@ public class AppConfig {
         });
 
         return mapper;
+    }
+
+    @Bean
+    public WebClient kruispuntdb() {
+        return WebClient.builder()
+            .baseUrl("http://projectbus10.p.bletchley.cloud:8093/companydata/")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
     }
 
     @Bean

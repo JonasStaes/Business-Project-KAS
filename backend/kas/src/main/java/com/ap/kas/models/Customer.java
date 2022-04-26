@@ -24,7 +24,7 @@ import lombok.ToString;
 @Getter @Setter @ToString(callSuper = true)
 public class Customer extends User {
     
-    private int companyNr;
+    private String companyNr;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -37,7 +37,7 @@ public class Customer extends User {
     @JoinColumn(name = "information_id")
     private CustomerInfo personalInfo;
 
-    public Customer(String name, String email, Boolean active, String password, int companyNr, Role role) {
+    public Customer(String name, String email, Boolean active, String password, String companyNr, Role role) {
         super(name, email, active, password);
         this.companyNr = companyNr;
         this.role = role;

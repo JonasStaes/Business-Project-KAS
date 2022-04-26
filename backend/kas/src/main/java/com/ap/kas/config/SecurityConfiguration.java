@@ -51,17 +51,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             .antMatchers("/signin/**").permitAll()
             .antMatchers("/change_password/**").permitAll()
             .antMatchers("/user/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
+            .antMatchers("/enums/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString(), Role.KREDIET_BEOORDELAAR.toString())
             .antMatchers("/credit_request/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString())
-            .antMatchers("/admin/**").hasAuthority(Role.ADMINISTRATOR.toString())
+            .antMatchers("/admin/**").hasAnyAuthority(Role.ADMINISTRATOR.toString())
             .antMatchers("/rating_agent/**").hasAuthority(Role.KREDIET_BEOORDELAAR.toString())
-            .anyRequest().authenticated();
+            .anyRequest().authenticated().and()
+            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

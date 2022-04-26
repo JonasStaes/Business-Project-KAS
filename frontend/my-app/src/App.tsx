@@ -1,30 +1,41 @@
-import React from 'react';
 import './App.css';
 import { BrowserRouter as Router } from "react-router-dom";
 import { EmployeeRoutes, AuthRoutes, CustomerRoutes } from './components/Router';
-import AuthService from './services/api/Auth.service';
+import AlertToast from './components/genericcomponents/AlertToast.component';
+import { selectCurrentToken, selectIsCustomer } from './redux/features/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 export default function App() {
+
+  const currentUserToken = useSelector(selectCurrentToken);
+  const isCustomer = useSelector(selectIsCustomer);
   
-  if(AuthService.getCurrentUser() === null) {
-    return(
+  let content = undefined;
+  if(currentUserToken === null) {
+    content = (
       <Router>
         <AuthRoutes/>
       </Router>
     );
-  } else if(AuthService.isCustomer()){
-    return (
+  } else if(isCustomer){
+    content = (
       <Router>
         <CustomerRoutes/>
       </Router>
     );
   } else  {
-    return(
+    content = (
       <Router>
         <EmployeeRoutes/>
       </Router>
     );
   } 
-
+  
+  return(
+    <div className="App">
+      {content}
+      <AlertToast/>
+    </div>
+  );
 } 
 

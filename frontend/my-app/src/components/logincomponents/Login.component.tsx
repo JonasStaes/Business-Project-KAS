@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ReactComponent as Logo } from '../../resources/logo.svg';
 import CustomerLogin from "./CustomerLogin.component";
-import AdminLogin from "./AdminLogin.component";
+import EmployeeLogin from "./EmployeeLogin.component";
 import { Link } from "react-router-dom";
 import { Switch } from "@headlessui/react";
 
@@ -34,7 +34,7 @@ export default function Login() {
                         
                     ].join(" ")}/>
                 </div>
-                {active ? <AdminLogin/> : <CustomerLogin/> }
+                {active ? <EmployeeLogin/> : <CustomerLogin/> }
                 <div>
                     <Link to="/kas/change_password/request" className={[
                             (active ? "text-black" : "text-main-1"), 

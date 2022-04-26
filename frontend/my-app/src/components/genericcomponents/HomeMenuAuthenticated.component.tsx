@@ -6,7 +6,7 @@ import UserMenu from './UserMenu.component';
 
 const AuthenticatedHome: FC = ({children}) => {
     return(
-        <div className='App'>
+        <div className="h-screen overflow-hidden bg-main-2">
             <nav className="flex items-center justify-between flex-wrap bg-main-0 p-6">
                 <div className="flex items-center flex-shrink-0 text-white mr-6">
                     <Logo className="fill-current h-8 w-8 mr-2"/>
@@ -21,7 +21,7 @@ const AuthenticatedHome: FC = ({children}) => {
                     </div>
                 </div>
             </nav>
-            <main className="bg-main-2 min-h-screen">
+            <main className="bg-main-2">
                 <Outlet/>
             </main>
       </div>

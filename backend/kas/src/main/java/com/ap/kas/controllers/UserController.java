@@ -15,9 +15,6 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
-import com.ap.kas.dtos.requestdtos.CustomerFinalizationRequest;
-import com.ap.kas.dtos.requestdtos.EmployeeFinalizationRequest;
 import com.ap.kas.dtos.updatedtos.CustomerInfoDto;
 import com.ap.kas.dtos.updatedtos.EmployeeInfoDto;
 
@@ -26,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,10 +50,10 @@ public class UserController {
     @Autowired
     private MailSender mailSender;
 
-    @PostMapping("/requestCustomer")
-    public ResponseEntity<MessageResponse> requestCustomerFinalization(@Valid @ModelAttribute CustomerFinalizationRequest customerFinalizationRequest) {
+    @PostMapping("/requestCustomer/{id}")
+    public ResponseEntity<MessageResponse> requestCustomerFinalization(@PathVariable("id") String id) {
         try {
-            Customer customer = customerRepository.findByCompanyNr(customerFinalizationRequest.getCompanyNr()).orElseThrow();
+            Customer customer = customerRepository.findById(id).orElseThrow();
             String token = UUID.randomUUID().toString();
             userUpdateTokenRepository.save(new UserUpdateToken(token, customer));
             mailSender.sendCustomerFinalizationMail(customer.getEmail(), token);
@@ -88,10 +86,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/requestEmployee")
-    public ResponseEntity<MessageResponse> requestEmployeeFInalization(@Valid @ModelAttribute EmployeeFinalizationRequest employeeFinalizationRequest) {
+    @PostMapping("/requestEmployee/{id}")
+    public ResponseEntity<MessageResponse> requestEmployeeFInalization(@PathVariable("id") String id) {
         try {
-            Employee employee = employeeRepository.findByEmail(employeeFinalizationRequest.getEmail()).orElseThrow();
+            Employee employee = employeeRepository.findById(id).orElseThrow();
             String token = UUID.randomUUID().toString();
             userUpdateTokenRepository.save(new UserUpdateToken(token, employee));
             mailSender.sendEmployeeFinalizationMail(employee.getEmail(), token);

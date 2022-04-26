@@ -3,6 +3,7 @@ package com.ap.kas.controllers;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
@@ -25,8 +26,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 @RequestMapping("credit_request")
@@ -48,6 +51,9 @@ public class CreditRequestController {
 
     @Autowired
     private AccountingService accountingService;
+
+    @Autowired
+    private WebClient kruispuntdb;
 
     @GetMapping("/all/{id}")
     public ResponseEntity<MessageResponse> readCreditRequests(@PathVariable("id") String id) {
@@ -72,7 +78,7 @@ public class CreditRequestController {
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
         logger.info("Files:\n {}", newCreditRequest.getFiles());
         try {
-            CreditRequest creditRequest = accountingService.evaluateCreditRequest(creditRequestMapper.convertFromCreateDTO(newCreditRequest));
+            CreditRequest creditRequest = creditRequestMapper.convertFromCreateDTO(newCreditRequest);
             logger.info("New Credit Request:\n {}", creditRequest);
 
             //we get the request that was saved because this one contains an ID, which is what links a file to a credit request
@@ -89,10 +95,22 @@ public class CreditRequestController {
                     }
                 });
             }
-            return ResponseEntity.ok(new MessageResponse("Successfully created credit request!", creditRequestMapper.convertToReadDto(creditRequest)));
+            return ResponseEntity.ok(new MessageResponse("Kredietaanvraag aangemaakt!", creditRequestMapper.convertToReadDto(creditRequest)));
         } catch (Exception e) {
             logger.error("{}", e);
-            return ResponseEntity.badRequest().body(new MessageResponse("Failed to create credit request"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Probleem bij het aanmaken van kredietaanvraag"));
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable("id") String id) {
+        try {
+            CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequestRepository.findById(id).orElseThrow());
+            creditRequestRepository.save(checkedRequest);
+            return ResponseEntity.ok(new MessageResponse("Kredietaanvraag gecheked!", creditRequestMapper.convertToReadDto(checkedRequest)));
+        } catch (NoSuchElementException e) {
+            logger.error("{}", e);
+            return ResponseEntity.badRequest().body(new MessageResponse("Kon deze aanvraag niet vinden"));
         }
     }
 }

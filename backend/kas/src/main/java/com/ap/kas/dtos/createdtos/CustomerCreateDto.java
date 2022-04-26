@@ -1,10 +1,8 @@
 package com.ap.kas.dtos.createdtos;
 
-
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import lombok.Data;
 
@@ -17,7 +15,8 @@ public class CustomerCreateDto {
     @Email
     private String email;
 
-    @Max(1999999999)
-    @Digits(fraction = 0, integer = 10)
-    private int companyNr;
+    @Pattern(regexp = "^(BE)?(0|1)([0-9]{9}|[0-9]{3}[-.][0-9]{3}[-.][0-9]{3})$")
+    private String companyNr;
+
+    private String role;
 }
