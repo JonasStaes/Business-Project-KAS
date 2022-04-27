@@ -13,7 +13,7 @@ export const ComplianceOverview = () => {
   const { data: creditRequests, isLoading: creditRequestsLoading } = useGetAllSuspiciousRequestsQuery(undefined, { pollingInterval: tenMins });
   const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day })
 
-  const [selectedStatus, setSelectedStatus] = useState<string>(statusesLoading ? defaultStatus  : statuses![0])
+  const [selectedStatus, setSelectedStatus] = useState<string>(statusesLoading ? defaultStatus : statuses![0])
 
   const filterRequests = () => {
     if(creditRequests !== undefined && statuses !== undefined) {

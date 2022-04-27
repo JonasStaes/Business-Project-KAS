@@ -56,10 +56,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/change_password/**").permitAll()
             .antMatchers("/user/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
-            .antMatchers("/enums/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString(), Role.KREDIET_BEOORDELAAR.toString())
+            .antMatchers("/enums/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString(), Role.KREDIET_BEOORDELAAR.toString(), Role.COMPLIANCE.toString())
             .antMatchers("/credit_request/**").hasAnyAuthority(Role.KLANT.toString(), Role.KANTOOR_MEDEWERKER.toString())
             .antMatchers("/admin/**").hasAnyAuthority(Role.ADMINISTRATOR.toString())
             .antMatchers("/rating_agent/**").hasAuthority(Role.KREDIET_BEOORDELAAR.toString())
+            .antMatchers("/compliance/**").hasAnyAuthority(Role.COMPLIANCE.toString())
             .anyRequest().authenticated().and()
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
