@@ -43,7 +43,7 @@ export default function NewEmployee() {
           <div className="container space-y-4">
             <StyledAppInput id={"name"} text={"naam"} 
               type="text"
-              value={employeeInfo.name} 
+              inputValue={employeeInfo.name} 
               validateChange={handleNameChange} 
               stateObjectSetter={setEmployeeInfo} 
               stateObject={employeeInfo}
@@ -51,7 +51,7 @@ export default function NewEmployee() {
             />
             <StyledAppInput id={"email"} text={"e-mail"} 
               type="email"
-              value={employeeInfo.email} 
+              inputValue={employeeInfo.email} 
               validateChange={handleEmailChange} 
               stateObjectSetter={setEmployeeInfo} 
               stateObject={employeeInfo}

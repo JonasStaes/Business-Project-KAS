@@ -33,7 +33,7 @@ export default function ChangePassword() {
                 <StyledUnmaskableInput 
                     id={"password"} 
                     text={"wachtwoord"} 
-                    value={passwordChangeData.password} 
+                    inputValue={passwordChangeData.password} 
                     validateChange={handlePasswordChange} 
                     stateObjectSetter={setPasswordChangeData} 
                     stateObject={passwordChangeData}

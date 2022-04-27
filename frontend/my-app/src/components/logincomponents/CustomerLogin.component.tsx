@@ -26,7 +26,7 @@ export default function CustomerLogin() {
                 <StyledLoginInput className="bg-main-input rounded h-8 w-56 outline-none px-1 border-2 border-inherit"
                     id={"companyNr"} 
                     text={"ondernemingsnummer"} 
-                    value={loginInfo.companyNr} 
+                    inputValue={loginInfo.companyNr} 
                     type="text"
                     validateChange={handleCompanyNrChange} 
                     stateObjectSetter={setLoginInfo} 
@@ -36,7 +36,7 @@ export default function CustomerLogin() {
                     id={"password"} 
                     text={"Wachtwoord"} 
                     type="password"
-                    value={loginInfo.password} 
+                    inputValue={loginInfo.password} 
                     validateChange={handlePasswordChange} 
                     stateObjectSetter={setLoginInfo} 
                     stateObject={loginInfo}

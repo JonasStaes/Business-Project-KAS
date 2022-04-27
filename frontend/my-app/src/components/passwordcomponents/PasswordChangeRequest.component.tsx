@@ -31,7 +31,7 @@ export default function PasswordChangeRequest() {
                 <StyledLoginInput className="bg-gray-300 opacity-80 rounded h-8 w-56 outline-none px-1" 
                     id={"name"} 
                     text={"naam"} 
-                    value={passwordChangeData.name} 
+                    inputValue={passwordChangeData.name} 
                     validateChange={handleNameChange} 
                     stateObjectSetter={setPasswordChangeData} 
                     stateObject={passwordChangeData}
@@ -40,7 +40,7 @@ export default function PasswordChangeRequest() {
                     className="bg-gray-300 opacity-80 rounded h-8 w-56 outline-none px-1" 
                     id={"email"} 
                     text={"e-mail"} 
-                    value={passwordChangeData.email} 
+                    inputValue={passwordChangeData.email} 
                     validateChange={handleEmailChange} 
                     stateObjectSetter={setPasswordChangeData} 
                     stateObject={passwordChangeData}

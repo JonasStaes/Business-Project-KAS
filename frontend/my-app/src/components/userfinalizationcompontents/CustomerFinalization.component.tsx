@@ -58,7 +58,7 @@ export default function CustomerFinalization() {
                             inputMode="text"
                             minLength={2}
                             pattern={"[a-zA-Z-]{2,}"}
-                            value={finalizationData.township}
+                            inputValue={finalizationData.township}
                             validateChange={handleTownShipChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}
@@ -68,7 +68,7 @@ export default function CustomerFinalization() {
                             text={"huisnr."}
                             type="number"
                             min={1} 
-                            value={finalizationData.homeNumber}
+                            inputValue={finalizationData.homeNumber}
                             validateChange={handleHomeNumberChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}                        
@@ -79,7 +79,7 @@ export default function CustomerFinalization() {
                             type="text"
                             minLength={2}
                             inputMode="text"
-                            value={finalizationData.streetName}
+                            inputValue={finalizationData.streetName}
                             validateChange={handleStreetNameChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}                         
@@ -90,7 +90,7 @@ export default function CustomerFinalization() {
                             type="number"
                             min={1000}
                             max={9999}
-                            value={finalizationData.postalCode}
+                            inputValue={finalizationData.postalCode}
                             validateChange={handlePostalCodeChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}                           
@@ -102,7 +102,7 @@ export default function CustomerFinalization() {
                             text={"geboortedatum"} 
                             type="date"
                             max={convertDateToYMDString(getEighteenYearsAgo())}
-                            value={finalizationData.birthDate}
+                            inputValue={finalizationData.birthDate}
                             validateChange={handleBirthDateChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}
@@ -112,7 +112,7 @@ export default function CustomerFinalization() {
                             text={"geboorteplaats"} 
                             type="text"
                             minLength={2}
-                            value={finalizationData.birthplace}
+                            inputValue={finalizationData.birthplace}
                             validateChange={handleBirthplaceChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}                       
@@ -123,7 +123,7 @@ export default function CustomerFinalization() {
                             type="tel"
                             inputMode="tel"
                             pattern="(?:\+\d{2}|\(?\d{3}\)?)\s?\d{2,3}\s?(?:\d{7}|(?:\d{2}\s?){2})"
-                            value={finalizationData.phoneNr}
+                            inputValue={finalizationData.phoneNr}
                             validateChange={handlePhoneNrChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}
@@ -133,7 +133,7 @@ export default function CustomerFinalization() {
                             text={"rijksregisternr."} 
                             type="text"
                             pattern="(?:\d{2}.?){3}-?\d{3}.?\d{2}"
-                            value={finalizationData.socialRegistryNr}
+                            inputValue={finalizationData.socialRegistryNr}
                             validateChange={handleSocialRegistryNrChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}
@@ -146,7 +146,7 @@ export default function CustomerFinalization() {
                             id={"password"} 
                             text={"wachtwoord"} 
                             type="password"
-                            value={finalizationData.password}
+                            inputValue={finalizationData.password}
                             validateChange={handlePasswordChange} 
                             stateObjectSetter={setFinalizationData} 
                             stateObject={finalizationData}  

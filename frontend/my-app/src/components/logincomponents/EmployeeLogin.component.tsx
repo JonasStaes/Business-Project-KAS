@@ -26,7 +26,7 @@ export default function EmployeeLogin() {
                     id="email" 
                     text="e-mail"
                     type="email"
-                    value={loginInfo.email}
+                    inputValue={loginInfo.email}
                     validateChange={handleEmailChange} 
                     stateObjectSetter={setLoginInfo} 
                     stateObject={loginInfo}
@@ -35,7 +35,7 @@ export default function EmployeeLogin() {
                     id="password" 
                     text="wachtwoord"
                     type="password"
-                    value={loginInfo.password}
+                    inputValue={loginInfo.password}
                     validateChange={handlePasswordChange} 
                     stateObjectSetter={setLoginInfo} 
                     stateObject={loginInfo}

@@ -54,21 +54,21 @@ export const NewCreditRequest: FC = () => {
         <div className="flex justify-between gap-8">
           <div className="w-72 p-2">
             <StyledAppInput id="name" text="Projectnaam" type="text"
-              value={creditRequestInfo.name}
+              inputValue={creditRequestInfo.name}
               validateChange={handleNameChange} 
               stateObjectSetter={setCreditRequestInfo} 
               stateObject={creditRequestInfo}    
               minLength={3}
             />
             <StyledAppInput id="totalAmount" text={"Totaal bedrag (\u20ac)"} type="number"
-              value={creditRequestInfo.totalAmount}
+              inputValue={creditRequestInfo.totalAmount}
               validateChange={handleTotalAmountInputChange} 
               stateObjectSetter={setCreditRequestInfo} 
               stateObject={creditRequestInfo} 
               min={1000}           
             />
             <StyledAppInput id="financedAmount" text={"Zelf gefinancierd (\u20ac)"} type="number"
-              value={creditRequestInfo.financedAmount}
+              inputValue={creditRequestInfo.financedAmount}
               validateChange={handleFinancedAmountInputChange} 
               stateObjectSetter={setCreditRequestInfo} 
               stateObject={creditRequestInfo} 
@@ -110,7 +110,7 @@ export const NewCreditRequest: FC = () => {
               <StyledTextArea 
                 id={"approvalNote"} 
                 text={"Verantwoording nieuwe aanvraag"} 
-                value={creditRequestInfo.approvalNote} 
+                inputValue={creditRequestInfo.approvalNote} 
                 validateChange={handleNoteChange} 
                 stateObjectSetter={setCreditRequestInfo} 
                 stateObject={creditRequestInfo}

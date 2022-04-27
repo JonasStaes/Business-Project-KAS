@@ -35,7 +35,7 @@ export default function EmployeeFinalization() {
                         <StyledUnmaskableInput 
                             id={"password"} 
                             text={"wachtwoord"} 
-                            value={employeeInfo.password} 
+                            inputValue={employeeInfo.password} 
                             validateChange={handlePasswordChange} 
                             stateObjectSetter={setEmployeeInfo} 
                             stateObject={employeeInfo}

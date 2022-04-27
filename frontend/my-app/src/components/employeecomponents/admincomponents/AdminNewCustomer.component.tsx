@@ -42,20 +42,20 @@ export default function NewCustomer() {
         <div className="container flex flex-row gap-8">
           <div className="container space-y-1">
             <StyledAppInput id="name" type="text" text="naam" 
-              value={customerInfo.name}
+              inputValue={customerInfo.name}
               validateChange={handleNameChange}
               stateObjectSetter={setCustomerInfo}    
               stateObject={customerInfo}        
               minLength={3}    
             />
             <StyledAppInput id="email" type="email" text="e-mail" 
-              value={customerInfo.email}
+              inputValue={customerInfo.email}
               validateChange={handleEmailChange} 
               stateObjectSetter={setCustomerInfo} 
               stateObject={customerInfo}                
             />
             <StyledAppInput id="companyNr" type="text" text="ondernemingsnummer"
-              value={customerInfo.companyNr}
+              inputValue={customerInfo.companyNr}
               validateChange={handleCompanyNrChange}
               stateObjectSetter={setCustomerInfo}
               stateObject={customerInfo}
