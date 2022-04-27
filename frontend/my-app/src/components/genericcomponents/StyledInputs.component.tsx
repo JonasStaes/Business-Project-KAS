@@ -8,15 +8,15 @@ import { cleanUpStringNoUppercase } from "../../services/frontend/TextParser.ser
 interface StyledInputProps<T> extends HTMLProps<HTMLInputElement> {
     id: string,
     text: string,
-    value: ValidatedObject<T>
+    inputValue: ValidatedObject<T>
     validateChange: Function,
     stateObjectSetter: Function
     stateObject: Object
 };
 
-export const StyledLoginInput = <T,>({ className, id, text, value, type, validateChange, stateObjectSetter, stateObject }: StyledInputProps<T>) => {
+export const StyledLoginInput = <T,>({ className, id, text, inputValue, type, validateChange, stateObjectSetter, stateObject }: StyledInputProps<T>) => {
     return(
-        <div className={value.valid ? "border-transparent" : "border-main-declined"}>
+        <div className={inputValue.valid ? "border-transparent" : "border-main-declined"}>
             <div className="flex flex-col py-4 space-y-4 items-center border-inherit">
                 <label className="uppercase text-2xl text-center" htmlFor={id}>{text}</label>
                 <input className={className}
@@ -26,15 +26,15 @@ export const StyledLoginInput = <T,>({ className, id, text, value, type, validat
                     onChange={(e: ChangeEvent<HTMLInputElement>) => updateStateAndErrors<typeof stateObject, T>(id, validateChange(e), stateObject, stateObjectSetter)}
                 />
             </div>
-            <div className="text-main-declined">{value.errorValue}</div>
+            <div className="text-main-declined">{inputValue.errorValue}</div>
         </div>
     );
 }
 
-export const StyledAppInput = <T,>({id, text, value, type, minLength, min, max, pattern, validateChange, stateObjectSetter, stateObject}: StyledInputProps<T>) => {
+export const StyledAppInput = <T,>({id, text, inputValue, type, minLength, min, max, pattern, validateChange, stateObjectSetter, stateObject}: StyledInputProps<T>) => {
 
     return(
-        <div className={[value.valid ? "border-main-0" : "border-main-declined", "pt-4"].join(" ")}>
+        <div className={[inputValue.valid ? "border-main-0" : "border-main-declined", "pt-4"].join(" ")}>
             <div className="relative group border-inherit">
                 <input className="border-b-2 border-inherit bg-transparent w-full h-10 px-4 text-lg peer" 
                     id={id}
@@ -61,15 +61,15 @@ export const StyledAppInput = <T,>({id, text, value, type, minLength, min, max, 
                 </label> 
                 
             </div>
-            <div className="text-main-declined">{value === undefined ? "" : value.errorValue}</div>
+            <div className="text-main-declined">{inputValue === undefined ? "" : inputValue.errorValue}</div>
         </div>
     );
 }
 
-export const StyledUnmaskableInput = <T,>({id, text, value, minLength, min, max, pattern, validateChange, stateObjectSetter, stateObject}: StyledInputProps<T>) => {
+export const StyledUnmaskableInput = <T,>({id, text, inputValue, minLength, min, max, pattern, validateChange, stateObjectSetter, stateObject}: StyledInputProps<T>) => {
     const [mask, setMask] = useState<boolean>(true);
     return(
-        <div className={[value.valid ? "border-main-0" : "border-main-declined", "pt-4"].join(" ")}>
+        <div className={[inputValue.valid ? "border-main-0" : "border-main-declined", "pt-4"].join(" ")}>
             <div className="relative group border-inherit">
                 <label className="select-none uppercase transform transition-all absolute top-0 left-0 flex items-center text-xs h-1/2 -translate-y-full pl-0"
                         htmlFor={id} 
@@ -96,7 +96,7 @@ export const StyledUnmaskableInput = <T,>({id, text, value, minLength, min, max,
                     <input type="checkbox" className="hidden" id="mask" onChange={() => setMask(!mask)}/>
                 </div>
             </div>
-            <div className="text-main-declined">{value === undefined ? "" : value.errorValue}</div>
+            <div className="text-main-declined">{inputValue === undefined ? "" : inputValue.errorValue}</div>
         </div>
     );
 }
@@ -230,7 +230,7 @@ export const StyledFileInput: FC<StyledFileInputProps> = ({ id, currentFiles, st
     );
 }
 
-export const StyledTextArea = <T,>({ id, text, value, validateChange, stateObjectSetter, stateObject }: StyledInputProps<T>) => {
+export const StyledTextArea = <T,>({ id, text, inputValue: value, validateChange, stateObjectSetter, stateObject }: StyledInputProps<T>) => {
     return(
         <div className={[(value.valid ? "border-main-0" : "border-main-declined"), "w-full p-4"].join(" ")}>
             <div className="flex flex-col items-center border-inherit">

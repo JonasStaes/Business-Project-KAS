@@ -75,7 +75,7 @@ const RateCreditRequest: FC = () => {
                             <StyledTextArea 
                                 id={"approvalNote"} 
                                 text={"opmerking"} 
-                                value={confirmationData.approvalNote} 
+                                inputValue={confirmationData.approvalNote} 
                                 validateChange={handleNoteChange} 
                                 stateObjectSetter={setConfirmationData} 
                                 stateObject={confirmationData}
