@@ -5,9 +5,11 @@ import com.ap.kas.models.Status;
 
 import org.springframework.stereotype.Service;
 
+
+
 @Service
 public class AccountingService {
-    
+ 
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest) {
 
         if(creditRequest.getTotalAmount() - creditRequest.getFinancedAmount() > 10000){ //todo: what constitutes "suspicious"?

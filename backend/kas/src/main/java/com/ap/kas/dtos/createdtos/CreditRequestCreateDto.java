@@ -35,4 +35,7 @@ public class CreditRequestCreateDto {
     private String parentId;
     
     String approvalNote;
+
+    @NotNull 
+    private boolean isSuspicious;
 }
