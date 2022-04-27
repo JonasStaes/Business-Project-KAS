@@ -3,20 +3,21 @@ import { FC, FormEvent, useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { day } from "../../redux/features/api/constants";
-import { useCreateCreditRequestMutation } from "../../redux/features/api/customerCreditRequest";
+import { useCreateCreditRequestMutation, useValidateCreditRequestMutation } from "../../redux/features/api/customerCreditRequest";
 import { useGetAllInvestmentTypesQuery } from "../../redux/features/api/enums";
 import { CreditRequestCreateDto } from "../../redux/features/api/types";
 import { selectCurrentUserId } from "../../redux/features/auth/authSlice";
 import { validateStateObject } from "../../services/frontend/StateObjectUpdater.service";
 import { cleanUpInvestmentType } from "../../services/frontend/TextParser.service";
-import { handleFinancedAmountInputChange, handleNameChange, handleTotalAmountInputChange } from "../../services/frontend/Validator.service";
+import { handleFinancedAmountInputChange, handleNameChange, handleNoteChange, handleTotalAmountInputChange } from "../../services/frontend/Validator.service";
 import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
-import { StyledFileInput, StyledAppInput, StyledSelect, StyledSlider } from "../genericcomponents/StyledInputs.component";
+import { StyledFileInput, StyledAppInput, StyledSelect, StyledSlider, StyledTextArea } from "../genericcomponents/StyledInputs.component";
 
 export const NewCreditRequest: FC = () => {
   const navigate = useNavigate(); 
   const currentUser = useSelector(selectCurrentUserId);
   const [createCreditRequest] = useCreateCreditRequestMutation();
+  const [validateRequest] = useValidateCreditRequestMutation();
   const { data: investmentTypes, isLoading } = useGetAllInvestmentTypesQuery(undefined, { pollingInterval: day });
 
   const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestCreateDto>({
@@ -25,6 +26,7 @@ export const NewCreditRequest: FC = () => {
     financedAmount: { value: 0, valid: true, errorValue: ""},
     duration: { value: 1, valid: true, errorValue: ""},
     investmentType: { value: { name: "Selecteer type", min: 1, max: 1 }, valid: true, errorValue: ""},
+    approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
     currentUser: currentUser!
   })
@@ -37,7 +39,10 @@ export const NewCreditRequest: FC = () => {
     e.preventDefault()
     createCreditRequest({ 
       creditRequestCreateDto: creditRequestInfo, 
-      callback: () => navigate("../credit_requests") 
+      callback: async (id: string) => {
+        await validateRequest(id)
+        navigate("../credit_requests") 
+      }
     })
   }
 
@@ -101,12 +106,14 @@ export const NewCreditRequest: FC = () => {
                 stateObject={creditRequestInfo} 
               />
             </div>}
-            <div className="self-end">
-              <StyledFileInput 
-                id="files" 
-                currentFiles={creditRequestInfo.files} 
-                stateObjectSetter={setCreditRequestInfo}
-                stateObject={creditRequestInfo} 
+            <div className="self-end flex flex-row">
+              <StyledTextArea 
+                id={"approvalNote"} 
+                text={"Verantwoording nieuwe aanvraag"} 
+                value={creditRequestInfo.approvalNote} 
+                validateChange={handleNoteChange} 
+                stateObjectSetter={setCreditRequestInfo} 
+                stateObject={creditRequestInfo}
               />
             </div>
           </div>
@@ -116,17 +123,25 @@ export const NewCreditRequest: FC = () => {
             <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
             Terug
           </Link>
-          <div>
-            <input className="hidden peer" id="submit" 
-              type="submit"
-              disabled={!validateStateObject(creditRequestInfo)}
+          <div className="flex flex-row gap-8">
+            <StyledFileInput 
+              id="files" 
+              currentFiles={creditRequestInfo.files} 
+              stateObjectSetter={setCreditRequestInfo}
+              stateObject={creditRequestInfo} 
             />
-            <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
-              htmlFor="submit"
-            >
-              <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
-              Volgende
-            </label>
+            <div>
+              <input className="hidden peer" id="submit" 
+                type="submit"
+                disabled={!validateStateObject(creditRequestInfo)}
+              />
+              <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
+                htmlFor="submit"
+              >
+                <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
+                Volgende
+              </label>
+            </div>
           </div>
         </div>
       </form>

@@ -1,6 +1,7 @@
 package com.ap.kas.controllers;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,6 +9,7 @@ import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CompanyInfoDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.FileStorage;
@@ -75,6 +77,7 @@ public class CreditRequestController {
 
     @PostMapping("/")
     public ResponseEntity<MessageResponse> createCreditRequest(@Valid @ModelAttribute CreditRequestCreateDto newCreditRequest) {
+        //System.out.println(kruispuntdb.get().uri("BE0123.456.789").retrieve().bodyToMono(CompanyInfoDto.class).block().getAssets());
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
         logger.info("Files:\n {}", newCreditRequest.getFiles());
         try {
@@ -95,6 +98,7 @@ public class CreditRequestController {
                     }
                 });
             }
+            System.out.println(creditRequestMapper.convertToReadDto(creditRequest).getId());
             return ResponseEntity.ok(new MessageResponse("Kredietaanvraag aangemaakt!", creditRequestMapper.convertToReadDto(creditRequest)));
         } catch (Exception e) {
             logger.error("{}", e);
@@ -104,7 +108,9 @@ public class CreditRequestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable("id") String id) {
+        System.out.println(id);
         try {
+            //System.out.println(kruispuntdb.get().uri("BE0123.456.789").retrieve().bodyToMono(CompanyInfoDto.class));
             CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequestRepository.findById(id).orElseThrow());
             creditRequestRepository.save(checkedRequest);
             return ResponseEntity.ok(new MessageResponse("Kredietaanvraag gecheked!", creditRequestMapper.convertToReadDto(checkedRequest)));

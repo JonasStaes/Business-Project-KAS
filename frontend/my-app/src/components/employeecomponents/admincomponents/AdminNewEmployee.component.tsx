@@ -58,7 +58,9 @@ export default function NewEmployee() {
             />
           </div>
           {(isLoading || roles === undefined) ? <LoadingSpinner/> : 
-          <ChipMenu id={"roles"} 
+          <ChipMenu 
+            id={"roles"} 
+            text={"selecteer werknemer rollen"}
             values={roles} 
             selectedValues={employeeInfo.roles.value} 
             stateObjectSetter={setEmployeeInfo} 

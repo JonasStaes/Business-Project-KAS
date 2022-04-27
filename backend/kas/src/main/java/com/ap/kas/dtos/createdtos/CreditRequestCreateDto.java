@@ -33,4 +33,6 @@ public class CreditRequestCreateDto {
 
     @NotNull
     private String parentId;
+    
+    String approvalNote;
 }

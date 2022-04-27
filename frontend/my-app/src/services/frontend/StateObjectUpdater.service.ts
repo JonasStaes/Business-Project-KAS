@@ -42,7 +42,7 @@ export const validateStateObject = (stateObject: Object): boolean => {
   Object.values(stateObject).forEach(entry => {
     if(typeof entry === "object") {
       let { value, valid } = entry;
-      if(value && valid) {
+      if(value !== undefined) {
         output = output && valid;
         switch(typeof value) {
           case "string":

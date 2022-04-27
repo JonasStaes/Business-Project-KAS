@@ -29,9 +29,9 @@ const RateCreditRequest: FC = () => {
         })
     }
 
-    const modifyStatusRow = (status?: string) => {
+    const modifyStatusRow = (status: string) => {
         let tempStyle = ""
-        if(status !== undefined) {
+        if(status !== null) {
             switch(status.toLowerCase()) {
                 case "in_behandeling":
                   tempStyle = "text-orange-500";
