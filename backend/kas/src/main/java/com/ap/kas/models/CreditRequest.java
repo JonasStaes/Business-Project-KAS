@@ -42,6 +42,7 @@ public class CreditRequest {
 
     private Period duration; 
 
+    @Enumerated(EnumType.STRING)
     private InvestmentType investmentType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

@@ -37,21 +37,24 @@ const RatingAgentOverview: FC = () => {
 
   const modifyStatusRow = (status: string) => {
     let tempStyle = ""
-    switch(status.toLowerCase()) {
-      case "in_behandeling":
-        tempStyle = "text-orange-500";
-        break;
-      case "goedgekeurd":
-        tempStyle = "text-main-accepted";
-        break;
-      case "afgekeurd":
-        tempStyle = "text-main-declined"
-        break;
+    if(status !== null) {
+      switch(status.toLowerCase()) {
+        case "in_behandeling":
+          tempStyle = "text-orange-500";
+          break;
+        case "goedgekeurd":
+          tempStyle = "text-main-accepted";
+          break;
+        case "afgekeurd":
+          tempStyle = "text-main-declined"
+          break;
+      }
     }
     return tempStyle;
   }
 
   const handleRowClick = (id: string) => {
+    console.log(id)
     navigate(`.././credit_request/${id}`);
   }
 

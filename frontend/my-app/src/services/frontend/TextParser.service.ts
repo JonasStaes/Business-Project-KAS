@@ -8,8 +8,12 @@ export const cleanUpArrayNoUppercase = (roles: Array<string>) => {
     return roles.map(role => cleanUpStringNoUppercase(role)).join(", ");
 }
 
-export const cleanUpStringUppercase = (status: string) => {
-    return status.toLowerCase().replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
+export const cleanUpStringUppercase = (string: string) => {
+    if(string !== null) {
+        return string.toLowerCase().replaceAll(/_/g, " ").replace(/\b\w/g, function(l){ return l.toUpperCase() })
+    } 
+
+    return "";
 }
 
 export const cleanUpInvestmentType = (investmentType: InvestmentType) => {

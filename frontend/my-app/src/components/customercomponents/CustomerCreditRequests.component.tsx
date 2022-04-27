@@ -15,7 +15,7 @@ const defaultStatus = "Geen Status";
 export const CustomerCreditRequests: FC = () => {
   const userID = useSelector(selectCurrentUserId);
   const { data: creditRequests, isLoading: creditRequestsLoading } = useGetCustomerCreditRequestsQuery(userID, { pollingInterval: tenMins });
-  const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day })
+  const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day, refetchOnFocus: true })
 
   const [selectedStatus, setSelectedStatus] = useState<string>(statusesLoading ? defaultStatus  : statuses![0])
 
@@ -40,16 +40,18 @@ export const CustomerCreditRequests: FC = () => {
 
     const modifyStatusRow = (status: string) => {
       let tempStyle = ""
-      switch(status.toLowerCase()) {
-        case "in_behandeling":
-          tempStyle = "text-orange-500";
-          break;
-        case "goedgekeurd":
-          tempStyle = "text-main-accepted";
-          break;
-        case "afgekeurd":
-          tempStyle = "text-main-declined"
-          break;
+      if(status !== null) {
+        switch(status.toLowerCase()) {
+          case "in_behandeling":
+            tempStyle = "text-orange-500";
+            break;
+          case "goedgekeurd":
+            tempStyle = "text-main-accepted";
+            break;
+          case "afgekeurd":
+            tempStyle = "text-main-declined"
+            break;
+        }
       }
       return tempStyle;
     }

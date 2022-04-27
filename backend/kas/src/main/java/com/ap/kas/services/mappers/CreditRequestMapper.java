@@ -19,13 +19,19 @@ public class CreditRequestMapper {
 
     public CreditRequest convertFromCreateDTO(CreditRequestCreateDto creditRequestCreateDto) {
         Condition<CreditRequestCreateDto, CreditRequest> notNull = ctx -> ctx.getSource() != null;
-        modelMapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> mapper.when(notNull).map(CreditRequestCreateDto::getParentId, CreditRequest::setCustomer));
+        modelMapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> {
+            mapper.when(notNull).map(CreditRequestCreateDto::getParentId, CreditRequest::setCustomer);
+            mapper.skip(CreditRequest::setId);
+        });
         return modelMapper.map(creditRequestCreateDto, CreditRequest.class);
     }
 
     public CreditRequestReadDto convertToReadDto(CreditRequest creditRequest) {
         Condition<CreditRequest, CreditRequestReadDto> notNull = ctx -> ctx.getSource() != null;
-        modelMapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(mapper -> mapper.when(notNull).map(CreditRequest::getStatus, CreditRequestReadDto::setStatus));
+        modelMapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(mapper -> {
+            mapper.when(notNull).map(CreditRequest::getStatus, CreditRequestReadDto::setStatus);
+            mapper.when(notNull).map(CreditRequest::getId, CreditRequestReadDto::setId);
+        });
         return modelMapper.map(creditRequest, CreditRequestReadDto.class);
     }
 

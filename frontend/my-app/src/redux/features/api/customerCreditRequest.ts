@@ -22,6 +22,7 @@ const customerApi = baseApi.injectEndpoints({
                     totalAmount: { value: totalAmount }, 
                     duration: { value: duration }, 
                     investmentType: { value: { name: investmentType} }, 
+                    approvalNote: { value: approvalNote },
                     files,
                     currentUser
                 }
@@ -33,6 +34,7 @@ const customerApi = baseApi.injectEndpoints({
                 formData.append('duration', `P${duration}Y`);
                 formData.append('parentId', currentUser);
                 formData.append("investmentType", investmentType);
+                formData.append("approvalNote", approvalNote);
                 if(files.length > 0) {
                     files.forEach(file => {
                         formData.append('files', file);
@@ -47,15 +49,25 @@ const customerApi = baseApi.injectEndpoints({
             transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
             onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
                 try {
-                    await queryFulfilled
-                    request.callback();
+                    const { data } = await queryFulfilled
+                    request.callback(data.id);
                 } catch (error) {
                     dispatch(activateError({message: "Probleem bij het aanmaken van kredietaanvraag"}))
                 }
             },
-
+            invalidatesTags: ["CreditRequests"]
+        }),
+        validateCreditRequest: builder.mutation<CreditRequestReadDto, string>({
+            query: (id) => {
+                return {
+                    url: `${urlBase}/${id}`,
+                    method: "PUT"
+                }
+            },
+            transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
+            invalidatesTags: (res) => [{ type: "CreditRequests", id: res?.id }]
         })
     }),
 })
 
-export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation } = customerApi;
+export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation, useValidateCreditRequestMutation } = customerApi;

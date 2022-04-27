@@ -45,6 +45,7 @@ export type CreditRequestCreateDto = {
     financedAmount: ValidatedObject<number>, 
     duration: ValidatedObject<number>, 
     investmentType: ValidatedObject<InvestmentType>, 
+    approvalNote: ValidatedObject<string>,
     files: Array<File>,
     currentUser: string
 }
