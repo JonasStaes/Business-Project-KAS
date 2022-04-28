@@ -20,7 +20,7 @@ export default function NewCustomer() {
     name: { value: "", valid: true, errorValue: ""},
     email: { value: "", valid: true, errorValue: ""},
     companyNr: { value: "", valid: true, errorValue: ""},
-    role: { value: "", valid: true, errorValue: ""}
+    role: { value: roles === undefined ? "" : roles[0], valid: true, errorValue: ""}
   })
 
   const submitNewCustomer = (e: FormEvent) => {
@@ -65,7 +65,7 @@ export default function NewCustomer() {
           <div className="container">
             {(isLoading || roles === undefined) ? <LoadingSpinner/> : 
             <StyledRadioGroup 
-              value={roles[0]} 
+              value={customerInfo.role.value} 
               stateObjectSetter={setCustomerInfo} 
               stateObject={customerInfo} 
               roles={roles}
