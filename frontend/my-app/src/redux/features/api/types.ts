@@ -60,7 +60,6 @@ export type CustomerCreateDto = {
     name: ValidatedObject<string>,
     email: ValidatedObject<string>,
     companyNr: ValidatedObject<string>,
-    role: ValidatedObject<string>
 }
 
 export type CustomerFinalizationDto = {

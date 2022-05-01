@@ -17,6 +17,4 @@ public class CustomerCreateDto {
 
     @Pattern(regexp = "^(BE)?(0|1)([0-9]{9}|[0-9]{3}[-.][0-9]{3}[-.][0-9]{3})$")
     private String companyNr;
-
-    private String role;
 }

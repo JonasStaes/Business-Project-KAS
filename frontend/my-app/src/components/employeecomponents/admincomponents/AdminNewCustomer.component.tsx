@@ -1,18 +1,16 @@
 import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCreateCustomerMutation, useGetCustomerRolesQuery } from "../../../redux/features/api/admin";
+import { useCreateCustomerMutation } from "../../../redux/features/api/admin";
 import { CustomerCreateDto } from "../../../redux/features/api/types";
 import { useRequestCustomerFinalizationQuery } from "../../../redux/features/api/user";
 import { validateStateObject } from "../../../services/frontend/StateObjectUpdater.service";
 import { handleCompanyNrChange, handleEmailChange, handleNameChange } from "../../../services/frontend/Validator.service";
-import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
-import { StyledAppInput, StyledRadioGroup } from "../../genericcomponents/StyledInputs.component";
+import { StyledAppInput } from "../../genericcomponents/StyledInputs.component";
 
 export default function NewCustomer() {
   const navigate = useNavigate(); 
   const [skip, setSkip] = useState<boolean>(true);
-  const { data: roles, isLoading } = useGetCustomerRolesQuery();
   const [createCustomer, { data: customerData }] = useCreateCustomerMutation();
   useRequestCustomerFinalizationQuery(customerData === undefined ? "" : customerData.id, { skip });
 
@@ -20,7 +18,6 @@ export default function NewCustomer() {
     name: { value: "", valid: true, errorValue: ""},
     email: { value: "", valid: true, errorValue: ""},
     companyNr: { value: "", valid: true, errorValue: ""},
-    role: { value: roles === undefined ? "" : roles[0], valid: true, errorValue: ""}
   })
 
   const submitNewCustomer = (e: FormEvent) => {
@@ -62,15 +59,6 @@ export default function NewCustomer() {
               pattern={"^(BE)?(0|1)([0-9]{9}|[0-9]{3}[-.][0-9]{3}[-.][0-9]{3})$"}
             />
           </div>
-          <div className="container">
-            {(isLoading || roles === undefined) ? <LoadingSpinner/> : 
-            <StyledRadioGroup 
-              value={customerInfo.role.value} 
-              stateObjectSetter={setCustomerInfo} 
-              stateObject={customerInfo} 
-              roles={roles}
-            />}
-          </div>
         </div>
         <div className="w-full flex justify-between">
           <Link to="../users" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
@@ -80,7 +68,7 @@ export default function NewCustomer() {
           <div>
             <input className="hidden peer" id="submit" 
               type="submit"
-              disabled={!validateStateObject(createCustomer)}
+              disabled={!validateStateObject(customerInfo)}
             />
             <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
               htmlFor="submit"
