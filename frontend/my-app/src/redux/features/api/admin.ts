@@ -25,15 +25,12 @@ const adminApi = baseApi.injectEndpoints({
                     name: { value: name },
                     email: { value: email },
                     companyNr: { value: companyNr },
-                    role: { value: role }
                 }
             }) => { 
-                console.log(role)
                 let formData = new FormData();
                 formData.append('name', name);
                 formData.append('email', email);
                 formData.append('companyNr', companyNr)
-                formData.append('role', role)
                 return {
                     url: `${urlBase}/newCustomer`,
                     method: "POST",
