@@ -34,8 +34,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Could not find customer with companyNr: " + principal));
             return (UserDetails)CustomerDetailsImpl.build(customer);
         }
-        
-           
-        
     }
 }
