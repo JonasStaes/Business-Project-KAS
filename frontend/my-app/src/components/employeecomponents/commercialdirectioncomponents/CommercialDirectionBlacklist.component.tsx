@@ -2,13 +2,13 @@ import { Dialog } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, TrashIcon, ArrowCircleRightIcon } from "@heroicons/react/solid";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetAllWhiteListEntriesQuery } from "../../../redux/features/api/commercialdirection";
+import { useGetAllBlackListEntriesQuery } from "../../../redux/features/api/commercialdirection";
 import { tenMins } from "../../../redux/features/api/constants";
 import { cleanUpArrayNoUppercase } from "../../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 
-export default function CommercialDirectionOverview() {
-  const { data: entries, isLoading: entriesLoading } = useGetAllWhiteListEntriesQuery(undefined, { pollingInterval: tenMins });
+export default function CommercialDirectionBlacklist() {
+  const { data: entries, isLoading: entriesLoading } = useGetAllBlackListEntriesQuery(undefined, { pollingInterval: tenMins });
 
 
   const [open, setOpen] = useState<boolean>(false);
@@ -17,13 +17,13 @@ export default function CommercialDirectionOverview() {
   return(
     <div className="mx-auto max-w-6xl py-4 h-screen">
       <div className="flex items-center justify-end gap-4 flex-wrap container pb-4">
-        <Link to="../new_whitelist_entry" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
+        <Link to="../new_customer" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
           <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
           <span className="text-xl tracking-wider mr-2 uppercase">Sector</span>
         </Link>
-        <Link to="../blacklist" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
+        <Link to="../whitelist" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
           <ArrowCircleRightIcon className="fill-current h-7 w-7 mr-2"/>
-          <span className="text-xl tracking-wider mr-2 uppercase">Zwarte lijst</span>
+          <span className="text-xl tracking-wider mr-2 uppercase">Witte lijst</span>
         </Link>
         
       </div>

@@ -34,7 +34,7 @@ public class CommerciaDirectionController {
     private BlackListRepository blackListRepository;
 
 
-    private static final Logger logger = LoggerFactory.getLogger(CreditRequestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommerciaDirectionController.class);
 
     @GetMapping("/allwhitelist")
     public ResponseEntity<MessageResponse> readWhiteList() {
@@ -72,7 +72,7 @@ public class CommerciaDirectionController {
         logger.info("Incoming WhiteList entry:\n {}", entry);
 
         try{
-            if(whiteListRepository.existsByNacebel(entry)){
+            if(whiteListRepository.existsByNacebel(entry.getNacebel())){
                 throw new IllegalArgumentException("Entry already exists");
             }
             whiteListRepository.save(entry);
