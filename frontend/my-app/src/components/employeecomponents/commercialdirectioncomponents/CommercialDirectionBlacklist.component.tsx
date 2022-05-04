@@ -1,18 +1,19 @@
 import { Dialog } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, TrashIcon, ArrowCircleRightIcon } from "@heroicons/react/solid";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useGetAllBlackListEntriesQuery } from "../../../redux/features/api/commercialdirection";
+import { Link, useNavigate } from "react-router-dom";
+import { useDeleteWhiteListEntryMutation, useGetAllWhiteListEntriesQuery, useDeleteBlackListEntryMutation, useGetAllBlackListEntriesQuery } from "../../../redux/features/api/commercialdirection";
 import { tenMins } from "../../../redux/features/api/constants";
 import { cleanUpArrayNoUppercase } from "../../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 
-export default function CommercialDirectionBlacklist() {
+export default function Blacklistoverview() {
   const { data: entries, isLoading: entriesLoading } = useGetAllBlackListEntriesQuery(undefined, { pollingInterval: tenMins });
 
-
+  const navigate = useNavigate(); 
   const [open, setOpen] = useState<boolean>(false);
-
+  const [selectedEntry, setSelectedEntry] = useState<string>("");
+  const [remove] = useDeleteBlackListEntryMutation();
 
   return(
     <div className="mx-auto max-w-6xl py-4 h-screen">
@@ -33,18 +34,74 @@ export default function CommercialDirectionBlacklist() {
           <thead className="bg-gray-300">
             <tr className="h-8">
               <th>NACEBEL</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
           {entries!.map(entry => (
             <tr key={JSON.stringify(entry)} className="odd:bg-blue-200 h-8">
               <td className="text-center border-x">{entry.nacebel}</td>
+              <td className="p-2 flex justify-center">
+                <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500" 
+                  onClick={() => {
+                    setOpen(true)
+                    setSelectedEntry(entry.id);
+                  }}
+                >
+                  <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
+                  Verwijderen
+                </button>
+              </td>
             </tr>
           ))}
           </tbody>
         </table>
       }
       </div>
+      <Dialog className="fixed inset-0 z-10 overflow-y-auto" 
+        as="div"
+        open={open} 
+        onClose={() => setOpen(false)}
+      >
+        <div className="min-h-screen px-4 text-center">
+          <Dialog.Overlay className="fixed inset-0 bg-gray-500 opacity-60"/>
+          <span
+            className="inline-block h-screen align-middle"
+            aria-hidden="true"
+          >
+            &#8203;
+          </span>
+          <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <Dialog.Title
+              as="h2"
+              className="text-lg font-semibold leading-6 "
+            >
+              Verwijder sector?
+            </Dialog.Title>
+            <Dialog.Description className="mt-2 text-red-700">
+              Deze actie zal deze sector permanent verwijderen!
+            </Dialog.Description>
+            <div className="flex items-center justify-between mt-4">
+              <button className="bg-main-0 p-2 rounded flex flex-row items-center text-main-1"
+                onClick={() => setOpen(false)}
+              >
+                <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
+                Terug
+              </button>
+              <button className="bg-red-700 p-2 rounded flex flex-row items-center text-main-1"
+                onClick={() => {
+                  setOpen(false);
+                  remove(selectedEntry);
+                  window.location.reload();
+                }}
+              >
+                <TrashIcon className="fill-current h-7 w-7 mr-2"/>
+                Verwijder sector
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
