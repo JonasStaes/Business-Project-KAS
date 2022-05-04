@@ -1,5 +1,6 @@
 package com.ap.kas.services;
 
+import com.ap.kas.dtos.readdtos.CompanyInfoDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Status;
 
@@ -9,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AccountingService {
+
+    public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoDto companyInfo) {
+        
+        return creditRequest;
+    }
  
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest) {
 
