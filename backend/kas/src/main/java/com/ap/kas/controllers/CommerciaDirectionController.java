@@ -23,8 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-@RequestMapping("commercial")
-public class CommercialManagerController {
+@RequestMapping("commercial_direction")
+public class CommerciaDirectionController {
 
     @Autowired
     private WhiteListRepository whiteListRepository;
