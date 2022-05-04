@@ -5,11 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ap.kas.config.Profiles;
+import com.ap.kas.models.BlackListEntry;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
 import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
+import com.ap.kas.models.WhiteListEntry;
 import com.ap.kas.repositories.BlackListRepository;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
@@ -85,14 +87,17 @@ public class MockDataRunner implements CommandLineRunner {
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
-        String whiteListEntry1 = "58.110";
-        String whiteListEntry2 = "25.501";
+        WhiteListEntry whiteListEntry1 = new WhiteListEntry("58.110");
+        WhiteListEntry whiteListEntry2 = new WhiteListEntry("25.501");
+
+       
         whiteListRepository.save(whiteListEntry1);
         whiteListRepository.save(whiteListEntry2);
         whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
 
-        String blackListEntry1 = "92.000";
-        String blackListEntry2 = "25.400";
+
+        BlackListEntry blackListEntry1 = new BlackListEntry("92.000");
+        BlackListEntry blackListEntry2 = new BlackListEntry("25.400");
         blackListRepository.save(blackListEntry1);
         blackListRepository.save(blackListEntry2);
         blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
