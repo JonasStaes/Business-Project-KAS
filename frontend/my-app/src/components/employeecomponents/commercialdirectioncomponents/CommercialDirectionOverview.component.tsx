@@ -31,7 +31,7 @@ export default function AdminUsers() {
         <table className="table-auto border-collapse min-w-full p-4 overflow-y-auto">
           <thead className="bg-gray-300">
             <tr className="h-8">
-              <th>NACBEL</th>
+              <th>NACEBEL</th>
             </tr>
           </thead>
           <tbody>
