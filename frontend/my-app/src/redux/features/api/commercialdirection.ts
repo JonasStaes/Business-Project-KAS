@@ -39,7 +39,33 @@ const complianceApi = baseApi.injectEndpoints({
             },
             invalidatesTags: ["WhiteListEntry"]
         }),
+
+        createBlackListEntry: builder.mutation<ListEntryDto, { listEntryDto: ListEntryDto, callback: Function }>({
+            query: ({ 
+                listEntryDto: {
+                    nacebel: { value: nacebel }, 
+                }
+            }) => {
+                let formData = new FormData();
+                formData.append('nacebel', nacebel);
+                return {
+                    url: `${urlBase}/blacklist`,
+                    method: "POST",
+                    body: formData
+                }
+            },
+            transformResponse: (response: MessageResponse<ListEntryDto>) => response.data,
+            onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
+                try {
+                    await queryFulfilled
+                    request.callback();
+                } catch (error) {
+                    dispatch(activateError({message: "Probleem bij het aanmaken van black list entry"}))
+                }
+            },
+            invalidatesTags: ["WhiteListEntry"]
+        }),
     })
 })
 
-export const { useGetAllWhiteListEntriesQuery, useGetAllBlackListEntriesQuery, useCreateWhiteListEntryMutation } = complianceApi
+export const { useGetAllWhiteListEntriesQuery, useGetAllBlackListEntriesQuery, useCreateWhiteListEntryMutation, useCreateBlackListEntryMutation} = complianceApi

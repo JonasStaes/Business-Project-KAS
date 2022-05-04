@@ -17,12 +17,12 @@ export default function CommercialDirectionBlacklist() {
   return(
     <div className="mx-auto max-w-6xl py-4 h-screen">
       <div className="flex items-center justify-end gap-4 flex-wrap container pb-4">
-        <Link to="../new_customer" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
+        <Link to="../new_blacklist_entry" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
           <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
           <span className="text-xl tracking-wider mr-2 uppercase">Sector</span>
         </Link>
         <Link to="../whitelist" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
-          <ArrowCircleRightIcon className="fill-current h-7 w-7 mr-2"/>
+          <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
           <span className="text-xl tracking-wider mr-2 uppercase">Witte lijst</span>
         </Link>
         

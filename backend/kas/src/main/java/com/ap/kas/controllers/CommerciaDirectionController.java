@@ -93,7 +93,7 @@ public class CommerciaDirectionController {
         logger.info("Incoming BlackList entry:\n {}", entry);
 
         try{
-            if(blackListRepository.existsByNacebel(entry)){
+            if(blackListRepository.existsByNacebel(entry.getNacebel())){
                 throw new IllegalArgumentException("Entry already exists");
             }
             blackListRepository.save(entry);
