@@ -19,6 +19,7 @@ import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/Rati
 import AuthenticatedHome from "./genericcomponents/HomeMenuAuthenticated.component";
 import RateCreditRequest from "./employeecomponents/ratingagentcomponents/RatingAgentRateRequest.component";
 import { ComplianceOverview } from "./employeecomponents/compliancecomponents/ComplianceOverview.component";
+import CommercialDirectionOverview  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionOverview.component";
 import { useSelector } from "react-redux";
 import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
 import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsRatingAgent } from "../redux/features/auth/authSlice";
@@ -73,7 +74,7 @@ export const EmployeeRoutes = () => {
                 {isCommercialDirection && 
                     <Route path="commercial_direction">
                         <Route index element={<Navigate replace to="/kas/employee/compliance/whitelist"/>}/>
-                        <Route path="suspicious_credit_requests" element={<ComplianceOverview/>}/>
+                        <Route path="whitelist" element={<CommercialDirectionOverview/>}/>
                     </Route>
                 }
             </Route>

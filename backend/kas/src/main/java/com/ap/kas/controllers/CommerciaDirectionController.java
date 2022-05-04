@@ -33,8 +33,6 @@ public class CommerciaDirectionController {
     @Autowired
     private BlackListRepository blackListRepository;
 
-    @Autowired
-    private ListService listService;
 
     private static final Logger logger = LoggerFactory.getLogger(CreditRequestController.class);
 
