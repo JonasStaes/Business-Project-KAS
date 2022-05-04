@@ -104,3 +104,8 @@ export type PasswordChangeDto = {
 export type ListEntryDto = {
     nacebel: ValidatedObject<string>
 }
+
+export type ListEntryReadDto = {
+    id: string,
+    nacebel: ValidatedObject<string>
+}
