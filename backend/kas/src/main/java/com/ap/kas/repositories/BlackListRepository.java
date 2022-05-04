@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BlackListRepository extends JpaRepository<BlackListEntry, String> {
 
-    boolean existsByNacebel(BlackListEntry entry);
+    boolean existsByNacebel(String nacebel);
     
 }

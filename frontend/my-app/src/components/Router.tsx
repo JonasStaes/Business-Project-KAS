@@ -22,6 +22,7 @@ import { ComplianceOverview } from "./employeecomponents/compliancecomponents/Co
 import CommercialDirectionOverview  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionOverview.component";
 import CommercialDirectionBlacklist  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionBlacklist.component";
 import CommercialDirectionAddWhiteList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddWhiteList.component";
+import CommercialDirectionAddBlackList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddBlackList.component";
 import { useSelector } from "react-redux";
 import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
 import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsRatingAgent } from "../redux/features/auth/authSlice";
@@ -79,6 +80,7 @@ export const EmployeeRoutes = () => {
                         <Route path="whitelist" element={<CommercialDirectionOverview/>}/>
                         <Route path ="blacklist" element ={<CommercialDirectionBlacklist/>}/>
                         <Route path="new_whitelist_entry" element={<CommercialDirectionAddWhiteList/>}/>
+                        <Route path="new_blacklist_entry" element={<CommercialDirectionAddBlackList/>}/>
                     </Route>
                 }
             </Route>
