@@ -3,6 +3,7 @@ package com.ap.kas.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +15,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.ap.kas.repositories.WhiteListRepository;
-import com.ap.kas.services.ListService;
 import com.ap.kas.repositories.BlackListRepository;
-
+import com.ap.kas.models.BlackListEntry;
+import com.ap.kas.models.WhiteListEntry;
 import com.ap.kas.payload.response.MessageResponse;
 
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class CommerciaDirectionController {
     @Autowired
     private WhiteListRepository whiteListRepository;
 
-   @Autowired
+    @Autowired
     private BlackListRepository blackListRepository;
 
     @Autowired
@@ -40,12 +41,12 @@ public class CommerciaDirectionController {
     @GetMapping("/allwhitelist")
     public ResponseEntity<MessageResponse> readWhiteList() {
         try {
-            List<String> whitelistEntries = new LinkedList<String>();
+            List<WhiteListEntry> whitelistEntries = new LinkedList<WhiteListEntry>();
             whiteListRepository.findAll().forEach(entry -> {
                       whitelistEntries.add(entry);
             });
           
-            return ResponseEntity.ok(new MessageResponse("Got all suspicious requests!", whitelistEntries));
+            return ResponseEntity.ok(new MessageResponse("Got all whitelist entries!", whitelistEntries));
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to get whitelist"));
@@ -55,12 +56,12 @@ public class CommerciaDirectionController {
     @GetMapping("/allblacklist")
     public ResponseEntity<MessageResponse> readBlackList(){
         try {
-            List<String> blackListEntries = new LinkedList<String>();
+            List<BlackListEntry> blackListEntries = new LinkedList<BlackListEntry>();
             blackListRepository.findAll().forEach(entry -> {
                       blackListEntries.add(entry);
             });
           
-            return ResponseEntity.ok(new MessageResponse("Got all suspicious requests!", blackListEntries));
+            return ResponseEntity.ok(new MessageResponse("Got all whitelist entries!", blackListEntries));
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to get blacklist"));
@@ -69,11 +70,11 @@ public class CommerciaDirectionController {
     }
 
     @PostMapping("/whitelist")
-    public ResponseEntity<MessageResponse> createWhiteListEntry(@Valid @RequestBody String entry){
+    public ResponseEntity<MessageResponse> createWhiteListEntry(@Valid @ModelAttribute WhiteListEntry entry){
         logger.info("Incoming WhiteList entry:\n {}", entry);
 
         try{
-            if(listService.CheckWhiteListEntryExistance(entry)){
+            if(whiteListRepository.existsByNacebel(entry)){
                 throw new IllegalArgumentException("Entry already exists");
             }
             whiteListRepository.save(entry);
@@ -90,11 +91,11 @@ public class CommerciaDirectionController {
     }
 
     @PostMapping("/blacklist")
-    public ResponseEntity<MessageResponse> createBlackListEntry(@Valid @RequestBody String entry){
+    public ResponseEntity<MessageResponse> createBlackListEntry(@Valid @ModelAttribute BlackListEntry entry){
         logger.info("Incoming BlackList entry:\n {}", entry);
 
         try{
-            if(listService.CheckBlackListEntryExistance(entry)){
+            if(blackListRepository.existsByNacebel(entry)){
                 throw new IllegalArgumentException("Entry already exists");
             }
             blackListRepository.save(entry);
