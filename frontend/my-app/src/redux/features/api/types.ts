@@ -102,5 +102,5 @@ export type PasswordChangeDto = {
 }
 
 export type ListEntryDto = {
-    nacbel: ValidatedObject<string>
+    nacebel: ValidatedObject<string>
 }

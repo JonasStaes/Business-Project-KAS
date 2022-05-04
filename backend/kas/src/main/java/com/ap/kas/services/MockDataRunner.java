@@ -10,9 +10,11 @@ import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
 import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
+import com.ap.kas.repositories.BlackListRepository;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
+import com.ap.kas.repositories.WhiteListRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,12 @@ public class MockDataRunner implements CommandLineRunner {
 
     @Autowired
     private AccountingService accountingService;
+
+    @Autowired 
+    private WhiteListRepository whiteListRepository;
+
+    @Autowired
+    private BlackListRepository blackListRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -76,6 +84,20 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.saveAll(creditRequests);
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
+
+        String whiteListEntry1 = "58.110";
+        String whiteListEntry2 = "25.501";
+        whiteListRepository.save(whiteListEntry1);
+        whiteListRepository.save(whiteListEntry2);
+        whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+
+        String blackListEntry1 = "92.000";
+        String blackListEntry2 = "25.400";
+        blackListRepository.save(blackListEntry1);
+        blackListRepository.save(blackListEntry2);
+        blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+
+
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
