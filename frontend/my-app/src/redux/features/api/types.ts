@@ -112,3 +112,7 @@ export type PasswordChangeDto = {
     token: string,
     password: ValidatedObject<string>
 }
+
+export type ListEntryDto = {
+    nacbel: ValidatedObject<string>
+}
