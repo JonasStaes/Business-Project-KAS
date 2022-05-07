@@ -2,6 +2,7 @@ package com.ap.kas.models;
 
 import java.time.Period;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,7 +56,9 @@ public class CreditRequest {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private String approvalNote;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "feedback_document_id")
+    private FeedbackDocument feedbackDocument;
 
     private boolean isSuspicious;
 

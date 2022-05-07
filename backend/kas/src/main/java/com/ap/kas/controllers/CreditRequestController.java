@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
-import com.ap.kas.dtos.readdtos.CompanyInfoDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.FileStorage;
@@ -17,6 +16,7 @@ import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.AccountingService;
 import com.ap.kas.services.FileStorageService;
+import com.ap.kas.services.KruispubtDBApiService;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.slf4j.Logger;
@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
-
 @RestController
 @RequestMapping("credit_request")
 public class CreditRequestController {
@@ -54,7 +52,7 @@ public class CreditRequestController {
     private AccountingService accountingService;
 
     @Autowired
-    private WebClient kruispuntdb;
+    private KruispubtDBApiService apiService;
 
     @GetMapping("/all/{id}")
     public ResponseEntity<MessageResponse> readCreditRequests(@PathVariable("id") String id) {
@@ -108,7 +106,7 @@ public class CreditRequestController {
         try {
             CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
             CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequest,
-                kruispuntdb.get().uri("/BE0123.456.789").retrieve().bodyToMono(CompanyInfoDto.class).block()
+                apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr())
             );
             creditRequestRepository.save(checkedRequest);
             return ResponseEntity.ok(new MessageResponse("Kredietaanvraag gecheked!", creditRequestMapper.convertToReadDto(checkedRequest)));
