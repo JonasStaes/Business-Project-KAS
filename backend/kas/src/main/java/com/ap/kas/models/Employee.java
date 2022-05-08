@@ -29,7 +29,7 @@ import lombok.ToString;
 public class Employee extends User {
     
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "tblRoles", joinColumns = @JoinColumn(name = "id"))
+    @JoinTable(name = "tblRole", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     protected Set<Role> roles = new HashSet<Role>(); 

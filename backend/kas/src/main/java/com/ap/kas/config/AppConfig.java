@@ -105,7 +105,7 @@ public class AppConfig {
     @Bean
     public WebClient kruispuntdb() {
         return WebClient.builder()
-            .baseUrl("http://projectbus10.p.bletchley.cloud:8093/companydata/")
+            .baseUrl("http://projectbus10.p.bletchley.cloud:8093/companydata")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
     }

@@ -5,14 +5,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ap.kas.config.Profiles;
+import com.ap.kas.models.CalculatedRatio;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
+import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
+import com.ap.kas.repositories.FeedbackDocumentRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +41,16 @@ public class MockDataRunner implements CommandLineRunner {
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private FeedbackDocumentRepository feedbackDocumentRepository;
+
+    @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private AccountingService accountingService;
+
+    @Autowired
+    private KruispubtDBApiService apiService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -76,6 +85,9 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.saveAll(creditRequests);
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
+
+        FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
+        feedbackDocumentRepository.save(test);
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
@@ -83,6 +95,6 @@ public class MockDataRunner implements CommandLineRunner {
         float requestedAmount = (float)Math.floor(100 + Math.random() * (totalAmount - 100));
         Period period = Period.ofYears(Math.toIntExact((long)Math.floor(1 + Math.random() * (25 - 1))));
         InvestmentType investmentType = InvestmentType.values()[Math.toIntExact((long)Math.floor(0 + Math.random() * (InvestmentType.values().length - 0)))];
-        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, investmentType, customer));
+        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, investmentType, customer), apiService.getCompanyInfoDto(customer.getCompanyNr()));
     }    
 }
