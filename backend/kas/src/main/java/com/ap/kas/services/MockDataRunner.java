@@ -53,8 +53,10 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     private AccountingService accountingService;
 
+
     @Autowired
     private KruispuntDBApiService apiService;
+  
     @Autowired 
     private WhiteListRepository whiteListRepository;
 
@@ -98,24 +100,20 @@ public class MockDataRunner implements CommandLineRunner {
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
-        FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
-        feedbackDocumentRepository.save(test);
         WhiteListEntry whiteListEntry1 = new WhiteListEntry("58.110");
         WhiteListEntry whiteListEntry2 = new WhiteListEntry("25.501");
-
-       
         whiteListRepository.save(whiteListEntry1);
         whiteListRepository.save(whiteListEntry2);
         whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
-
 
         BlackListEntry blackListEntry1 = new BlackListEntry("92.000");
         BlackListEntry blackListEntry2 = new BlackListEntry("25.400");
         blackListRepository.save(blackListEntry1);
         blackListRepository.save(blackListEntry2);
         blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
-
-
+  
+        FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
+        feedbackDocumentRepository.save(test);
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
