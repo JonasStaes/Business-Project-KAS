@@ -50,7 +50,7 @@ public class MockDataRunner implements CommandLineRunner {
     private AccountingService accountingService;
 
     @Autowired
-    private KruispubtDBApiService apiService;
+    private KruispuntDBApiService apiService;
 
     @Override
     public void run(String... args) throws Exception {

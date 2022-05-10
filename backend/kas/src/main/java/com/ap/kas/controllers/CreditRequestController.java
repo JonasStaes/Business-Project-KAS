@@ -16,7 +16,7 @@ import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.AccountingService;
 import com.ap.kas.services.FileStorageService;
-import com.ap.kas.services.KruispubtDBApiService;
+import com.ap.kas.services.KruispuntDBApiService;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class CreditRequestController {
     private AccountingService accountingService;
 
     @Autowired
-    private KruispubtDBApiService apiService;
+    private KruispuntDBApiService apiService;
 
     @GetMapping("/all/{id}")
     public ResponseEntity<MessageResponse> readCreditRequests(@PathVariable("id") String id) {
@@ -69,6 +69,21 @@ public class CreditRequestController {
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a credit request"));
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MessageResponse> readCreditRequest(@PathVariable("id") String id) {
+        try {
+            CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
+            CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(creditRequest);
+            readDto.setFiles(fileStorageRepository.findAllByCreditRequest(creditRequest));
+
+            logger.info("Outgoing Credit Request: \n {}", readDto);
+            return ResponseEntity.ok(new MessageResponse("Got credit request with id: " + id, readDto)); 
+        } catch (NoSuchElementException e) {
+            logger.error("{}", e);
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to find credit request"));
         }
     }
 

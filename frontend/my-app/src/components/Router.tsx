@@ -21,6 +21,7 @@ import RateCreditRequest from "./employeecomponents/ratingagentcomponents/Rating
 import { ComplianceOverview } from "./employeecomponents/compliancecomponents/ComplianceOverview.component";
 import { useSelector } from "react-redux";
 import { selectIsAdmin, selectIsCompliance, selectIsRatingAgent } from "../redux/features/auth/authSlice";
+import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
 
 
 export const CustomerRoutes = () => {
@@ -30,6 +31,7 @@ export const CustomerRoutes = () => {
             <Route path="kas/customer" element={<AuthenticatedHome/>}>
                 <Route index element={<Navigate replace to="/kas/customer/credit_requests"/>}/>
                 <Route path="credit_requests" element={<CustomerCreditRequests/>}/>
+                <Route path="credit_request/:id" element={<CreditRequestDetail/>}/>
                 <Route path="new_credit_request" element={<NewCreditRequest/>}/>
             </Route>
             <Route path="*" element={<Navigate replace to="/kas/customer"/>} />
