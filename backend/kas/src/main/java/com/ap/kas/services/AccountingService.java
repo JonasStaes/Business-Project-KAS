@@ -1,20 +1,35 @@
 package com.ap.kas.services;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import com.ap.kas.dtos.readdtos.CompanyInfoDto;
+import com.ap.kas.models.BlackListEntry;
 import com.ap.kas.models.CalculatedRatio;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.Status;
+import com.ap.kas.models.WhiteListEntry;
 import com.ap.kas.models.FeedbackDocument.FeedbackDocumentBuilder;
+import com.ap.kas.repositories.BlackListRepository;
+import com.ap.kas.repositories.WhiteListRepository;
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountingService {
 
 
+    @Autowired
+    private WhiteListRepository whiteListRepository;
+
+    @Autowired 
+    private BlackListRepository blackListRepository;
+
+     
 
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoDto companyInfo) {
         FeedbackDocumentBuilder builder = FeedbackDocument.builder();
@@ -23,23 +38,35 @@ public class AccountingService {
         FeedbackDocument feedbackDocument = builder.build();
         creditRequest.setFeedbackDocument(feedbackDocument);
 
-        //zet check witte en zwarte lijst hier, als kredietaanvraag in geen een van de twee zit, voer onderstaande code uit
-        //vergeet niet, verdachte aanvraagen staan op IN_BEHANDELING
-        //van hier
-        long validRatios = feedbackDocument.getCalculatedRatios().stream()
+
+        if(checkIfMatchesWhiteListEntry(companyInfo.getNacbelCode())){
+            creditRequest.setStatus(Status.GOEDGEKEURD);
+            return creditRequest;
+        } else if(checkIfMatchesBlackListEntry(companyInfo.getNacbelCode())){
+            creditRequest.setStatus(Status.IN_BEHANDELING);
+            creditRequest.setSuspicious(true);
+            return creditRequest;
+        } else{
+            long validRatios = feedbackDocument.getCalculatedRatios().stream()
             .map(ratio -> {
                 return ratio.isRatioValid();
             })
             .filter(calculatedRatio -> calculatedRatio)
             .count();
 
-        if(validRatios < feedbackDocument.getCalculatedRatios().size() / 2) {
-            creditRequest.setStatus(Status.AFGEKEURD);
-        } else if(validRatios == feedbackDocument.getCalculatedRatios().size()) {
-            creditRequest.setStatus(Status.GOEDGEKEURD);
-        } else {
-            creditRequest.setStatus(Status.IN_BEHANDELING);
+            if(validRatios < feedbackDocument.getCalculatedRatios().size() / 2) {
+                creditRequest.setStatus(Status.AFGEKEURD);
+            } else if(validRatios == feedbackDocument.getCalculatedRatios().size()) {
+                creditRequest.setStatus(Status.GOEDGEKEURD);
+            } else {
+                creditRequest.setStatus(Status.IN_BEHANDELING);
+            }
         }
+
+        //zet check witte en zwarte lijst hier, als kredietaanvraag in geen een van de twee zit, voer onderstaande code uit
+        //vergeet niet, verdachte aanvraagen staan op IN_BEHANDELING
+        //van hier
+       
         //tot hier dus
         return creditRequest;
     }
@@ -113,4 +140,34 @@ public class AccountingService {
             .minimum(0)
             .build();
     }
+
+    private boolean checkIfMatchesWhiteListEntry(String nacebel){
+        List<WhiteListEntry> whiteListEntries = new LinkedList<WhiteListEntry>();
+        whiteListRepository.findAll().forEach(entry -> {
+                  whiteListEntries.add(entry);
+        });
+
+        for (WhiteListEntry entry : whiteListEntries) {
+            if(entry.getNacebel().equals(nacebel)){
+                return true;
+            }        
+        }
+        return false;       
+    }
+
+    private boolean checkIfMatchesBlackListEntry(String nacebel){
+        List<BlackListEntry> blackListEntries = new LinkedList<BlackListEntry>();
+        blackListRepository.findAll().forEach(entry -> {
+                  blackListEntries.add(entry);
+        });
+
+        for (BlackListEntry entry : blackListEntries) {
+            if(entry.getNacebel().equals(nacebel)){
+                return true;
+            }         
+        }
+        return false;       
+    }
+
+    
 }
