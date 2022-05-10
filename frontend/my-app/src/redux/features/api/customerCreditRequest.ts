@@ -14,7 +14,7 @@ const customerApi = baseApi.injectEndpoints({
             }))] 
             : ["CreditRequests"]
         }),
-        getOneCreditRequest: builder.query<CreditRequestReadDto, string>({
+        getOneCustomerCreditRequest: builder.query<CreditRequestReadDto, string>({
             query: (id) => `${urlBase}/${id}`,
             transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
             onQueryStarted: async (body, {dispatch, queryFulfilled}) => {
@@ -81,4 +81,4 @@ const customerApi = baseApi.injectEndpoints({
     }),
 })
 
-export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation, useValidateCreditRequestMutation } = customerApi;
+export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation, useValidateCreditRequestMutation, useGetOneCustomerCreditRequestQuery } = customerApi;

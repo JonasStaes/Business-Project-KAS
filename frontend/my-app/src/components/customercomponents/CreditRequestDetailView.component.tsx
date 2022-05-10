@@ -1,13 +1,15 @@
 import { ArrowCircleLeftIcon } from "@heroicons/react/solid";
+import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetOneCreditRequestQuery } from "../../redux/features/api/ratingagent";
+import { useGetOneCustomerCreditRequestQuery } from "../../redux/features/api/customerCreditRequest";
 import { cleanUpStringUppercase } from "../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
+import { Feedback } from "./FeedbackDocument.component";
 
 export const CreditRequestDetail = () => {
     let params = useParams();
-    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestQuery(params.id === undefined ? "" : params.id);
+    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCustomerCreditRequestQuery(params.id === undefined ? "" : params.id);
 
     const modifyStatusRow = (status: string) => {
         let tempStyle = ""
@@ -56,7 +58,12 @@ export const CreditRequestDetail = () => {
                     <div className="grow-[1] border border-main-2">
                         <h1 className="bg-main-0 text-main-1 rounded-t py-2">Feedback</h1>
                         <div className="bg-main-1 rounded-b">
-                            {creditRequest.feedbackDocument.toString()}
+                            Work In Progress
+                            
+                            {/* <PDFViewer>
+                                <Feedback approvalNote={creditRequest.feedbackDocument.approvalNote} calculatedRatios={creditRequest.feedbackDocument.calculatedRatios}/>
+                            </PDFViewer> */}
+                           
                         </div>
                     </div>
                 </>

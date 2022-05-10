@@ -112,7 +112,7 @@ export const CustomerCreditRequests: FC = () => {
             </thead>
             <tbody>
             {filterRequests().slice().map(cr => (
-              <tr key={cr.id} className="h-8 odd:bg-blue-100" onClick={() => handleRowClick(cr.id)}>
+              <tr key={cr.id} className="h-8 odd:bg-blue-100 hover:bg-gray-300"  onClick={() => handleRowClick(cr.id)}>
                 <td className="text-center border-x">{cr.name}</td>
                 <td className="text-center border-x text-ellipsis">{cleanUpStringUppercase(cr.investmentType)}</td>
                 <td className="text-center border-x">{cr.totalAmount}</td>
