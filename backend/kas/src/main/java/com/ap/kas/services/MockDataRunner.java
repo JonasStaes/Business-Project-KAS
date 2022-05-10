@@ -57,7 +57,7 @@ public class MockDataRunner implements CommandLineRunner {
 
 
     @Autowired
-    private KruispubtDBApiService apiService;
+    private KruispuntDBApiService apiService;
   
     @Autowired 
     private WhiteListRepository whiteListRepository;
