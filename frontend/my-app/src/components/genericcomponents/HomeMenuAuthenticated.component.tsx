@@ -21,7 +21,7 @@ const AuthenticatedHome: FC = ({children}) => {
                     </div>
                 </div>
             </nav>
-            <main className="bg-main-2">
+            <main className="bg-main-2 h-screen">
                 <Outlet/>
             </main>
       </div>
