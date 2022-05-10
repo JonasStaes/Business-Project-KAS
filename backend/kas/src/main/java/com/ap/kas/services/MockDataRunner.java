@@ -6,16 +6,22 @@ import java.util.List;
 
 import com.ap.kas.config.Profiles;
 import com.ap.kas.models.CalculatedRatio;
+import com.ap.kas.models.BlackListEntry;
+
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
 import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
+import com.ap.kas.models.WhiteListEntry;
+import com.ap.kas.repositories.BlackListRepository;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
 import com.ap.kas.repositories.FeedbackDocumentRepository;
+import com.ap.kas.repositories.WhiteListRepository;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +55,15 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     private AccountingService accountingService;
 
+
     @Autowired
-    private KruispuntDBApiService apiService;
+    private KruispubtDBApiService apiService;
+  
+    @Autowired 
+    private WhiteListRepository whiteListRepository;
+
+    @Autowired
+    private BlackListRepository blackListRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -72,6 +85,9 @@ public class MockDataRunner implements CommandLineRunner {
         Employee employee3 = new Employee("employee3", "employee3@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee3.addRole(Role.COMPLIANCE);
         employeeRepository.save(employee3);
+        Employee employee4 = new Employee("employee4", "employee4@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        employee4.addRole(Role.COMMERCIELE_DIRECTIE);
+        employeeRepository.save(employee4);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
 
         creditRequestRepository.deleteAll();
@@ -86,8 +102,23 @@ public class MockDataRunner implements CommandLineRunner {
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
+
+        WhiteListEntry whiteListEntry1 = new WhiteListEntry("58.110");
+        WhiteListEntry whiteListEntry2 = new WhiteListEntry("25.501");
+        whiteListRepository.save(whiteListEntry1);
+        whiteListRepository.save(whiteListEntry2);
+        whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+
+
+        BlackListEntry blackListEntry1 = new BlackListEntry("92.000");
+        BlackListEntry blackListEntry2 = new BlackListEntry("25.400");
+        blackListRepository.save(blackListEntry1);
+        blackListRepository.save(blackListEntry2);
+        blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+  
         FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
         feedbackDocumentRepository.save(test);
+
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
