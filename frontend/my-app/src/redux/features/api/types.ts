@@ -36,7 +36,19 @@ export type CreditRequestReadDto = {
     financedAmount: number,
     duration: string,
     investmentType: string,
-    status: string
+    status: string,
+    feedbackDocument: FeedbackDocument
+}
+
+export type FeedbackDocument = {
+    approvalNote: string,
+    calculatedRatios: Array<CalculatedRatio>
+}
+
+export type CalculatedRatio = {
+    name: string,
+    ratio: number,
+    minimum: number
 }
 
 export type CreditRequestCreateDto = {

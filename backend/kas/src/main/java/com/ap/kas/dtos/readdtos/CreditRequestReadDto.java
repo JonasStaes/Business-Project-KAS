@@ -4,6 +4,7 @@ import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.FileStorage;
 
 import lombok.Data;
@@ -28,4 +29,6 @@ public class CreditRequestReadDto {
     private String status;
 
     private boolean isSuspicious;
+
+    private FeedbackDocument feedbackDocument;
 }

@@ -24,6 +24,7 @@ import CommercialDirectionBlacklist  from "./employeecomponents/commercialdirect
 import CommercialDirectionAddWhiteList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddWhiteList.component";
 import CommercialDirectionAddBlackList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddBlackList.component";
 import { useSelector } from "react-redux";
+import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
 import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsRatingAgent } from "../redux/features/auth/authSlice";
 
 
@@ -34,6 +35,7 @@ export const CustomerRoutes = () => {
             <Route path="kas/customer" element={<AuthenticatedHome/>}>
                 <Route index element={<Navigate replace to="/kas/customer/credit_requests"/>}/>
                 <Route path="credit_requests" element={<CustomerCreditRequests/>}/>
+                <Route path="credit_request/:id" element={<CreditRequestDetail/>}/>
                 <Route path="new_credit_request" element={<NewCreditRequest/>}/>
             </Route>
             <Route path="*" element={<Navigate replace to="/kas/customer"/>} />

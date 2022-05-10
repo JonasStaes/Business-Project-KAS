@@ -65,7 +65,6 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     private BlackListRepository blackListRepository;
 
-
     @Override
     public void run(String... args) throws Exception {
 

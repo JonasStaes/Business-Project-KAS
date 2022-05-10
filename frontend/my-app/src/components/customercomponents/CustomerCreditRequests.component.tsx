@@ -2,7 +2,7 @@ import { Listbox } from "@headlessui/react";
 import { CheckIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { FC, Fragment, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { day, tenMins } from "../../redux/features/api/constants";
 import { useGetCustomerCreditRequestsQuery } from "../../redux/features/api/customerCreditRequest";
 import { useGetAllStatusesQuery } from "../../redux/features/api/enums";
@@ -13,6 +13,7 @@ import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
 const defaultStatus = "Geen Status";
 
 export const CustomerCreditRequests: FC = () => {
+  const navigate = useNavigate();
   const userID = useSelector(selectCurrentUserId);
   const { data: creditRequests, isLoading: creditRequestsLoading } = useGetCustomerCreditRequestsQuery(userID, { pollingInterval: tenMins });
   const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day, refetchOnFocus: true })
@@ -54,6 +55,10 @@ export const CustomerCreditRequests: FC = () => {
         }
       }
       return tempStyle;
+    }
+
+    const handleRowClick = (id: string) => {
+      navigate(`.././credit_request/${id}`);
     }
 
     return(
@@ -107,7 +112,7 @@ export const CustomerCreditRequests: FC = () => {
             </thead>
             <tbody>
             {filterRequests().slice().map(cr => (
-              <tr key={cr.id} className="h-8 odd:bg-blue-100">
+              <tr key={cr.id} className="h-8 odd:bg-blue-100" onClick={() => handleRowClick(cr.id)}>
                 <td className="text-center border-x">{cr.name}</td>
                 <td className="text-center border-x text-ellipsis">{cleanUpStringUppercase(cr.investmentType)}</td>
                 <td className="text-center border-x">{cr.totalAmount}</td>
