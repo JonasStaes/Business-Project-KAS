@@ -41,8 +41,8 @@ export default function AddToBlackList() {
               validateChange={handleNameChange} 
               stateObjectSetter={setEntryInfo} 
               stateObject={EntryInfo}
-              minLength={3}
-              pattern={"([0-9]{2}[.][0-9]{3})$"}
+              minLength={7}
+              pattern={"([0-9]{7})$"}
             />
             </div>
         </div>

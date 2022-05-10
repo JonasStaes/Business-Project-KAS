@@ -103,15 +103,15 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
 
-        WhiteListEntry whiteListEntry1 = new WhiteListEntry("58.110");
-        WhiteListEntry whiteListEntry2 = new WhiteListEntry("25.501");
+        WhiteListEntry whiteListEntry1 = new WhiteListEntry("1234567");
+        WhiteListEntry whiteListEntry2 = new WhiteListEntry("8910112");
         whiteListRepository.save(whiteListEntry1);
         whiteListRepository.save(whiteListEntry2);
         whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
 
 
-        BlackListEntry blackListEntry1 = new BlackListEntry("92.000");
-        BlackListEntry blackListEntry2 = new BlackListEntry("25.400");
+        BlackListEntry blackListEntry1 = new BlackListEntry("6578423");
+        BlackListEntry blackListEntry2 = new BlackListEntry("1563987");
         blackListRepository.save(blackListEntry1);
         blackListRepository.save(blackListEntry2);
         blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));

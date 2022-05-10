@@ -42,7 +42,7 @@ export default function AddToWhiteList() {
               stateObjectSetter={setEntryInfo} 
               stateObject={EntryInfo}
               minLength={3}
-              pattern={"([0-9]{2}[.][0-9]{3})$"}
+              pattern={"([0-9]{7})$"}
             />
             </div>
         </div>
