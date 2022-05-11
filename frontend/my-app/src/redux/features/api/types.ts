@@ -48,7 +48,8 @@ export type FeedbackDocument = {
 export type CalculatedRatio = {
     name: string,
     ratio: number,
-    minimum: number
+    minimum: number,
+    ratioValid: boolean
 }
 
 export type CreditRequestCreateDto = {

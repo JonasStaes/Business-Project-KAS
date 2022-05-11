@@ -25,7 +25,7 @@ export default function AdminUsers() {
           <span className="text-xl tracking-wider mr-2 uppercase">Werknemer</span>
         </Link>
       </div>
-      <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg border-main-0 rounded border-2 h-4/5">
+      <div className="bg-main-1 shadow overflow-scroll container sm:rounded-lg border-main-0 rounded border-2 h-4/5">
       {usersLoading ? <LoadingSpinner/> : 
         <table className="table-auto border-collapse min-w-full p-4 overflow-y-auto">
           <thead className="bg-gray-300">
@@ -40,9 +40,9 @@ export default function AdminUsers() {
           <tbody>
           {users!.map(usr => (
             <tr key={JSON.stringify(usr)} className="odd:bg-blue-200 h-8">
-              <td className="text-center border-x">{usr.name}</td>
+              <td className="text-center border-x w-1/6">{usr.name}</td>
               <td className="text-center border-x">{usr.email}</td>
-              <td className="text-center border-x truncate">{cleanUpArrayNoUppercase(usr.roles)}</td>
+              <td className="text-center border-x w-2/6">{cleanUpArrayNoUppercase(usr.roles)}</td>
               <td className="text-center border-x">{usr.active.toString()}</td>
               <td className="p-2 flex justify-center">
                 <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500" 

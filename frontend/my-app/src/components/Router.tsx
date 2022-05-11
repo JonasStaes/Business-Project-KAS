@@ -76,7 +76,7 @@ export const EmployeeRoutes = () => {
                 }
                 {isCommercialDirection && 
                     <Route path="commercial_direction">
-                        <Route index element={<Navigate replace to="/kas/employee/compliance/whitelist"/>}/>
+                        <Route index element={<Navigate replace to="/kas/employee/commercial_direction/whitelist"/>}/>
                         <Route path="whitelist" element={<CommercialDirectionOverview/>}/>
                         <Route path ="blacklist" element ={<CommercialDirectionBlacklist/>}/>
                         <Route path="new_whitelist_entry" element={<CommercialDirectionAddWhiteList/>}/>

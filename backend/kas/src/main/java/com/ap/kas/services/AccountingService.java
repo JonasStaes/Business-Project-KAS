@@ -59,7 +59,7 @@ public class AccountingService {
         }
 
         creditRequest.setFeedbackDocument(feedbackDocument);
-        System.out.println("test " + creditRequest.getFeedbackDocument());
+        System.out.println("test " + creditRequest);
         return creditRequest;
     }
 

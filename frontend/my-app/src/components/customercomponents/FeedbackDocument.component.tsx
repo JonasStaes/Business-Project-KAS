@@ -21,7 +21,11 @@ const styles = StyleSheet.create({
   section: {
     margin: 10,
     padding: 10,
-  }
+  },
+  divider: {
+    borderBottom: "30",
+    borderBottomColor: "#448AE6"
+  },
 });
   
 
@@ -32,11 +36,24 @@ export const Feedback: FC<FeedbackDocument> = ({ approvalNote, calculatedRatios 
             <Text style={styles.title}>Omega</Text>
           </View>
           <View style={styles.section}>
-          {calculatedRatios.map(ratio => (
-            <Text>{ratio.name}: {ratio.ratio}</Text>
-          ))}
-            
-            <Text>{approvalNote}</Text>
+            <Text>Details aanvraag</Text>
+          </View>
+          <View style={styles.divider}/>
+          <View style={styles.section}>
+            <Text>Prijszetting &amp; aflossing</Text>
+          </View>
+          <View style={styles.divider}/>
+          <View style={styles.section}>
+            <Text>
+              Opmerking: {"\n"}
+              {approvalNote}
+            </Text>
+            <Text>{"\n"}</Text>
+            {calculatedRatios.map(ratio => (
+              <Text key={ratio.name} style={{ backgroundColor: ratio.ratioValid ? "#5AC129" : "#C33212", padding: 4, margin: 1 }}>
+                {ratio.name}: {ratio.ratio}
+              </Text>
+            ))}
           </View>
         </Page>
     </Document>
