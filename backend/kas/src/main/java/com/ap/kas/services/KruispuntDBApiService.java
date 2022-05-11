@@ -5,6 +5,7 @@ import com.ap.kas.dtos.readdtos.CompanyInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 @Service
 public class KruispuntDBApiService {
@@ -18,6 +19,8 @@ public class KruispuntDBApiService {
         CompanyInfoDto output;
         try {
             output = kruispuntdb.get().uri("/" + convertedNr).retrieve().bodyToMono(CompanyInfoDto.class).block();
+        } catch (WebClientRequestException e) {
+            output = new CompanyInfoDto();
         } catch (Exception e) {
             output = kruispuntdb.get().uri("/BE0123.456.789").retrieve().bodyToMono(CompanyInfoDto.class).block();
         }
