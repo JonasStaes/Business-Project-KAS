@@ -53,7 +53,6 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     private AccountingService accountingService;
 
-
     @Autowired
     private KruispuntDBApiService apiService;
   
@@ -96,19 +95,6 @@ public class MockDataRunner implements CommandLineRunner {
         employeeRepository.save(employee4);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
 
-        creditRequestRepository.deleteAll();
-
-        List<CreditRequest> creditRequests = new LinkedList<CreditRequest>() {{
-            for (int i = 0; i < 20; i++) {
-                add(createRandomCreditRequest(i + 1, (i % 2 == 0 ? customer1 : customer2)));
-            }
-        }};
-
-        creditRequestRepository.saveAll(creditRequests);
-
-        creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
-
-
         WhiteListEntry whiteListEntry1 = new WhiteListEntry("1234567");
         WhiteListEntry whiteListEntry2 = new WhiteListEntry("8910112");
         whiteListRepository.save(whiteListEntry1);
@@ -118,11 +104,21 @@ public class MockDataRunner implements CommandLineRunner {
 
         BlackListEntry blackListEntry1 = new BlackListEntry("6578423");
         BlackListEntry blackListEntry2 = new BlackListEntry("1563987");
-        BlackListEntry blackListEntry3 = new BlackListEntry("9511001");
         blackListRepository.save(blackListEntry1);
         blackListRepository.save(blackListEntry2);
-        blackListRepository.save(blackListEntry3);
         blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+
+        creditRequestRepository.deleteAll();
+        List<CreditRequest> creditRequests = new LinkedList<CreditRequest>() {{
+            List<Customer> customers = customerRepository.findAll();
+            for (int i = 0; i < 30; i++) {
+                add(createRandomCreditRequest(i + 1, (customers.get(i % customers.size()))));
+            }
+        }};
+
+        creditRequestRepository.saveAll(creditRequests);
+
+        creditRequestRepository.findAll().forEach(cr -> logger.info("{}\n", cr));
   
         FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
         feedbackDocumentRepository.save(test);

@@ -1,15 +1,12 @@
 package com.ap.kas.services;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import com.ap.kas.dtos.readdtos.CompanyInfoDto;
-import com.ap.kas.models.BlackListEntry;
 import com.ap.kas.models.CalculatedRatio;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.Status;
-import com.ap.kas.models.WhiteListEntry;
 import com.ap.kas.models.FeedbackDocument.FeedbackDocumentBuilder;
 import com.ap.kas.repositories.BlackListRepository;
 import com.ap.kas.repositories.WhiteListRepository;
@@ -22,31 +19,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountingService {
 
-
     @Autowired
     private WhiteListRepository whiteListRepository;
 
     @Autowired 
     private BlackListRepository blackListRepository;
 
-     
-
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoDto companyInfo) {
         FeedbackDocumentBuilder builder = FeedbackDocument.builder();
 
         builder = calculateRatios(companyInfo, builder);
         FeedbackDocument feedbackDocument = builder.build();
-        creditRequest.setFeedbackDocument(feedbackDocument);
-
 
         if(checkIfMatchesWhiteListEntry(companyInfo.getNacbelCode())){
             creditRequest.setStatus(Status.GOEDGEKEURD);
-            return creditRequest;
+            feedbackDocument.setApprovalNote("Uw kredietaanvraag is goedgekeurd. Uw bedrijfstype krijgt momenteel automatische goedkeuring van de bank.");
         } else if(checkIfMatchesBlackListEntry(companyInfo.getNacbelCode())){
             creditRequest.setStatus(Status.IN_BEHANDELING);
             creditRequest.setSuspicious(true);
-            return creditRequest;
-        } else{
+            feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling.");
+        } else {
             long validRatios = feedbackDocument.getCalculatedRatios().stream()
             .map(ratio -> {
                 return ratio.isRatioValid();
@@ -54,20 +46,20 @@ public class AccountingService {
             .filter(calculatedRatio -> calculatedRatio)
             .count();
 
-            if(validRatios < feedbackDocument.getCalculatedRatios().size() / 2) {
+            if(validRatios == 0) {
                 creditRequest.setStatus(Status.AFGEKEURD);
+                feedbackDocument.setApprovalNote("Uw kredietaanvraag is afgekeurd. Geen enkele van uw ratio's voldoen aan onze minima.");
             } else if(validRatios == feedbackDocument.getCalculatedRatios().size()) {
                 creditRequest.setStatus(Status.GOEDGEKEURD);
+                feedbackDocument.setApprovalNote("Uw kredietaanvraag is goedgekeurd. Al uw ratio's voldoen aan onze minima.");
             } else {
                 creditRequest.setStatus(Status.IN_BEHANDELING);
+                feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling.");
             }
         }
 
-        //zet check witte en zwarte lijst hier, als kredietaanvraag in geen een van de twee zit, voer onderstaande code uit
-        //vergeet niet, verdachte aanvraagen staan op IN_BEHANDELING
-        //van hier
-       
-        //tot hier dus
+        creditRequest.setFeedbackDocument(feedbackDocument);
+        System.out.println("test " + creditRequest.getFeedbackDocument());
         return creditRequest;
     }
 
@@ -142,31 +134,13 @@ public class AccountingService {
     }
 
     private boolean checkIfMatchesWhiteListEntry(String nacebel){
-        List<WhiteListEntry> whiteListEntries = new LinkedList<WhiteListEntry>();
-        whiteListRepository.findAll().forEach(entry -> {
-                  whiteListEntries.add(entry);
-        });
-
-        for (WhiteListEntry entry : whiteListEntries) {
-            if(entry.getNacebel().equals(nacebel)){
-                return true;
-            }        
-        }
-        return false;       
+       return  whiteListRepository.findAll().stream()
+            .anyMatch(entry -> entry.getNacebel().equals(nacebel));
     }
 
     private boolean checkIfMatchesBlackListEntry(String nacebel){
-        List<BlackListEntry> blackListEntries = new LinkedList<BlackListEntry>();
-        blackListRepository.findAll().forEach(entry -> {
-                  blackListEntries.add(entry);
-        });
-
-        for (BlackListEntry entry : blackListEntries) {
-            if(entry.getNacebel().equals(nacebel)){
-                return true;
-            }         
-        }
-        return false;       
+        return blackListRepository.findAll().stream()
+            .anyMatch(entry -> entry.getNacebel().equals(nacebel));    
     }
 
     
