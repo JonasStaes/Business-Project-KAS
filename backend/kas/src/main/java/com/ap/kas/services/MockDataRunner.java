@@ -71,6 +71,8 @@ public class MockDataRunner implements CommandLineRunner {
         customerRepository.save(customer1);
         Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891");
         customerRepository.save(customer2);
+        Customer customer3 = new Customer("customer 3", "customer3@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer3")), "0123456789");
+        customerRepository.save(customer3);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
         employeeRepository.deleteAll();
@@ -106,16 +108,20 @@ public class MockDataRunner implements CommandLineRunner {
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
 
-        WhiteListEntry whiteListEntry1 = new WhiteListEntry("58.110");
-        WhiteListEntry whiteListEntry2 = new WhiteListEntry("25.501");
+
+        WhiteListEntry whiteListEntry1 = new WhiteListEntry("1234567");
+        WhiteListEntry whiteListEntry2 = new WhiteListEntry("8910112");
         whiteListRepository.save(whiteListEntry1);
         whiteListRepository.save(whiteListEntry2);
         whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
 
-        BlackListEntry blackListEntry1 = new BlackListEntry("92.000");
-        BlackListEntry blackListEntry2 = new BlackListEntry("25.400");
+
+        BlackListEntry blackListEntry1 = new BlackListEntry("6578423");
+        BlackListEntry blackListEntry2 = new BlackListEntry("1563987");
+        BlackListEntry blackListEntry3 = new BlackListEntry("9511001");
         blackListRepository.save(blackListEntry1);
         blackListRepository.save(blackListEntry2);
+        blackListRepository.save(blackListEntry3);
         blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
   
         FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
