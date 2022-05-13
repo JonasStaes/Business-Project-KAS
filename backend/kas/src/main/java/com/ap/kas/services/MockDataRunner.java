@@ -3,6 +3,7 @@ package com.ap.kas.services;
 import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import com.ap.kas.config.Profiles;
 import com.ap.kas.models.CalculatedRatio;
@@ -20,6 +21,9 @@ import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
 import com.ap.kas.repositories.FeedbackDocumentRepository;
 import com.ap.kas.repositories.WhiteListRepository;
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,35 +66,38 @@ public class MockDataRunner implements CommandLineRunner {
     @Autowired
     private BlackListRepository blackListRepository;
 
+    Faker faker = new Faker(new Locale("nl-BE"));
+    FakeValuesService fakeValuesService = new FakeValuesService(new Locale("nl-BE"), new RandomService());
+
     @Override
     public void run(String... args) throws Exception {
 
         customerRepository.deleteAll();
-        Customer customer1 = new Customer("customer 1", "customer1@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), "1234567890");
+        Customer customer1 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer1")), "1234567890");
         customerRepository.save(customer1);
-        Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891");
+        Customer customer2 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891");
         customerRepository.save(customer2);
-        Customer customer3 = new Customer("customer 3", "customer3@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer3")), "0123456789");
+        Customer customer3 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer3")), "0123456789");
         customerRepository.save(customer3);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
         employeeRepository.deleteAll();
-        Employee employee = new Employee("employee", "employee@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        Employee employee = new Employee(faker.name().fullName(), "employee@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee.addRole(Role.ADMINISTRATOR);
         employee.addRole(Role.KREDIET_BEOORDELAAR);
         employee.addRole(Role.COMPLIANCE);
         employee.addRole(Role.COMMERCIELE_DIRECTIE);
         employeeRepository.save(employee);
-        Employee employee1 = new Employee("employee1", "employee1@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        Employee employee1 = new Employee(faker.name().fullName(), "employee1@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee1.addRole(Role.ADMINISTRATOR);
         employeeRepository.save(employee1);
-        Employee employee2 = new Employee("employee2", "employee2@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        Employee employee2 = new Employee(faker.name().fullName(), "employee2@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee2.addRole(Role.KREDIET_BEOORDELAAR);
         employeeRepository.save(employee2);
-        Employee employee3 = new Employee("employee3", "employee3@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        Employee employee3 = new Employee(faker.name().fullName(), "employee3@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee3.addRole(Role.COMPLIANCE);
         employeeRepository.save(employee3);
-        Employee employee4 = new Employee("employee4", "employee4@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        Employee employee4 = new Employee(faker.name().fullName(), "employee4@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee4.addRole(Role.COMMERCIELE_DIRECTIE);
         employeeRepository.save(employee4);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
@@ -125,10 +132,14 @@ public class MockDataRunner implements CommandLineRunner {
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
-        float totalAmount = (float)Math.floor(100 + Math.random() * (20000 - 100));
-        float requestedAmount = (float)Math.floor(100 + Math.random() * (totalAmount - 100));
+        float financedAmount = randomFloat(4, 6);
+        float totalAmount = Float.sum(randomFloat(5, 7), financedAmount);
         Period period = Period.ofYears(Math.toIntExact((long)Math.floor(1 + Math.random() * (25 - 1))));
         InvestmentType investmentType = InvestmentType.values()[Math.toIntExact((long)Math.floor(0 + Math.random() * (InvestmentType.values().length - 0)))];
-        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, investmentType, customer), apiService.getCompanyInfoDto(customer.getCompanyNr()));
+        return accountingService.evaluateCreditRequest(new CreditRequest(faker.company().bs(), totalAmount, financedAmount, period, investmentType, customer), apiService.getCompanyInfoDto(customer.getCompanyNr()));
     }    
+
+    public float randomFloat(int min, int max) {
+        return Float.parseFloat(fakeValuesService.numerify(fakeValuesService.regexify(String.format("[#]{%d,%d}\\.[#]{2}", min, max))));
+    }
 }

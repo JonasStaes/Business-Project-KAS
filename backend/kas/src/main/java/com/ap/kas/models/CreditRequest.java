@@ -55,7 +55,7 @@ public class CreditRequest {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
+    
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "feedback_document_id")
     private FeedbackDocument feedbackDocument;

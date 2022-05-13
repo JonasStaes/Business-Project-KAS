@@ -30,7 +30,7 @@ export const CreditRequestDetail = () => {
     }
 
     const calculateRequestedAmount = (totalAmount: number, financedAmount: number) => {
-        return totalAmount - financedAmount
+        return (((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2)
     }
 
     useEffect(() => {
@@ -49,9 +49,9 @@ export const CreditRequestDetail = () => {
                                 <ul className="capitalize space-y-2 py-2">
                                     <li>Naam: {creditRequest.name}</li>
                                     <li>Investerings Type: {cleanUpStringUppercase(creditRequest.investmentType)}</li>
-                                    <li>Totaal bedrag: {creditRequest.totalAmount}</li>
-                                    <li>Zelfgefinancieerd bedrag: {creditRequest.financedAmount}</li>
-                                    <li>Gevraagd bedrag: {calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount)}</li>
+                                    <li>Totaal bedrag: &euro; {creditRequest.totalAmount}</li>
+                                    <li>Zelfgefinancieerd bedrag: &euro; {creditRequest.financedAmount}</li>
+                                    <li>Gevraagd bedrag: &euro; {calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount)}</li>
                                     <li className={modifyStatusRow(creditRequest.status)}>Status: {cleanUpStringUppercase(creditRequest.status)}</li>
                                 </ul>
                             </div>
@@ -68,7 +68,7 @@ export const CreditRequestDetail = () => {
                         <h1 className="bg-main-0 text-main-1 rounded-t py-2">Feedback</h1>
                         <div className="bg-main-1 rounded-b">
                             <PDFViewer showToolbar={false} className="w-full h-[34rem]">
-                                <Feedback approvalNote={creditRequest.feedbackDocument.approvalNote} calculatedRatios={creditRequest.feedbackDocument.calculatedRatios}/>
+                                <Feedback feedbackDocument={creditRequest.feedbackDocument} creditRequest={creditRequest}/>
                             </PDFViewer>
                         </div>
                     </div>

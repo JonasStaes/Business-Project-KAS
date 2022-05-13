@@ -1,6 +1,7 @@
 import { Document, Page, StyleSheet, View, Text } from "@react-pdf/renderer"
 import { FC } from "react"
-import { FeedbackDocument } from "../../redux/features/api/types"
+import { CreditRequestReadDto, FeedbackDocument } from "../../redux/features/api/types"
+import { cleanUpStringUppercase, formatNumber } from "../../services/frontend/TextParser.service";
 
 const styles = StyleSheet.create({
   header: {
@@ -27,16 +28,36 @@ const styles = StyleSheet.create({
     borderBottomColor: "#448AE6"
   },
 });
+
+interface FeedbackProps {
+  feedbackDocument: FeedbackDocument,
+  creditRequest: CreditRequestReadDto
+}
   
 
-export const Feedback: FC<FeedbackDocument> = ({ approvalNote, calculatedRatios }) => (
+const calculateRequestedAmount = (totalAmount: number, financedAmount: number) => {
+  return parseFloat((((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2))
+}
+
+
+export const Feedback: FC<FeedbackProps> = ({ feedbackDocument: { approvalNote, calculatedRatios }, creditRequest: { name, investmentType, totalAmount, financedAmount } }) => (
     <Document>
         <Page size={"A4"} style={styles.page}>
           <View style={styles.header}>
             <Text style={styles.title}>Omega</Text>
           </View>
           <View style={styles.section}>
-            <Text>Details aanvraag</Text>
+            <Text>
+              Naam project: {name}
+              {"\n"}
+              Investeringstype: {cleanUpStringUppercase(investmentType)} 
+              {"\n"}
+              Totaal Bedrag: &euro; {formatNumber(totalAmount)}  
+              {"\n"}
+              Zelfgefinancieerd bedrag: &euro; {formatNumber(financedAmount)}
+              {"\n"}
+              Gevraagd bedrag: &euro; {formatNumber(calculateRequestedAmount(totalAmount, financedAmount))}
+            </Text>
           </View>
           <View style={styles.divider}/>
           <View style={styles.section}>
