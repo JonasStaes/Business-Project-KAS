@@ -17,7 +17,7 @@ public class KasApplication {
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<MessageResponse> test() {
-		return ResponseEntity.ok().body(new MessageResponse("hello world!"));
+	public String test() {
+		return "hello world!";
 	}
 }
