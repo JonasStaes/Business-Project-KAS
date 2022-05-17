@@ -1,3 +1,4 @@
+import { ExclamationIcon } from "@heroicons/react/solid";
 import { Document, Page, StyleSheet, View, Text } from "@react-pdf/renderer"
 import { FC } from "react"
 import { CreditRequestReadDto, FeedbackDocument } from "../../redux/features/api/types"
@@ -44,10 +45,11 @@ export const Feedback: FC<FeedbackProps> = ({ feedbackDocument: { approvalNote, 
     <Document>
         <Page size={"A4"} style={styles.page}>
           <View style={styles.header}>
-            <Text style={styles.title}>Omega</Text>
+            <Text style={styles.title}>Omega  </Text>
           </View>
           <View style={styles.section}>
             <Text>
+            <ExclamationIcon className="fill-yellow-500 h-7 w-7 mr-2"/>
               Naam project: {name}
               {"\n"}
               Investeringstype: {cleanUpStringUppercase(investmentType)} 

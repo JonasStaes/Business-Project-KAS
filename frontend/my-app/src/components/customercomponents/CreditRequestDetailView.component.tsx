@@ -3,7 +3,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetOneCustomerCreditRequestQuery } from "../../redux/features/api/customerCreditRequest";
-import { cleanUpStringUppercase } from "../../services/frontend/TextParser.service";
+import { cleanUpStringUppercase, formatNumber } from "../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
 import { Feedback } from "./FeedbackDocument.component";
 
@@ -30,13 +30,16 @@ export const CreditRequestDetail = () => {
     }
 
     const calculateRequestedAmount = (totalAmount: number, financedAmount: number) => {
-        return (((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2)
+        return parseFloat((((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2))
     }
 
     useEffect(() => {
-        console.log(creditRequest?.feedbackDocument)
-    })
-    
+        console.log(creditRequest?.files)
+        if(creditRequest?.files !== undefined) {
+            console.log(new File([creditRequest.files[0].data], creditRequest.files[0].name, { type: creditRequest.files[0].type }))
+        }
+    }, [creditRequest])
+
     return (
     <div className="flex flex-col p-4 gap-y-8 max-h-full">
         <div className="flex flex-row divide-x text-left indent-4 max-h-full">
@@ -49,9 +52,9 @@ export const CreditRequestDetail = () => {
                                 <ul className="capitalize space-y-2 py-2">
                                     <li>Naam: {creditRequest.name}</li>
                                     <li>Investerings Type: {cleanUpStringUppercase(creditRequest.investmentType)}</li>
-                                    <li>Totaal bedrag: &euro; {creditRequest.totalAmount}</li>
-                                    <li>Zelfgefinancieerd bedrag: &euro; {creditRequest.financedAmount}</li>
-                                    <li>Gevraagd bedrag: &euro; {calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount)}</li>
+                                    <li>Totaal bedrag: &euro; {formatNumber(creditRequest.totalAmount)}</li>
+                                    <li>Zelfgefinancieerd bedrag: &euro; {formatNumber(creditRequest.financedAmount)}</li>
+                                    <li>Gevraagd bedrag: &euro; {formatNumber(calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount))}</li>
                                     <li className={modifyStatusRow(creditRequest.status)}>Status: {cleanUpStringUppercase(creditRequest.status)}</li>
                                 </ul>
                             </div>

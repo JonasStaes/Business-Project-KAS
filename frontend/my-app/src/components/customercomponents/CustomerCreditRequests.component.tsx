@@ -7,7 +7,7 @@ import { day, tenMins } from "../../redux/features/api/constants";
 import { useGetCustomerCreditRequestsQuery } from "../../redux/features/api/customerCreditRequest";
 import { useGetAllStatusesQuery } from "../../redux/features/api/enums";
 import { selectCurrentUserId } from "../../redux/features/auth/authSlice";
-import { cleanUpStringUppercase } from "../../services/frontend/TextParser.service";
+import { cleanUpStringUppercase, formatNumber } from "../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
 
 const defaultStatus = "Geen Status";
@@ -115,8 +115,8 @@ export const CustomerCreditRequests: FC = () => {
               <tr key={cr.id} className="h-8 odd:bg-blue-100 hover:bg-gray-300"  onClick={() => handleRowClick(cr.id)}>
                 <td className="text-center border-x">{cr.name}</td>
                 <td className="text-center border-x text-ellipsis">{cleanUpStringUppercase(cr.investmentType)}</td>
-                <td className="text-center border-x">{cr.totalAmount}</td>
-                <td className="text-center border-x">{cr.financedAmount}</td>
+                <td className="text-center border-x">{formatNumber(cr.totalAmount)}</td>
+                <td className="text-center border-x">{formatNumber(cr.financedAmount)}</td>
                 <td className={["text-center border-x", modifyStatusRow(cr.status)].join(" ")}>{cleanUpStringUppercase(cr.status)}</td>
               </tr>
             ))}

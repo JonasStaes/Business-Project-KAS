@@ -18,5 +18,3 @@ export const baseApi = createApi({
     keepUnusedDataFor: 86400000,
     endpoints: () => ({}),
 })
-
-//build the authentication first, then start relocating the rest

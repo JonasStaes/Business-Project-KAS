@@ -34,7 +34,15 @@ export const updateStateAndErrors = <T,U>(propertyName: string, { value, valid, 
 }
 
 export const updateState = <T,U>(propertyName: string, value: U, data: T, dataSetter: Function) => {  
-  updateStateAndErrors(propertyName, { value: value, valid: true, errorValue: "" }, data, dataSetter);
+  let temp = {};
+
+  Object.defineProperty(temp, propertyName, {
+    enumerable: true,
+      writable: true,
+      value: value
+  });
+
+  dataSetter({...data, ...temp})
 }
 
 export const validateStateObject = (stateObject: Object): boolean => {

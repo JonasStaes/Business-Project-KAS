@@ -9,7 +9,8 @@ const complianceApi = baseApi.injectEndpoints({
             query: () => `${urlBase}/all`,
             transformResponse: (res: MessageResponse<Array<CreditRequestReadDto>>) => res.data
         })
-    })
+    }),
+    overrideExisting: true
 })
 
 export const { useGetAllSuspiciousRequestsQuery } = complianceApi

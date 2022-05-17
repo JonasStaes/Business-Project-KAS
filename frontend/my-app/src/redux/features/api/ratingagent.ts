@@ -55,7 +55,8 @@ const ratingAgentApi = baseApi.injectEndpoints({
             invalidatesTags: (result) => result ? [{type: "CreditRequests", id: result.id}] 
             : ["CreditRequests"]
         })
-    })
+    }),
+    overrideExisting: true
 })
 
 export const { useGetAllCreditRequestsQuery, useGetOneCreditRequestQuery, useSetApprovalStatusMutation } = ratingAgentApi

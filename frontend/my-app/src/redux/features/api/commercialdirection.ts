@@ -98,7 +98,8 @@ const complianceApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [{ type: "WhiteListEntry", id: "LIST" }]
         })
-    })
+    }),
+    overrideExisting: true
 })
 
 export const { useGetAllWhiteListEntriesQuery, useGetAllBlackListEntriesQuery, useCreateWhiteListEntryMutation, useCreateBlackListEntryMutation, useDeleteWhiteListEntryMutation, useDeleteBlackListEntryMutation} = complianceApi

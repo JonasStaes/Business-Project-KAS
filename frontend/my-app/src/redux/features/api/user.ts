@@ -104,7 +104,8 @@ const userApi = baseApi.injectEndpoints({
                 }
             },
         })
-    })
+    }),
+    overrideExisting: true
 })
 
 export const { 

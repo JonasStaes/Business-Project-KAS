@@ -96,6 +96,7 @@ const adminApi = baseApi.injectEndpoints({
             invalidatesTags: [{ type: "Users", id: "LIST" }]
         })
     }),
+    overrideExisting: true
 })
 
 export const { 

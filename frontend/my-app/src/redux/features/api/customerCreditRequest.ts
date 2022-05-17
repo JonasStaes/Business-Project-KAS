@@ -32,7 +32,7 @@ const customerApi = baseApi.injectEndpoints({
                     financedAmount: { value: financedAmount }, 
                     totalAmount: { value: totalAmount }, 
                     duration: { value: duration }, 
-                    investmentType: { value: { name: investmentType} }, 
+                    investmentType: { name: investmentType }, 
                     approvalNote: { value: approvalNote },
                     files,
                     currentUser
@@ -44,13 +44,17 @@ const customerApi = baseApi.injectEndpoints({
                 formData.append('totalAmount', totalAmount.toString());
                 formData.append('duration', `P${duration}Y`);
                 formData.append('parentId', currentUser);
-                formData.append("investmentType", investmentType);
-                formData.append("approvalNote", approvalNote);
-                if(files.length > 0) {
+                formData.append('investmentType', investmentType);
+                formData.append('approvalNote', approvalNote);
+                if(files.length !== undefined) {
                     files.forEach(file => {
                         formData.append('files', file);
                     })   
                 }   
+                console.log(...formData)
+                console.log(files)
+                console.log(files.length)
+                console.log(files.length > 0)
                 return {
                     url: `${urlBase}/`,
                     method: "POST",
@@ -79,6 +83,7 @@ const customerApi = baseApi.injectEndpoints({
             invalidatesTags: (res) => [{ type: "CreditRequests", id: res?.id }]
         }),
     }),
+    overrideExisting: true
 })
 
 export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation, useValidateCreditRequestMutation, useGetOneCustomerCreditRequestQuery } = customerApi;

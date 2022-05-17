@@ -49,7 +49,8 @@ const passwordApi = baseApi.injectEndpoints({
                 }
             }
         })
-    })
+    }),
+    overrideExisting: true
 })
 
 export const { useRequestPasswordChangeMutation, useChangePasswordMutation } = passwordApi;

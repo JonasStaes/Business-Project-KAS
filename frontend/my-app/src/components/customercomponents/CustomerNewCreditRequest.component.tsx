@@ -25,7 +25,7 @@ export const NewCreditRequest: FC = () => {
     totalAmount: { value: 0, valid: true, errorValue: ""},
     financedAmount: { value: 0, valid: true, errorValue: ""},
     duration: { value: 1, valid: true, errorValue: ""},
-    investmentType: { value: { name: "Selecteer type", min: 1, max: 1 }, valid: true, errorValue: ""},
+    investmentType: { name: "Selecteer type", min: 1, max: 1 },
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
     currentUser: currentUser!
@@ -92,15 +92,15 @@ export const NewCreditRequest: FC = () => {
                 id="investmentType" 
                 values={investmentTypes} 
                 keyExtractor={({name}) => name}
-                selectedValue={creditRequestInfo.investmentType.value} 
+                selectedValue={creditRequestInfo.investmentType} 
                 valueCleaner={cleanUpInvestmentType} 
                 stateObjectSetter={setCreditRequestInfo} 
                 stateObject={creditRequestInfo} 
               />
               <StyledSlider 
                 id="duration" 
-                min={creditRequestInfo.investmentType.value.min}
-                max={creditRequestInfo.investmentType.value.max}
+                min={creditRequestInfo.investmentType.min}
+                max={creditRequestInfo.investmentType.max}
                 currentValue={creditRequestInfo.duration.value} 
                 stateObjectSetter={setCreditRequestInfo} 
                 stateObject={creditRequestInfo} 
