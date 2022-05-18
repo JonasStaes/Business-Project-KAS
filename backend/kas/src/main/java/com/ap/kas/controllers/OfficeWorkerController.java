@@ -49,21 +49,28 @@ public class OfficeWorkerController {
     @GetMapping("/all")
     public ResponseEntity<MessageResponse> readCreditRequests() {
         try {
+
             List<CreditRequestReadDto> creditRequests = new LinkedList<CreditRequestReadDto>();
-            creditRequestRepository.findAll().forEach(cr -> {
-                CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(cr);
-                readDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
-                creditRequests.add(readDto);
-            });
+            creditRequestRepository.findAll().stream()
+                .filter(cr -> {
+                    return !cr.isSuspicious();
+                })
+                .forEach(cr -> {
+                    CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(cr);
+                    readDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
+                    creditRequests.add(readDto);
+                });
 
             logger.info("Outgoing Credit Requests: \n {}", creditRequests);
             return ResponseEntity.ok(new MessageResponse("Got all credit requests!", creditRequests));
+
         } catch (Exception e) {
             logger.error("{}", e);
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to map a credit request"));
-        }
-    }
 
+        }
+
+    }
 
     
 }
