@@ -54,8 +54,24 @@ const officeWorkerApi = baseApi.injectEndpoints({
             },
             invalidatesTags: (result) => result ? [{type: "CreditRequests", id: result.id}] 
             : ["CreditRequests"]
+        }),
+        deleteCreditRequestOffice: builder.mutation<MessageResponse<null>, string>({
+            query: (id) => {
+                return {
+                    url: `${urlBase}/editCreditRequest/${id}`,
+                    method: "DELETE"
+                }
+            },
+            onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
+                try {
+                    await queryFulfilled
+                } catch (error) {
+                    dispatch(activateError({message: "Probleem bij het verwijderen van deze gebruiker"}))
+                }
+            },
+            invalidatesTags: [{ type: "Users", id: "LIST" }]
         })
     })
 })
 
-export const { useGetAllCreditRequestsOfficeQuery, useGetOneCreditRequestOfficeQuery, useSetApprovalStatusOfficeMutation } = officeWorkerApi
+export const { useGetAllCreditRequestsOfficeQuery, useGetOneCreditRequestOfficeQuery, useSetApprovalStatusOfficeMutation, useDeleteCreditRequestOfficeMutation } = officeWorkerApi

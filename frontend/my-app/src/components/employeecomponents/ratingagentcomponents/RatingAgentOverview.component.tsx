@@ -4,7 +4,7 @@ import { FC, Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 import { day, tenMins } from "../../../redux/features/api/constants";
 import { useGetAllStatusesQuery } from "../../../redux/features/api/enums";
-import { useGetAllCreditRequestsQuery } from "../../../redux/features/api/ratingagent";
+import { useGetAllCreditRequestsAgentQuery } from "../../../redux/features/api/ratingagent";
 import { cleanUpStringUppercase } from "../../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 
@@ -12,7 +12,7 @@ const defaultStatus = "Geen Status";
 
 const RatingAgentOverview: FC = () => {
   const navigate = useNavigate();
-  const { data: creditRequests, isLoading: creditRequestsLoading } = useGetAllCreditRequestsQuery(undefined, { pollingInterval: tenMins });
+  const { data: creditRequests, isLoading: creditRequestsLoading } = useGetAllCreditRequestsAgentQuery(undefined, { pollingInterval: tenMins });
   const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day })
 
   const [selectedStatus, setSelectedStatus] = useState<string>(statusesLoading ? defaultStatus : statuses![0])
