@@ -90,6 +90,9 @@ public class MockDataRunner implements CommandLineRunner {
         Employee employee4 = new Employee("employee4", "employee4@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee4.addRole(Role.COMMERCIELE_DIRECTIE);
         employeeRepository.save(employee4);
+        Employee employee5 = new Employee("employee5", "employee5@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        employee5.addRole(Role.KANTOOR_MEDEWERKER);
+        employeeRepository.save(employee5);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
 
         creditRequestRepository.deleteAll();

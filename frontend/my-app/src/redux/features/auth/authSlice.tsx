@@ -45,7 +45,7 @@ export const selectIsCustomer = createSelector(
     selectCurrentRoles,
     (roles) => {
         if(roles !== null) {
-            return roles.includes("KLANT") || roles?.includes("KANTOOR_MEDEWERKER")
+            return roles.includes("KLANT") 
         }
 
         return false;
@@ -70,4 +70,9 @@ export const selectIsCompliance = createSelector(
 export const selectIsCommercialDirection = createSelector(
     selectCurrentRoles,
     (roles) => roles?.includes("COMMERCIELE_DIRECTIE")
+);
+
+export const selectIsOfficeWorker = createSelector(
+    selectCurrentRoles,
+    (roles) => roles?.includes("KANTOOR_MEDEWERKER")
 );
