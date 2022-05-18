@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsRatingAgent } from '../../redux/features/auth/authSlice';
+import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsOfficeWorker, selectIsRatingAgent } from '../../redux/features/auth/authSlice';
 import AuthenticatedHome from '../genericcomponents/HomeMenuAuthenticated.component';
 
 const EmployeeHomeLinks: FC = () => {
@@ -9,6 +9,7 @@ const EmployeeHomeLinks: FC = () => {
     const isRatingAgent = useSelector(selectIsRatingAgent);
     const isCompliance = useSelector(selectIsCompliance);
     const isCommercialDirection = useSelector(selectIsCommercialDirection);
+    const isOfficeWorker = useSelector(selectIsOfficeWorker);
 
     return(
         <AuthenticatedHome>
@@ -17,6 +18,7 @@ const EmployeeHomeLinks: FC = () => {
                 {isRatingAgent && <Link to="/kas/employee/rating_agent" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Kredietbeoordelaar</Link>}
                 {isCompliance && <Link to="/kas/employee/compliance" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Compliance medewerker</Link>}
                 {isCommercialDirection && <Link to="/kas/employee/commercial_direction" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Commerciële directie</Link>}
+                {isOfficeWorker && <Link to="/kas/employee/office_worker" className="hover:bg-gray-400 hover:bg-opacity-80 rounded p-2">Kantoormedewerker</Link>}
             </div>
         </AuthenticatedHome>
     );
@@ -29,6 +31,7 @@ export const EmployeeHome: FC = () => {
     const isRatingAgent = useSelector(selectIsRatingAgent);
     const isCompliance = useSelector(selectIsCompliance);
     const isCommercialDirection = useSelector(selectIsCommercialDirection);
+    const isOfficeWorker = useSelector(selectIsOfficeWorker);
 
     return(
         <div className="p-8 flex flex-row gap-8 justify-between">
@@ -61,9 +64,18 @@ export const EmployeeHome: FC = () => {
             </div>}
             {isCommercialDirection && 
             <div className="grow bg-main-1 rounded shadow p-2 flex flex-col">
-                <div className="text-center text-lg capitalize underline">commerciële directie</div>
+                <div className="text-center text-lg capitalize underline">Commerciële directie</div>
                 <Link className="bg-gray-400 opacity-80 text-white px-8 py-1 rounded shadow mx-auto"
                     to="./commercial_direction/whitelist"
+                >
+                    Open Dashboard
+                </Link>
+            </div>}
+            {isOfficeWorker && 
+            <div className="grow bg-main-1 rounded shadow p-2 flex flex-col">
+                <div className="text-center text-lg capitalize underline">Kantoormedewerker</div>
+                <Link className="bg-gray-400 opacity-80 text-white px-8 py-1 rounded shadow mx-auto"
+                    to="./office_worker/credit_requests"
                 >
                     Open Dashboard
                 </Link>

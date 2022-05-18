@@ -23,9 +23,10 @@ import CommercialDirectionOverview  from "./employeecomponents/commercialdirecti
 import CommercialDirectionBlacklist  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionBlacklist.component";
 import CommercialDirectionAddWhiteList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddWhiteList.component";
 import CommercialDirectionAddBlackList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddBlackList.component";
+import OfficeWorkerOverview  from "./employeecomponents/officeworkercomponents/OfficeWorkerOverview.component";
 import { useSelector } from "react-redux";
 import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
-import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsRatingAgent } from "../redux/features/auth/authSlice";
+import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsOfficeWorker, selectIsRatingAgent } from "../redux/features/auth/authSlice";
 
 
 export const CustomerRoutes = () => {
@@ -48,6 +49,7 @@ export const EmployeeRoutes = () => {
     const isRatingAgent = useSelector(selectIsRatingAgent);
     const isCompliance = useSelector(selectIsCompliance);
     const isCommercialDirection = useSelector(selectIsCommercialDirection);
+    const isOfficeWorker = useSelector(selectIsOfficeWorker);
 
     return(
         <Routes>
@@ -81,6 +83,12 @@ export const EmployeeRoutes = () => {
                         <Route path ="blacklist" element ={<CommercialDirectionBlacklist/>}/>
                         <Route path="new_whitelist_entry" element={<CommercialDirectionAddWhiteList/>}/>
                         <Route path="new_blacklist_entry" element={<CommercialDirectionAddBlackList/>}/>
+                    </Route>
+                }
+                {isOfficeWorker && 
+                    <Route path="office_worker">
+                        <Route index element={<Navigate replace to="/kas/employee/office_worker/credit_requests"/>}/>
+                        <Route path="credit_requests" element={<OfficeWorkerOverview/>}/>
                     </Route>
                 }
             </Route>
