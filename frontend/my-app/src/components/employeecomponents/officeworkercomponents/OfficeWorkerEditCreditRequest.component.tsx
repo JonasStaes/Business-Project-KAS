@@ -29,10 +29,10 @@ export const EditCreditRequest: FC = () => {
   const [selectedCreditRequest, setSelectedCreditRequest] = useState<string>("");
 
   const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestCreateDto>({
-    name: { value: "", valid: true, errorValue: ""},
-    totalAmount: { value: 0, valid: true, errorValue: ""},
-    financedAmount: { value: 0, valid: true, errorValue: ""},
-    duration: { value: 1, valid: true, errorValue: ""},
+    name: { value: creditRequest !== undefined ? creditRequest.name : "", valid: true, errorValue: ""},
+    totalAmount: { value: creditRequest !== undefined ? creditRequest.totalAmount : 0, valid: true, errorValue: ""},
+    financedAmount: { value: creditRequest !== undefined ? creditRequest.financedAmount : 0, valid: true, errorValue: ""},
+    duration: { value: creditRequest !== undefined ? parseInt(creditRequest.duration) : 1, valid: true, errorValue: ""},
     investmentType: { value: { name: "Selecteer type", min: 1, max: 1 }, valid: true, errorValue: ""},
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
@@ -73,7 +73,7 @@ export const EditCreditRequest: FC = () => {
               validateChange={handleTotalAmountInputChange} 
               stateObjectSetter={setCreditRequestInfo} 
               stateObject={creditRequestInfo} 
-              min={1000}           
+              min={1000}    
             />
             <StyledAppInput id="financedAmount" text={"Zelf gefinancierd (\u20ac)"} type="number"
               inputValue={creditRequestInfo.financedAmount}
@@ -82,6 +82,7 @@ export const EditCreditRequest: FC = () => {
               stateObject={creditRequestInfo} 
               min={1000}   
               max={creditRequestInfo.totalAmount.value}
+              
             />
             <div className="container pl-2 flex flex-col space-y-2">
               <label className="text-2xl uppercase" htmlFor="total_value">{"Gevraagd bedrag (\u20ac): "}</label>
@@ -103,7 +104,7 @@ export const EditCreditRequest: FC = () => {
                 selectedValue={creditRequestInfo.investmentType.value} 
                 valueCleaner={cleanUpInvestmentType} 
                 stateObjectSetter={setCreditRequestInfo} 
-                stateObject={creditRequestInfo} 
+                stateObject={creditRequestInfo}
               />
               <StyledSlider 
                 id="duration" 
@@ -141,7 +142,6 @@ export const EditCreditRequest: FC = () => {
             <div>
               <input className="hidden peer" id="submit" 
                 type="submit"
-                disabled={!validateStateObject(creditRequestInfo)}
               />
               <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
                 htmlFor="submit"
