@@ -44,7 +44,7 @@ export type CreditRequestReadDto = {
 type FileData = {
     name: string,
     type: string,
-    data: Blob
+    data: Array<string>
 }
 
 export type FeedbackDocument = {
@@ -63,7 +63,7 @@ export type CreditRequestCreateDto = {
     name: ValidatedObject<string>, 
     totalAmount: ValidatedObject<number>, 
     financedAmount: ValidatedObject<number>, 
-    duration: ValidatedObject<number>, 
+    duration: number, 
     investmentType: InvestmentType, 
     approvalNote: ValidatedObject<string>,
     files: Array<File>,

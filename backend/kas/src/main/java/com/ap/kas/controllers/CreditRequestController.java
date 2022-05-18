@@ -60,6 +60,7 @@ public class CreditRequestController {
             List<CreditRequestReadDto> creditRequests = new LinkedList<CreditRequestReadDto>();
             creditRequestRepository.findAllByCustomerId(id).forEach(cr -> {
                 CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(cr);
+                logger.info("Outgoing files: ", fileStorageRepository.findAllByCreditRequest(cr));
                 readDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
                 creditRequests.add(readDto);
             });

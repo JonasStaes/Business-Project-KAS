@@ -19,7 +19,12 @@ const customerApi = baseApi.injectEndpoints({
             transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
             onQueryStarted: async (body, {dispatch, queryFulfilled}) => {
                 try {
-                    await queryFulfilled
+                    const {data} = await queryFulfilled
+                    if(data.files !== undefined) {
+                        console.log(data.files[0].data.toString())
+                        console.log("file")
+                        console.log(new File([Buffer.from(data.files[0].data.toString(), "base64")], data.files[0].name, { type: data.files[0].type}))
+                    }
                 } catch (error) {
                     dispatch(activateError({message: `Kon kredietaanvraag met id: ${body} niet vinden`}))
                 }
@@ -31,7 +36,7 @@ const customerApi = baseApi.injectEndpoints({
                     name: { value: name }, 
                     financedAmount: { value: financedAmount }, 
                     totalAmount: { value: totalAmount }, 
-                    duration: { value: duration }, 
+                    duration, 
                     investmentType: { name: investmentType }, 
                     approvalNote: { value: approvalNote },
                     files,
@@ -51,10 +56,6 @@ const customerApi = baseApi.injectEndpoints({
                         formData.append('files', file);
                     })   
                 }   
-                console.log(...formData)
-                console.log(files)
-                console.log(files.length)
-                console.log(files.length > 0)
                 return {
                     url: `${urlBase}/`,
                     method: "POST",

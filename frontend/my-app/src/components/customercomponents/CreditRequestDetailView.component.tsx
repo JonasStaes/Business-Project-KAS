@@ -1,6 +1,5 @@
 import { ArrowCircleLeftIcon } from "@heroicons/react/solid";
 import { PDFViewer } from "@react-pdf/renderer";
-import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetOneCustomerCreditRequestQuery } from "../../redux/features/api/customerCreditRequest";
 import { cleanUpStringUppercase, formatNumber } from "../../services/frontend/TextParser.service";
@@ -33,20 +32,13 @@ export const CreditRequestDetail = () => {
         return parseFloat((((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2))
     }
 
-    useEffect(() => {
-        console.log(creditRequest?.files)
-        if(creditRequest?.files !== undefined) {
-            console.log(new File([creditRequest.files[0].data], creditRequest.files[0].name, { type: creditRequest.files[0].type }))
-        }
-    }, [creditRequest])
-
     return (
     <div className="flex flex-col p-4 gap-y-8 max-h-full">
-        <div className="flex flex-row divide-x text-left indent-4 max-h-full">
+        <div className="flex flex-row divide-x text-left indent-4 max-h-screen">
             {(creditRequestLoading || creditRequest === undefined) ? <LoadingSpinner/> : 
                 <>
-                    <div className="grow-[1] border border-main-2 space-y-2">
-                        <div>
+                    <div className="flex flex-col justify-start gap-y-2 grow-[1] ">
+                        <div className="border border-main-2">
                             <h1 className="bg-main-0 text-main-1 rounded-t py-2">Aanvraag</h1>
                             <div className="bg-main-1 rounded-b">
                                 <ul className="capitalize space-y-2 py-2">
@@ -59,12 +51,27 @@ export const CreditRequestDetail = () => {
                                 </ul>
                             </div>
                         </div>
-
-                        <div className="w-full flex justify-between pr-2">
-                            <Link to="../credit_requests" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
-                                <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
-                                Terug
-                            </Link>
+                        <div className="border border-main-2 ">
+                            <h1 className="bg-main-0 text-main-1 rounded-t py-2">Feedback</h1>
+                            <div className="bg-main-1 rounded-b">
+                                {creditRequest?.files !== undefined && 
+                                    creditRequest.files.map(file => (
+                                        <a href={URL.createObjectURL(new File([Buffer.from(creditRequest.files[0].data.toString(), "base64")], creditRequest.files[0].name, { type: creditRequest.files[0].type}))} rel="noopener noreferrer" target="_blank">
+                                            <div>
+                                                {file.name}
+                                            </div>
+                                        </a>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        <div className="justify-self-end">
+                            <div className="w-full flex justify-between pr-2">
+                                <Link to="../credit_requests" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">
+                                    <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
+                                    Terug
+                                </Link>
+                            </div>
                         </div>
                     </div>
                     <div className="grow-[1] border border-main-2 h-screen">

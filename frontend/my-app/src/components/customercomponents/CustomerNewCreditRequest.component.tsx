@@ -24,7 +24,7 @@ export const NewCreditRequest: FC = () => {
     name: { value: "", valid: true, errorValue: ""},
     totalAmount: { value: 0, valid: true, errorValue: ""},
     financedAmount: { value: 0, valid: true, errorValue: ""},
-    duration: { value: 1, valid: true, errorValue: ""},
+    duration: 1,
     investmentType: { name: "Selecteer type", min: 1, max: 1 },
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
@@ -101,7 +101,7 @@ export const NewCreditRequest: FC = () => {
                 id="duration" 
                 min={creditRequestInfo.investmentType.min}
                 max={creditRequestInfo.investmentType.max}
-                currentValue={creditRequestInfo.duration.value} 
+                currentValue={creditRequestInfo.duration} 
                 stateObjectSetter={setCreditRequestInfo} 
                 stateObject={creditRequestInfo} 
               />
