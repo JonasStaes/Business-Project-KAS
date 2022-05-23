@@ -36,7 +36,19 @@ export type CreditRequestReadDto = {
     financedAmount: number,
     duration: string,
     investmentType: string,
-    status: string
+    status: string,
+    feedbackDocument: FeedbackDocument
+}
+
+export type FeedbackDocument = {
+    approvalNote: string,
+    calculatedRatios: Array<CalculatedRatio>
+}
+
+export type CalculatedRatio = {
+    name: string,
+    ratio: number,
+    minimum: number
 }
 
 export type CreditRequestCreateDto = {
@@ -60,7 +72,6 @@ export type CustomerCreateDto = {
     name: ValidatedObject<string>,
     email: ValidatedObject<string>,
     companyNr: ValidatedObject<string>,
-    role: ValidatedObject<string>
 }
 
 export type CustomerFinalizationDto = {
@@ -100,4 +111,13 @@ export type PasswordChangeRequestDto = {
 export type PasswordChangeDto = {
     token: string,
     password: ValidatedObject<string>
+}
+
+export type ListEntryDto = {
+    nacebel: ValidatedObject<string>
+}
+
+export type ListEntryReadDto = {
+    id: string,
+    nacebel: ValidatedObject<string>
 }

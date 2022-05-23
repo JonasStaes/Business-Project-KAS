@@ -14,6 +14,17 @@ const customerApi = baseApi.injectEndpoints({
             }))] 
             : ["CreditRequests"]
         }),
+        getOneCreditRequest: builder.query<CreditRequestReadDto, string>({
+            query: (id) => `${urlBase}/${id}`,
+            transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
+            onQueryStarted: async (body, {dispatch, queryFulfilled}) => {
+                try {
+                    await queryFulfilled
+                } catch (error) {
+                    dispatch(activateError({message: `Kon kredietaanvraag met id: ${body} niet vinden`}))
+                }
+            },
+        }),
         createCreditRequest: builder.mutation<CreditRequestReadDto, { creditRequestCreateDto: CreditRequestCreateDto, callback: Function }>({
             query: ({ 
                 creditRequestCreateDto: {
@@ -66,7 +77,7 @@ const customerApi = baseApi.injectEndpoints({
             },
             transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
             invalidatesTags: (res) => [{ type: "CreditRequests", id: res?.id }]
-        })
+        }),
     }),
 })
 

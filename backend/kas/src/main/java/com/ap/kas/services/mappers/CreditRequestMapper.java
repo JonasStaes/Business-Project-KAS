@@ -36,7 +36,7 @@ public class CreditRequestMapper {
     }
 
     public CreditRequest confirmStatus(CreditRequestStatusConfirmationDto confirmationDto, CreditRequest creditRequest) {
-        creditRequest.setApprovalNote(confirmationDto.getApprovalNote());
+        creditRequest.getFeedbackDocument().setApprovalNote(confirmationDto.getApprovalNote());
         if(confirmationDto.isApproval()) {
             creditRequest.setStatus(Status.GOEDGEKEURD);
         } else {

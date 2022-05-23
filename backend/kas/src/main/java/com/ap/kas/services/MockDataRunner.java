@@ -5,14 +5,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ap.kas.config.Profiles;
+import com.ap.kas.models.CalculatedRatio;
+import com.ap.kas.models.BlackListEntry;
+
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
+import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
+import com.ap.kas.models.WhiteListEntry;
+import com.ap.kas.repositories.BlackListRepository;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
+import com.ap.kas.repositories.FeedbackDocumentRepository;
+import com.ap.kas.repositories.WhiteListRepository;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,19 +47,34 @@ public class MockDataRunner implements CommandLineRunner {
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private FeedbackDocumentRepository feedbackDocumentRepository;
+
+    @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private AccountingService accountingService;
 
+
+    @Autowired
+    private KruispuntDBApiService apiService;
+  
+    @Autowired 
+    private WhiteListRepository whiteListRepository;
+
+    @Autowired
+    private BlackListRepository blackListRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
         customerRepository.deleteAll();
-        Customer customer1 = new Customer("customer 1", "customer1@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), "1234567890", Role.KLANT);
+        Customer customer1 = new Customer("customer 1", "customer1@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer1")), "1234567890");
         customerRepository.save(customer1);
-        Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891", Role.KLANT);
+        Customer customer2 = new Customer("customer 2", "customer2@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891");
         customerRepository.save(customer2);
+        Customer customer3 = new Customer("customer 3", "customer3@gmail.com", true, passwordEncoder.encode(new StringBuffer("customer3")), "0123456789");
+        customerRepository.save(customer3);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
         employeeRepository.deleteAll();
@@ -63,6 +87,9 @@ public class MockDataRunner implements CommandLineRunner {
         Employee employee3 = new Employee("employee3", "employee3@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee3.addRole(Role.COMPLIANCE);
         employeeRepository.save(employee3);
+        Employee employee4 = new Employee("employee4", "employee4@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
+        employee4.addRole(Role.COMMERCIELE_DIRECTIE);
+        employeeRepository.save(employee4);
         employeeRepository.findAll().forEach(em -> logger.info("{}", em));
 
         creditRequestRepository.deleteAll();
@@ -76,6 +103,26 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.saveAll(creditRequests);
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}", cr));
+
+
+        WhiteListEntry whiteListEntry1 = new WhiteListEntry("1234567");
+        WhiteListEntry whiteListEntry2 = new WhiteListEntry("8910112");
+        whiteListRepository.save(whiteListEntry1);
+        whiteListRepository.save(whiteListEntry2);
+        whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+
+
+        BlackListEntry blackListEntry1 = new BlackListEntry("6578423");
+        BlackListEntry blackListEntry2 = new BlackListEntry("1563987");
+        BlackListEntry blackListEntry3 = new BlackListEntry("9511001");
+        blackListRepository.save(blackListEntry1);
+        blackListRepository.save(blackListEntry2);
+        blackListRepository.save(blackListEntry3);
+        blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
+  
+        FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
+        feedbackDocumentRepository.save(test);
+
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
@@ -83,6 +130,6 @@ public class MockDataRunner implements CommandLineRunner {
         float requestedAmount = (float)Math.floor(100 + Math.random() * (totalAmount - 100));
         Period period = Period.ofYears(Math.toIntExact((long)Math.floor(1 + Math.random() * (25 - 1))));
         InvestmentType investmentType = InvestmentType.values()[Math.toIntExact((long)Math.floor(0 + Math.random() * (InvestmentType.values().length - 0)))];
-        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, investmentType, customer));
+        return accountingService.evaluateCreditRequest(new CreditRequest("test " + i, totalAmount, requestedAmount, period, investmentType, customer), apiService.getCompanyInfoDto(customer.getCompanyNr()));
     }    
 }
