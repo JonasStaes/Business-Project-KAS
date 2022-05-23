@@ -25,6 +25,8 @@ public class AccountingService {
     @Autowired 
     private BlackListRepository blackListRepository;
 
+    //#region credit request evaluation
+    
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoDto companyInfo) {
         FeedbackDocumentBuilder builder = FeedbackDocument.builder();
 
@@ -63,7 +65,9 @@ public class AccountingService {
         return creditRequest;
     }
 
-    public FeedbackDocumentBuilder calculateRatios(CompanyInfoDto companyInfo, FeedbackDocumentBuilder builder) {
+    //#region evaluation methods
+
+    private FeedbackDocumentBuilder calculateRatios(CompanyInfoDto companyInfo, FeedbackDocumentBuilder builder) {
         builder.calculatedRatios(new LinkedList<CalculatedRatio>(){{
             add(calculateSolvencyRate(companyInfo.getEquity(), companyInfo.getAssets()));
             add(calculateProfitabilityRateOnEquity(companyInfo.getResult(), companyInfo.getEquity()));
@@ -143,5 +147,17 @@ public class AccountingService {
             .anyMatch(entry -> entry.getNacebel().equals(nacebel));    
     }
 
+    //#endregion evaluation methods
+
+    //#endregion credit request evaluation
+
+
+    public void calculateFixedPricing() {
+        
+    }
+
+    public void calculateDynamicPricing() {
+
+    }
     
 }
