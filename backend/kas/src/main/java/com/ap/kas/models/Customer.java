@@ -27,7 +27,7 @@ public class Customer extends User {
     private String companyNr;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.KLANT;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
@@ -37,9 +37,8 @@ public class Customer extends User {
     @JoinColumn(name = "information_id")
     private CustomerInfo personalInfo;
 
-    public Customer(String name, String email, Boolean active, String password, String companyNr, Role role) {
+    public Customer(String name, String email, Boolean active, String password, String companyNr) {
         super(name, email, active, password);
         this.companyNr = companyNr;
-        this.role = role;
     }
 }

@@ -3,9 +3,9 @@ import { GlobalState } from '../../store'
 
 export const baseApi = createApi({
     reducerPath: "api",
-    tagTypes: ["CreditRequests", "Users"],
+    tagTypes: ["CreditRequests", "Users", "WhiteListEntry"],
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'http://localhost:8080/api/v1',
+        baseUrl: 'http://projectbus4.p.bletchley.cloud:8069/api/v1/',
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as GlobalState).auth.accessToken
             if(token) {

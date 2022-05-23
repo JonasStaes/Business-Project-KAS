@@ -54,7 +54,6 @@ const RatingAgentOverview: FC = () => {
   }
 
   const handleRowClick = (id: string) => {
-    console.log(id)
     navigate(`.././credit_request/${id}`);
   }
 
@@ -107,7 +106,7 @@ const RatingAgentOverview: FC = () => {
             </thead>
             <tbody>
               {filterRequests().map(cr => (
-                <tr key={JSON.stringify(cr)} className="h-8 odd:bg-blue-100 hover:bg-gray-300" onClick={() => handleRowClick(cr.id)}>
+                <tr key={cr.id} className="h-8 odd:bg-blue-100 hover:bg-gray-300" onClick={() => handleRowClick(cr.id)}>
                   <td className="text-center border-x">{cr.name}</td>
                   <td className="text-center border-x text-ellipsis">{cleanUpStringUppercase(cr.investmentType)}</td>
                   <td className="text-center border-x">{cr.totalAmount}</td>

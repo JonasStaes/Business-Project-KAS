@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public enum Role {
     KLANT("customer"),
-    KANTOOR_MEDEWERKER("customer"),
+    KANTOOR_MEDEWERKER("employee"),
     ADMINISTRATOR("employee"),
     COMPLIANCE("employee"),
     KREDIET_BEOORDELAAR("employee"),

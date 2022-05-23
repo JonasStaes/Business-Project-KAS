@@ -6,7 +6,9 @@ import java.util.Optional;
 import com.ap.kas.models.UserUpdateToken;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserUpdateTokenRepository extends JpaRepository<UserUpdateToken, String>{
     void deleteByExpiryDateLessThan(Date now);
     void deleteAllByExpiryDateLessThan(Date now);

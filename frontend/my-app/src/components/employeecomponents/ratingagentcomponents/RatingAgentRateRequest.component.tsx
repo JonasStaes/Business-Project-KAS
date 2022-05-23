@@ -53,7 +53,7 @@ const RateCreditRequest: FC = () => {
 
     return(
         <div className="flex flex-col p-4 gap-y-8">
-            <div className="flex flex-row divide-x text-center">
+            <div className="flex flex-row divide-x text-left">
                 <div className="grow-[1] border border-main-2">
                     <h1 className="bg-main-0 text-main-1 rounded-t py-2">Bedrijf</h1>
                     <div className="bg-main-1 rounded-b">
