@@ -25,7 +25,7 @@ public class MailSender {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("noreplay.omega@gmail.com");
+            helper.setFrom("noreplay.fba@gmail.com");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);
@@ -42,16 +42,16 @@ public class MailSender {
 
     public void sendPasswordRecoveryMail(String email, String token) {
         String message = "Click <a href=\"http://localhost:3000/kas/change_password/" + token + "\">this link</a> to change your password.";
-        sendMail(email, "Omega: Request for password recovery", message);
+        sendMail(email, "FBA: Request for password recovery", message);
     }
 
     public void sendCustomerFinalizationMail(String email, String token) {
-        String message = "Click <a href=\"http://localhost:3000/kas/finalize_account/customer/" + token + "\">this link</a> to fill in your customer information and start banking with Omega!";
-        sendMail(email, "Omega: account created for you", message);
+        String message = "Click <a href=\"http://localhost:3000/kas/finalize_account/customer/" + token + "\">this link</a> to fill in your customer information and start banking with FBA!";
+        sendMail(email, "FBA: account created for you", message);
     }
 
     public void sendEmployeeFinalizationMail(String email, String token) {
         String message = "Click <a href=\"http://localhost:3000/kas/finalize_account/employee/" + token + "\">this link</a> to fill in your password information and start working in KAS.";
-        sendMail(email, "Omega: employee account created for you", message);
+        sendMail(email, "FBA: employee account created for you", message);
     }
 }
