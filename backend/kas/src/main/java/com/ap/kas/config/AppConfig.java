@@ -117,7 +117,7 @@ public class AppConfig {
         mailSenderImpl.setHost("smtp.gmail.com");
         mailSenderImpl.setPort(587);
 
-        mailSenderImpl.setUsername("noreplay.omega@gmail.com");
+        mailSenderImpl.setUsername("noreplay.fba@gmail.com");
         mailSenderImpl.setPassword("eJhmbSVJNbSp2Kt");
 
         Properties props = mailSenderImpl.getJavaMailProperties();

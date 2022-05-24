@@ -149,7 +149,7 @@ export const handleBirthDateChange = ({ target: { value, validity } }: ChangeEve
         if(validity.valueMissing) {
             errorMessage = "Geboortedatum is verplicht";
         } else if(validity.rangeOverflow) {
-            errorMessage = "Een klant van omega moet minstens 18 jaar oud zijn";
+            errorMessage = "Een klant van FBA moet minstens 18 jaar oud zijn";
         }
         output.errorValue = errorMessage;
     }

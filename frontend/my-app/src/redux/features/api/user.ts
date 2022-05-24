@@ -58,7 +58,7 @@ const userApi = baseApi.injectEndpoints({
                     await queryFulfilled
                     body.callback();
                 } catch (error) {
-                    dispatch(activateError({message: `Kon uw informatie niet afmaken, contacteer Omega voor hulp`}))
+                    dispatch(activateError({message: `Kon uw informatie niet afmaken, contacteer FBA voor hulp`}))
                     body.callback();
                 }
             },
