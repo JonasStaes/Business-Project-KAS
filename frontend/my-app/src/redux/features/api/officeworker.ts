@@ -1,6 +1,6 @@
 import { activateError } from "../errors/errorSlice";
 import { baseApi } from "./baseApi";
-import { CreditRequestReadDto, CreditRequestStatusConfirmationDto, MessageResponse } from "./types";
+import { CreditRequestCreateDto, CreditRequestReadDto, CreditRequestStatusConfirmationDto, CreditRequestUpdateDto, MessageResponse } from "./types";
 
 const urlBase: string = "office_worker";
 
@@ -54,8 +54,67 @@ const officeWorkerApi = baseApi.injectEndpoints({
             },
             invalidatesTags: (result) => result ? [{type: "CreditRequests", id: result.id}] 
             : ["CreditRequests"]
-        })
+        }),
+        deleteCreditRequestOffice: builder.mutation<MessageResponse<null>, string>({
+            query: (id) => {
+                return {
+                    url: `${urlBase}/editCreditRequest/${id}`,
+                    method: "DELETE"
+                }
+            },
+            onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
+                try {
+                    await queryFulfilled
+                } catch (error) {
+                    dispatch(activateError({message: "Probleem bij het verwijderen van deze gebruiker"}))
+                }
+            },
+            invalidatesTags: [{ type: "Users", id: "LIST" }]
+        }),
+        updateCreditRequest: builder.mutation<CreditRequestReadDto, { creditRequestUpdateDto: CreditRequestUpdateDto, callback: Function }>({
+            query: ({ 
+                creditRequestUpdateDto: {
+                    name: { value: name }, 
+                    financedAmount: { value: financedAmount }, 
+                    totalAmount: { value: totalAmount }, 
+                    duration: { value: duration }, 
+                    investmentType: { value: { name: investmentType} }, 
+                    approvalNote: { value: approvalNote },
+                    files,
+                    id
+
+                }
+            }) => {
+                let formData = new FormData();
+                formData.append('name', name);
+                formData.append('financedAmount', financedAmount.toString());
+                formData.append('totalAmount', totalAmount.toString());
+                formData.append('duration', `P${duration}Y`);
+                formData.append("investmentType", investmentType);
+                formData.append("approvalNote", approvalNote);
+                if(files.length > 0) {
+                    files.forEach(file => {
+                        formData.append('files', file);
+                    })   
+                }   
+                return {
+                    url: `${urlBase}/editCreditRequest/${id}`,
+                    method: "PUT",
+                    body: formData
+                }
+            },
+            transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
+            onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
+                try {
+                    const { data } = await queryFulfilled
+                    request.callback(data.id);
+                } catch (error) {
+                    dispatch(activateError({message: "Probleem bij het aanmaken van kredietaanvraag"}))
+                }
+            },
+            invalidatesTags: ["CreditRequests"]
+        }),
     })
 })
 
-export const { useGetAllCreditRequestsOfficeQuery, useGetOneCreditRequestOfficeQuery, useSetApprovalStatusOfficeMutation } = officeWorkerApi
+export const { useGetAllCreditRequestsOfficeQuery, useGetOneCreditRequestOfficeQuery, useSetApprovalStatusOfficeMutation, useDeleteCreditRequestOfficeMutation, useUpdateCreditRequestMutation } = officeWorkerApi

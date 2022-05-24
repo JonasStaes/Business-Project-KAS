@@ -31,7 +31,7 @@ export const StyledLoginInput = <T,>({ className, id, text, inputValue, type, va
     );
 }
 
-export const StyledAppInput = <T,>({id, text, inputValue, type, minLength, min, max, pattern, validateChange, stateObjectSetter, stateObject}: StyledInputProps<T>) => {
+export const StyledAppInput = <T,>({id, text, inputValue, type, minLength, min, max, pattern, validateChange, stateObjectSetter, stateObject, value}: StyledInputProps<T>) => {
 
     return(
         <div className={[inputValue.valid ? "border-main-0" : "border-main-declined", "pt-4"].join(" ")}>
@@ -46,6 +46,7 @@ export const StyledAppInput = <T,>({id, text, inputValue, type, minLength, min, 
                     min={min}
                     max={max}
                     pattern={pattern}
+                    value={value}
                 />
                 <label className={[
                     "text-xl uppercase",

@@ -1,13 +1,13 @@
 import { ArrowCircleLeftIcon } from "@heroicons/react/solid";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetOneCreditRequestQuery } from "../../redux/features/api/ratingagent";
+import { useGetOneCreditRequestAgentQuery } from "../../redux/features/api/ratingagent";
 import { cleanUpStringUppercase } from "../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
 
 export const CreditRequestDetail = () => {
     let params = useParams();
-    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestQuery(params.id === undefined ? "" : params.id);
+    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestAgentQuery(params.id === undefined ? "" : params.id);
 
     const modifyStatusRow = (status: string) => {
         let tempStyle = ""

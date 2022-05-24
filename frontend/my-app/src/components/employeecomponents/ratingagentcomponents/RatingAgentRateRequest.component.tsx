@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowCircleLeftIcon, PlusCircleIcon, XCircleIcon } from "@heroicons/react/solid";
 import { cleanUpStringUppercase } from "../../../services/frontend/TextParser.service";
-import { useGetOneCreditRequestQuery, useSetApprovalStatusMutation } from "../../../redux/features/api/ratingagent";
+import { useGetOneCreditRequestAgentQuery, useSetApprovalStatusAgentMutation } from "../../../redux/features/api/ratingagent";
 import { CreditRequestStatusConfirmationDto } from "../../../redux/features/api/types";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 import { validateStateObject } from "../../../services/frontend/StateObjectUpdater.service";
@@ -13,8 +13,8 @@ import { StyledTextArea } from "../../genericcomponents/StyledInputs.component";
 const RateCreditRequest: FC = () => {
     let params = useParams();
     const navigate = useNavigate();
-    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestQuery(params.id === undefined ? "" : params.id);
-    const [confirmStatus] = useSetApprovalStatusMutation();
+    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestAgentQuery(params.id === undefined ? "" : params.id);
+    const [confirmStatus] = useSetApprovalStatusAgentMutation();
 
     const [confirmationData, setConfirmationData] = useState<CreditRequestStatusConfirmationDto>({
         id: params.id === undefined ? "" : params.id,

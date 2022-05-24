@@ -6,7 +6,7 @@ const urlBase: string = "rating_agent";
 
 const ratingAgentApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAllCreditRequests: builder.query<Array<CreditRequestReadDto>, void>({
+        getAllCreditRequestsAgent: builder.query<Array<CreditRequestReadDto>, void>({
             query: () => `${urlBase}/all`,
             transformResponse: (response: MessageResponse<Array<CreditRequestReadDto>>) => response.data,
             providesTags: (result) => result ? [...result.map(({id}) => ({
@@ -14,7 +14,7 @@ const ratingAgentApi = baseApi.injectEndpoints({
             }))] 
             : ["CreditRequests"]
         }),
-        getOneCreditRequest: builder.query<CreditRequestReadDto, string>({
+        getOneCreditRequestAgent: builder.query<CreditRequestReadDto, string>({
             query: (id) => `${urlBase}/${id}`,
             transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
             onQueryStarted: async (body, {dispatch, queryFulfilled}) => {
@@ -25,7 +25,7 @@ const ratingAgentApi = baseApi.injectEndpoints({
                 }
             },
         }),
-        setApprovalStatus: builder.mutation<CreditRequestReadDto, { creditRequestStatusConfirmationDto: CreditRequestStatusConfirmationDto, approval: boolean, callback: Function }>({
+        setApprovalStatusAgent: builder.mutation<CreditRequestReadDto, { creditRequestStatusConfirmationDto: CreditRequestStatusConfirmationDto, approval: boolean, callback: Function }>({
             query: ({
                 creditRequestStatusConfirmationDto: {
                     id,
@@ -58,4 +58,4 @@ const ratingAgentApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useGetAllCreditRequestsQuery, useGetOneCreditRequestQuery, useSetApprovalStatusMutation } = ratingAgentApi
+export const { useGetAllCreditRequestsAgentQuery, useGetOneCreditRequestAgentQuery, useSetApprovalStatusAgentMutation } = ratingAgentApi
