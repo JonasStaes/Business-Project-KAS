@@ -8,7 +8,7 @@ import { Feedback } from "./FeedbackDocument.component";
 
 export const CreditRequestDetail = () => {
     let params = useParams();
-    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCustomerCreditRequestQuery(params.id === undefined ? "" : params.id);
+    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCustomerCreditRequestQuery(params.id!, { skip: params.id === undefined });
 
     const modifyStatusRow = (status: string) => {
         let tempStyle = ""
@@ -51,12 +51,13 @@ export const CreditRequestDetail = () => {
                                 </ul>
                             </div>
                         </div>
+                        {(creditRequest?.files !== undefined && creditRequest?.files.length > 0) && 
                         <div className="border border-main-2 ">
-                            <h1 className="bg-main-0 text-main-1 rounded-t py-2">Feedback</h1>
+                            <h1 className="bg-main-0 text-main-1 rounded-t py-2">Documenten</h1>
                             <div className="bg-main-1 rounded-b">
-                                {creditRequest?.files !== undefined && 
+                                {
                                     creditRequest.files.map(file => (
-                                        <a href={URL.createObjectURL(new File([Buffer.from(creditRequest.files[0].data.toString(), "base64")], creditRequest.files[0].name, { type: creditRequest.files[0].type}))} rel="noopener noreferrer" target="_blank">
+                                        <a href={URL.createObjectURL(new File([Buffer.from(file.data.toString(), "base64")], file.name, { type: file.type}))} rel="noopener noreferrer" target="_blank">
                                             <div>
                                                 {file.name}
                                             </div>
@@ -65,6 +66,7 @@ export const CreditRequestDetail = () => {
                                 }
                             </div>
                         </div>
+                        }
                         <div className="justify-self-end">
                             <div className="w-full flex justify-between pr-2">
                                 <Link to="../credit_requests" className="bg-main-0 shadow text-main-1 rounded w-40 py-2 uppercase text-lg flex justify-center">

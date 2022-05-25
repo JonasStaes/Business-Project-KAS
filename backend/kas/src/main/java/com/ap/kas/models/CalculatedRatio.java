@@ -31,9 +31,21 @@ public class CalculatedRatio {
 
     private float ratio;
 
-    private float minimum;
+    private Float ceiling;
 
-    public boolean isRatioValid() {
-        return this.ratio >= this.minimum;
+    private Float floor;
+
+    public Status isRatioValid() {
+        if(ceiling == null && floor == null) {
+            return Status.GEEN_STATUS;
+        }
+
+        if(ratio > ceiling) {
+            return Status.GOEDGEKEURD;
+        } else if(ratio < floor) {
+            return Status.AFGEKEURD;
+        } else {
+            return Status.IN_BEHANDELING;
+        }
     }
 }

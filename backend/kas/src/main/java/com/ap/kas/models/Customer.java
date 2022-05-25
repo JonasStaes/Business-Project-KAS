@@ -37,6 +37,8 @@ public class Customer extends User {
     @JoinColumn(name = "information_id")
     private CustomerInfo personalInfo;
 
+    private int customerScore = 50;
+
     public Customer(String name, String email, Boolean active, String password, String companyNr) {
         super(name, email, active, password);
         this.companyNr = companyNr;

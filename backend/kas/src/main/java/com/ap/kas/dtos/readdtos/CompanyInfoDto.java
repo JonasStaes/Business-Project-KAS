@@ -31,6 +31,8 @@ public class CompanyInfoDto {
 
     float currentAssets;
 
+    float stock;
+
     float fixedAssets;
 
     float shortTermDebt;

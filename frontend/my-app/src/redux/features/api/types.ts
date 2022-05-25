@@ -49,14 +49,22 @@ type FileData = {
 
 export type FeedbackDocument = {
     approvalNote: string,
-    calculatedRatios: Array<CalculatedRatio>
+    calculatedRatios: Array<CalculatedRatio>,
+    amortizationSchedule: AmortizationSchedule
 }
 
 export type CalculatedRatio = {
     name: string,
     ratio: number,
     minimum: number,
-    ratioValid: boolean
+    ratioStatus: string
+}
+
+export type AmortizationSchedule = {
+    remainingDebt: Array<number>,
+    yearlyInterest: Array<number>,
+    yearlyDebtPayment: Array<number>,
+    yearlyTotalPayment: Array<number>
 }
 
 export type CreditRequestCreateDto = {

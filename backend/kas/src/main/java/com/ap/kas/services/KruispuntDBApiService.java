@@ -22,7 +22,7 @@ public class KruispuntDBApiService {
             System.err.println(e);
             output = CompanyInfoDto.builder()
                 .name("Acme")
-                .nacbelCode("1563987")
+                .nacbelCode("9511001")
                 .equity(1000000)
                 .assets(200000)
                 .result(350000)
@@ -33,8 +33,8 @@ public class KruispuntDBApiService {
                 .fixedAssets(10000)
                 .shortTermDebt(5000)
                 .longTermDebt(150000)
-                .depreciation(0)
-                .writeDown(0)
+                .depreciation(100)
+                .writeDown(100)
                 .build();
         }
         return output;

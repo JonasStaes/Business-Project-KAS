@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Locale;
 
 import com.ap.kas.config.Profiles;
-import com.ap.kas.models.CalculatedRatio;
 import com.ap.kas.models.BlackListEntry;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
 import com.ap.kas.models.Employee;
-import com.ap.kas.models.FeedbackDocument;
 import com.ap.kas.models.InvestmentType;
 import com.ap.kas.models.Role;
 import com.ap.kas.models.WhiteListEntry;
@@ -19,7 +17,6 @@ import com.ap.kas.repositories.BlackListRepository;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.EmployeeRepository;
-import com.ap.kas.repositories.FeedbackDocumentRepository;
 import com.ap.kas.repositories.WhiteListRepository;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
@@ -49,9 +46,6 @@ public class MockDataRunner implements CommandLineRunner {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private FeedbackDocumentRepository feedbackDocumentRepository;
-
-    @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
@@ -75,9 +69,9 @@ public class MockDataRunner implements CommandLineRunner {
         customerRepository.deleteAll();
         Customer customer1 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer1")), "1234567890");
         customerRepository.save(customer1);
-        Customer customer2 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer2")), "1234567891");
+        Customer customer2 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer2")), "0898092925");
         customerRepository.save(customer2);
-        Customer customer3 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer3")), "0123456789");
+        Customer customer3 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer3")), "1483476443");
         customerRepository.save(customer3);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
@@ -104,15 +98,19 @@ public class MockDataRunner implements CommandLineRunner {
 
         WhiteListEntry whiteListEntry1 = new WhiteListEntry("1234567");
         WhiteListEntry whiteListEntry2 = new WhiteListEntry("8910112");
+        WhiteListEntry whiteListEntry3 = new WhiteListEntry("6166");
         whiteListRepository.save(whiteListEntry1);
         whiteListRepository.save(whiteListEntry2);
+        whiteListRepository.save(whiteListEntry3);
         whiteListRepository.findAll().forEach(entry -> logger.info("{}", entry));
 
 
         BlackListEntry blackListEntry1 = new BlackListEntry("6578423");
         BlackListEntry blackListEntry2 = new BlackListEntry("1563987");
+        BlackListEntry blackListEntry3 = new BlackListEntry("906");
         blackListRepository.save(blackListEntry1);
         blackListRepository.save(blackListEntry2);
+        blackListRepository.save(blackListEntry3);
         blackListRepository.findAll().forEach(entry -> logger.info("{}", entry));
 
         creditRequestRepository.deleteAll();
@@ -126,9 +124,6 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.saveAll(creditRequests);
 
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}\n", cr));
-  
-        FeedbackDocument test = FeedbackDocument.builder().approvalNote("approvalNote").calculatedRatio(CalculatedRatio.builder().name("test").ratio(100f).minimum(50f).build()).build();
-        feedbackDocumentRepository.save(test);
     }
 
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {

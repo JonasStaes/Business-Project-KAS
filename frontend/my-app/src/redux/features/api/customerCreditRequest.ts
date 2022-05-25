@@ -26,7 +26,7 @@ const customerApi = baseApi.injectEndpoints({
                         console.log(new File([Buffer.from(data.files[0].data.toString(), "base64")], data.files[0].name, { type: data.files[0].type}))
                     }
                 } catch (error) {
-                    dispatch(activateError({message: `Kon kredietaanvraag met id: ${body} niet vinden`}))
+                    //dispatch(activateError({message: `Kon kredietaanvraag met id: ${body} niet vinden`}))
                 }
             },
         }),
