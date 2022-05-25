@@ -157,7 +157,6 @@ export const EditCreditRequest: FC = () => {
                 Volgende
               </label>
               <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500" 
-                 disabled={!checkType(creditRequest!.status)} 
                   onClick={() => {
                     setOpen(true)
                   }}
