@@ -81,6 +81,7 @@ public class MockDataRunner implements CommandLineRunner {
         employee.addRole(Role.KREDIET_BEOORDELAAR);
         employee.addRole(Role.COMPLIANCE);
         employee.addRole(Role.COMMERCIELE_DIRECTIE);
+        employee.addRole(Role.KANTOOR_MEDEWERKER);
         employeeRepository.save(employee);
         Employee employee1 = new Employee(faker.name().fullName(), "employee1@gmail.com", true, passwordEncoder.encode(new StringBuffer("employee")));
         employee1.addRole(Role.ADMINISTRATOR);

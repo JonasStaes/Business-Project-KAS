@@ -47,7 +47,7 @@ public class AccountingService {
         } else if(checkIfMatchesBlackListEntry(companyInfo.getNacbelCode())){
             creditRequest.setStatus(Status.IN_BEHANDELING);
             creditRequest.setSuspicious(true);
-            feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling.");
+            feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling.  De bank zal u contacteren binnen 2-3 werkdagen");
         } else {
             List<Status> validatedRatios = feedbackDocument.getCalculatedRatios().stream()
                 .map(ratio -> {
@@ -61,14 +61,14 @@ public class AccountingService {
 
             if(validatedRatios.contains(Status.IN_BEHANDELING)) {
                 creditRequest.setStatus(Status.IN_BEHANDELING);
-                feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling.");
+                feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling. De bank zal u contacteren binnen 2-3 werkdagen");
             } else if(acceptedRatios == validatedRatios.size()) {
                 creditRequest.setStatus(Status.GOEDGEKEURD);
                 feedbackDocument.setAmortizationSchedule(calculateFixedPricing(creditRequest));
                 feedbackDocument.setApprovalNote("Uw kredietaanvraag is goedgekeurd.");
             } else {
                 creditRequest.setStatus(Status.AFGEKEURD);
-                feedbackDocument.setApprovalNote("Uw kredietaanvraag is afgekeurd. Uw ratio's voldoen niet aan de minima van de bank");
+                feedbackDocument.setApprovalNote("Uw kredietaanvraag is afgekeurd. Uw ratio's voldoen niet aan de minima van de bank.");
             }
         }
 

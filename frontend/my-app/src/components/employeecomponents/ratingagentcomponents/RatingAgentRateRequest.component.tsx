@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowCircleLeftIcon, PlusCircleIcon, XCircleIcon } from "@heroicons/react/solid";
 import { cleanUpStringUppercase } from "../../../services/frontend/TextParser.service";
@@ -48,7 +48,7 @@ const RateCreditRequest: FC = () => {
     }
 
     const calculateRequestedAmount = (totalAmount: number, financedAmount: number) => {
-        return totalAmount - financedAmount
+        return parseFloat((((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2))
     }
 
     return(
@@ -86,7 +86,13 @@ const RateCreditRequest: FC = () => {
                 <div className="grow-[2] border border-main-2">
                     <h1 className="bg-main-0 text-main-1 rounded-t py-2">Ratios</h1>
                     <div className="bg-main-1 rounded-b">
-                        Work in progress
+                        <div className="capitalize space-y-2 py-2">
+                            {creditRequest?.feedbackDocument.calculatedRatios.map(ratio => (
+                                <div key={ratio.name}>
+                                    {ratio.name}: {ratio.ratio}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

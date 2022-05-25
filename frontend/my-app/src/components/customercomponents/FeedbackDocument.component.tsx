@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#448AE6",
     color: "white",
-    padding: 10,
+    padding: 2,
     maxHeight: "5%",
   },
   title: {
@@ -35,9 +35,18 @@ const styles = StyleSheet.create({
   column: {
     display: "flex",
     flexDirection: "column",
+  },
+  column_head: {
     borderColor: "black",
     borderWidth: 2,
-    padding: 10
+    paddingHorizontal: 4,
+    paddingVertical: 6
+  },
+  column_body: {
+    borderColor: "black",
+    borderWidth: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 6,
   }
 });
 
@@ -85,43 +94,43 @@ export const Feedback: FC<FeedbackProps> = ({ feedbackDocument: { approvalNote, 
                 <Text>Prijszetting &amp; aflossing</Text>
                 <Text>{"\n"}</Text>
                 <View style={styles.table}>
-                  <View>
-                    <Text>Datum {"\n"}</Text>
-                    <View style={styles.column}>
+                  <View style={styles.column}>
+                    <Text style={styles.column_head}>Datum {"\n"}</Text>
+                    <View style={styles.column_body}>
                       {amortizationSchedule.remainingDebt.map((entry, i) => (
                         <Text key={i}>{`Jaar ${i}`} {"\n"}</Text>
                       ))}
                     </View>
                   </View>
-                  <View>
-                    <Text>Uitstaande schuld {"\n"}</Text>
-                    <View style={styles.column}>
+                  <View style={styles.column}>
+                    <Text style={styles.column_head}>Uitstaande schuld {"\n"}</Text>
+                    <View style={styles.column_body}>
                       {amortizationSchedule.remainingDebt.map((entry, i) => (
-                        <Text key={i}>{formatNumber(entry)} {"\n"}</Text>
+                        <Text key={i}>&euro; {formatNumber(entry)} {"\n"}</Text>
                     ))}
                     </View>
                   </View>
-                  <View>
-                    <Text>Rente {"\n"}</Text>
-                    <View style={styles.column}>
+                  <View style={styles.column}>
+                    <Text style={styles.column_head}>Rente {"\n"}</Text>
+                    <View style={styles.column_body}>
                       {amortizationSchedule.yearlyInterest.map((entry, i) => (
-                        <Text key={i}>{formatNumber(entry)} {"\n"}</Text>
+                        <Text key={i}>&euro; {formatNumber(entry)} {"\n"}</Text>
                       ))}
                     </View>
                   </View>
-                  <View>
-                    <Text>Aflossing {"\n"}</Text>
-                    <View style={styles.column}>
+                  <View style={styles.column}>
+                    <Text style={styles.column_head}>Aflossing {"\n"}</Text>
+                    <View style={styles.column_body}>
                       {amortizationSchedule.yearlyDebtPayment.map((entry, i) => (
-                        <Text key={i}>{formatNumber(entry)} {"\n"}</Text>
+                        <Text key={i}>&euro; {formatNumber(entry)} {"\n"}</Text>
                     ))}
                     </View>
                   </View>
-                  <View>
-                    <Text>Betaling {"\n"}</Text>
-                    <View style={styles.column}>
+                  <View style={styles.column}>
+                    <Text style={styles.column_head}>Betaling {"\n"}</Text>
+                    <View style={styles.column_body}>
                       {amortizationSchedule.yearlyTotalPayment.map((entry, i) => (
-                        <Text key={i}>{formatNumber(entry)} {"\n"}</Text>
+                        <Text key={i}>&euro; {formatNumber(entry)} {"\n"}</Text>
                     ))}
                     </View>
                   </View>

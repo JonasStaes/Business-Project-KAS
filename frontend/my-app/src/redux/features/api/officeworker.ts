@@ -1,6 +1,6 @@
 import { activateError } from "../errors/errorSlice";
 import { baseApi } from "./baseApi";
-import { CreditRequestCreateDto, CreditRequestReadDto, CreditRequestStatusConfirmationDto, CreditRequestUpdateDto, MessageResponse } from "./types";
+import { CreditRequestReadDto, CreditRequestStatusConfirmationDto, CreditRequestUpdateDto, MessageResponse } from "./types";
 
 const urlBase: string = "office_worker";
 
@@ -77,8 +77,8 @@ const officeWorkerApi = baseApi.injectEndpoints({
                     name: { value: name }, 
                     financedAmount: { value: financedAmount }, 
                     totalAmount: { value: totalAmount }, 
-                    duration: { value: duration }, 
-                    investmentType: { value: { name: investmentType} }, 
+                    duration , 
+                    investmentType: { name: investmentType }, 
                     approvalNote: { value: approvalNote },
                     files,
                     id

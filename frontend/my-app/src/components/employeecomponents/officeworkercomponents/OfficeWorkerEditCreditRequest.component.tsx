@@ -18,7 +18,7 @@ import { StyledFileInput, StyledAppInput, StyledSelect, StyledSlider, StyledText
 
 export const EditCreditRequest: FC = () => {
     let params = useParams();
-    const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestOfficeQuery(params.id === undefined ? "" : params.id);
+    const { data: creditRequest } = useGetOneCreditRequestOfficeQuery(params.id === undefined ? "" : params.id);
     const [deactivate] = useDeleteCreditRequestOfficeMutation();
   const navigate = useNavigate(); 
   const currentUser = useSelector(selectCurrentUserId);
@@ -26,14 +26,13 @@ export const EditCreditRequest: FC = () => {
   const [validateRequest] = useValidateCreditRequestMutation();
   const { data: investmentTypes, isLoading } = useGetAllInvestmentTypesQuery(undefined, { pollingInterval: day });
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedCreditRequest, setSelectedCreditRequest] = useState<string>("");
 
   const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestCreateDto>({
     name: { value: creditRequest !== undefined ? creditRequest.name : "", valid: true, errorValue: ""},
     totalAmount: { value: creditRequest !== undefined ? creditRequest.totalAmount : 0, valid: true, errorValue: ""},
     financedAmount: { value: creditRequest !== undefined ? creditRequest.financedAmount : 0, valid: true, errorValue: ""},
-    duration: { value: creditRequest !== undefined ? parseInt(creditRequest.duration) : 1, valid: true, errorValue: ""},
-    investmentType: { value: { name: "Selecteer type", min: 1, max: 1 }, valid: true, errorValue: ""},
+    duration: creditRequest !== undefined ? parseInt(creditRequest.duration) : 1,
+    investmentType: { name: "Selecteer type", min: 1, max: 1 },
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
     currentUser: currentUser!
@@ -101,16 +100,16 @@ export const EditCreditRequest: FC = () => {
                 id="investmentType" 
                 values={investmentTypes} 
                 keyExtractor={({name}) => name}
-                selectedValue={creditRequestInfo.investmentType.value} 
+                selectedValue={creditRequestInfo.investmentType} 
                 valueCleaner={cleanUpInvestmentType} 
                 stateObjectSetter={setCreditRequestInfo} 
                 stateObject={creditRequestInfo}
               />
               <StyledSlider 
                 id="duration" 
-                min={creditRequestInfo.investmentType.value.min}
-                max={creditRequestInfo.investmentType.value.max}
-                currentValue={creditRequestInfo.duration.value} 
+                min={creditRequestInfo.investmentType.min}
+                max={creditRequestInfo.investmentType.max}
+                currentValue={creditRequestInfo.duration} 
                 stateObjectSetter={setCreditRequestInfo} 
                 stateObject={creditRequestInfo} 
               />
