@@ -60,9 +60,6 @@ public class OfficeWorkerController {
 
             List<CreditRequestReadDto> creditRequests = new LinkedList<CreditRequestReadDto>();
             creditRequestRepository.findAll().stream()
-                .filter(cr -> {
-                    return !cr.isSuspicious();
-                })
                 .forEach(cr -> {
                     CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(cr);
                     readDto.setFiles(fileStorageRepository.findAllByCreditRequest(cr));
