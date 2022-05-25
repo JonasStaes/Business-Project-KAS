@@ -4,15 +4,15 @@ import { FC, Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 import { day, tenMins } from "../../../redux/features/api/constants";
 import { useGetAllStatusesQuery } from "../../../redux/features/api/enums";
-import { useGetAllCreditRequestsAgentQuery } from "../../../redux/features/api/ratingagent";
 import { cleanUpStringUppercase } from "../../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
+import { useGetAllCreditRequestsOfficeQuery} from "../../../redux/features/api/officeworker";
 
 const defaultStatus = "Geen Status";
 
-const RatingAgentOverview: FC = () => {
+const OfficeWorkerOverview: FC = () => {
   const navigate = useNavigate();
-  const { data: creditRequests, isLoading: creditRequestsLoading } = useGetAllCreditRequestsAgentQuery(undefined, { pollingInterval: tenMins });
+  const { data: creditRequests, isLoading: creditRequestsLoading } = useGetAllCreditRequestsOfficeQuery(undefined, { pollingInterval: tenMins });
   const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day })
 
   const [selectedStatus, setSelectedStatus] = useState<string>(statusesLoading ? defaultStatus : statuses![0])
@@ -122,4 +122,4 @@ const RatingAgentOverview: FC = () => {
   );
 }
 
-export default RatingAgentOverview;
+export default OfficeWorkerOverview;

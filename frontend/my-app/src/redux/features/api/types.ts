@@ -67,7 +67,7 @@ export type AmortizationSchedule = {
     yearlyTotalPayment: Array<number>
 }
 
-export type CreditRequestCreateDto = {
+export interface CreditRequestCreateDto  {
     name: ValidatedObject<string>, 
     totalAmount: ValidatedObject<number>, 
     financedAmount: ValidatedObject<number>, 
@@ -76,6 +76,11 @@ export type CreditRequestCreateDto = {
     approvalNote: ValidatedObject<string>,
     files: Array<File>,
     currentUser: string
+}
+
+export interface CreditRequestUpdateDto extends CreditRequestCreateDto  {
+    id: string
+
 }
 
 export type InvestmentType = {
