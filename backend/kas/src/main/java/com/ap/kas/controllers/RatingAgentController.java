@@ -6,6 +6,7 @@ import com.ap.kas.models.CreditRequest;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.FileStorageRepository;
+import com.ap.kas.services.KruispuntDBApiService;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,9 @@ public class RatingAgentController {
 
     @Autowired
     private FileStorageRepository fileStorageRepository;
+
+    @Autowired
+    private KruispuntDBApiService apiService;
 
     @GetMapping("/all")
 
@@ -70,7 +74,9 @@ public class RatingAgentController {
     public ResponseEntity<MessageResponse> readCreditRequest(@PathVariable("id") String id) {
         try {
             CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
-            CreditRequestReadDto readDto = creditRequestMapper.convertToReadDto(creditRequest);
+            CreditRequestReadDto readDto = creditRequestMapper.convertToReadDtoWithCompanyInfo(creditRequest,
+                apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr())
+            );
             readDto.setFiles(fileStorageRepository.findAllByCreditRequest(creditRequest));
 
             logger.info("Outgoing Credit Request: \n {}", readDto);

@@ -31,6 +31,7 @@ export type MessageResponse<T> = {
 
 export type CreditRequestReadDto = {
     id: string,
+    companyNr: string,
     name: string,
     totalAmount: number,
     financedAmount: number,
@@ -38,7 +39,13 @@ export type CreditRequestReadDto = {
     investmentType: string,
     status: string,
     files: Array<FileData>,
-    feedbackDocument: FeedbackDocument
+    feedbackDocument: FeedbackDocument,
+    companyInfo?: CompanyInfo
+}
+
+type CompanyInfo = {
+    name: string,
+    nacbelCode: string,
 }
 
 type FileData = {

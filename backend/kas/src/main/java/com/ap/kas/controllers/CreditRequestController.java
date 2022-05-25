@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CompanyInfoReadDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.FileStorage;
@@ -121,9 +122,8 @@ public class CreditRequestController {
     public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable("id") String id) {
         try {
             CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
-            CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequest,
-                apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr())
-            );
+            CompanyInfoReadDto companyInfo = apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr());
+            CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequest, companyInfo);
             creditRequestRepository.save(checkedRequest);
             return ResponseEntity.ok(new MessageResponse("Kredietaanvraag gecheked!", creditRequestMapper.convertToReadDto(checkedRequest)));
         } catch (NoSuchElementException e) {

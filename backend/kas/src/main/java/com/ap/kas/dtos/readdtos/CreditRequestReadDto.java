@@ -14,6 +14,8 @@ public class CreditRequestReadDto {
     
     private String id;
 
+    private String companyNr;
+
     private String name;
 
     private float totalAmount; 
@@ -31,4 +33,6 @@ public class CreditRequestReadDto {
     private boolean isSuspicious;
 
     private FeedbackDocument feedbackDocument;
+
+    private CompanyInfoReadDto companyInfo;
 }

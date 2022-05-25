@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowCircleLeftIcon, PlusCircleIcon, XCircleIcon } from "@heroicons/react/solid";
-import { cleanUpStringUppercase } from "../../../services/frontend/TextParser.service";
+import { cleanUpStringUppercase, formatNumber } from "../../../services/frontend/TextParser.service";
 import { useGetOneCreditRequestAgentQuery, useSetApprovalStatusAgentMutation } from "../../../redux/features/api/ratingagent";
 import { CreditRequestStatusConfirmationDto } from "../../../redux/features/api/types";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
@@ -51,15 +51,24 @@ const RateCreditRequest: FC = () => {
         return parseFloat((((parseFloat(totalAmount.toFixed(2)) * 10) - (parseFloat(financedAmount.toFixed(2))) * 10) / 10).toFixed(2))
     }
 
+    useEffect(() => {
+        console.log(creditRequest)
+    })
+
     return(
         <div className="flex flex-col p-4 gap-y-8">
             <div className="flex flex-row divide-x text-left indent-4">
-                <div className="grow-[1] border border-main-2">
-                    <h1 className="bg-main-0 text-main-1 rounded-t py-2">Bedrijf</h1>
-                    <div className="bg-main-1 rounded-b">
-                        Work in progress
-                    </div>
-                </div>
+                {creditRequest?.companyInfo !== undefined && 
+                    <div className="grow-[1] border border-main-2">
+                        <h1 className="bg-main-0 text-main-1 rounded-t py-2">Bedrijf</h1>
+                        <div className="bg-main-1 rounded-b">
+                            <ul className="capitalize space-y-2 py-2">
+                                <li>Bedrijfsnaam: {creditRequest.companyInfo.name}</li>
+                                <li>BedrijfsNr: {creditRequest.companyNr}</li>
+                                <li>Nacbel code: {creditRequest.companyInfo.nacbelCode}</li>
+                            </ul>
+                        </div>
+                    </div>}
                 {(creditRequestLoading || creditRequest === undefined) ? <LoadingSpinner/> : 
                     <div className="grow-[1] border border-main-2">
                         <h1 className="bg-main-0 text-main-1 rounded-t py-2">Aanvraag</h1>
@@ -67,9 +76,9 @@ const RateCreditRequest: FC = () => {
                             <ul className="capitalize space-y-2 py-2">
                                 <li>Naam: {creditRequest.name}</li>
                                 <li>Investerings Type: {cleanUpStringUppercase(creditRequest.investmentType)}</li>
-                                <li>Totaal bedrag: {creditRequest.totalAmount}</li>
-                                <li>Zelfgefinancieerd bedrag: {creditRequest.financedAmount}</li>
-                                <li>Gevraagd bedrag: {calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount)}</li>
+                                <li>Totaal bedrag: &euro; {formatNumber(creditRequest.totalAmount)}</li>
+                                <li>Zelfgefinancieerd bedrag: &euro; {formatNumber(creditRequest.financedAmount)}</li>
+                                <li>Gevraagd bedrag: &euro; {formatNumber(calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount))}</li>
                                 <li className={modifyStatusRow(creditRequest.status)}>Status: {cleanUpStringUppercase(creditRequest.status)}</li>
                             </ul>
                             <StyledTextArea 

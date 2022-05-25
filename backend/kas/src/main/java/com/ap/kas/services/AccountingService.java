@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ap.kas.dtos.readdtos.CompanyInfoDto;
+import com.ap.kas.dtos.readdtos.CompanyInfoReadDto;
 import com.ap.kas.models.AmortizationSchedule;
 import com.ap.kas.models.CalculatedRatio;
 import com.ap.kas.models.CreditRequest;
@@ -34,7 +34,7 @@ public class AccountingService {
 
     //#region credit request evaluation
     
-    public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoDto companyInfo) {
+    public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoReadDto companyInfo) {
         FeedbackDocumentBuilder builder = FeedbackDocument.builder();
 
         builder = calculateRatios(companyInfo, builder);
@@ -78,7 +78,7 @@ public class AccountingService {
 
     //#region evaluation methods
 
-    private FeedbackDocumentBuilder calculateRatios(CompanyInfoDto companyInfo, FeedbackDocumentBuilder builder) {
+    private FeedbackDocumentBuilder calculateRatios(CompanyInfoReadDto companyInfo, FeedbackDocumentBuilder builder) {
         builder.calculatedRatios(new LinkedList<CalculatedRatio>(){{
             add(calculateSolvencyRate(companyInfo.getEquity(), companyInfo.getAssets()));
             add(calculateProfitabilityRateOnEquity(companyInfo.getResult(), companyInfo.getEquity()));

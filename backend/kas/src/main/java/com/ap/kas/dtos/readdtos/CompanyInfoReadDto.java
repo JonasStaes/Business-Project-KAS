@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyInfoDto {
+public class CompanyInfoReadDto {
 
     String name;
 

@@ -1,6 +1,6 @@
 package com.ap.kas.services;
 
-import com.ap.kas.dtos.readdtos.CompanyInfoDto;
+import com.ap.kas.dtos.readdtos.CompanyInfoReadDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +12,15 @@ public class KruispuntDBApiService {
     @Autowired
     private WebClient kruispuntdb;
     
-    public CompanyInfoDto getCompanyInfoDto(String companyNr) {
+    public CompanyInfoReadDto getCompanyInfoDto(String companyNr) {
         companyNr = companyNr.replaceAll("\\D", "");
         String convertedNr = "BE" + companyNr.substring(0, 4) + "." + companyNr.substring(4, 7) + "." + companyNr.substring(7, 10);
-        CompanyInfoDto output;
+        CompanyInfoReadDto output;
         try {
-            output = kruispuntdb.get().uri("/" + convertedNr).retrieve().bodyToMono(CompanyInfoDto.class).block();
+            output = kruispuntdb.get().uri("/" + convertedNr).retrieve().bodyToMono(CompanyInfoReadDto.class).block();
         } catch (Exception e) {
             System.err.println(e);
-            output = CompanyInfoDto.builder()
+            output = CompanyInfoReadDto.builder()
                 .name("Acme")
                 .nacbelCode("9511001")
                 .equity(1000000)

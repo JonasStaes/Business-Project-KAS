@@ -1,6 +1,7 @@
 package com.ap.kas.services.mappers;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CompanyInfoReadDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.dtos.updatedtos.CreditRequestStatusConfirmationDto;
 import com.ap.kas.models.CreditRequest;
@@ -32,7 +33,20 @@ public class CreditRequestMapper {
             mapper.when(notNull).map(CreditRequest::getStatus, CreditRequestReadDto::setStatus);
             mapper.when(notNull).map(CreditRequest::getId, CreditRequestReadDto::setId);
         });
+
         return modelMapper.map(creditRequest, CreditRequestReadDto.class);
+    }
+
+    public CreditRequestReadDto convertToReadDtoWithCompanyInfo(CreditRequest creditRequest, CompanyInfoReadDto companyInfo) {
+        Condition<CreditRequest, CreditRequestReadDto> notNull = ctx -> ctx.getSource() != null;
+        modelMapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(mapper -> {
+            mapper.when(notNull).map(CreditRequest::getStatus, CreditRequestReadDto::setStatus);
+            mapper.when(notNull).map(CreditRequest::getId, CreditRequestReadDto::setId);
+            mapper.when(notNull).map(src -> src.getCustomer().getCompanyNr(), CreditRequestReadDto::setCompanyNr);
+        });
+        CreditRequestReadDto output = modelMapper.map(creditRequest, CreditRequestReadDto.class);
+        output.setCompanyInfo(companyInfo);
+        return output;
     }
 
     public CreditRequest confirmStatus(CreditRequestStatusConfirmationDto confirmationDto, CreditRequest creditRequest) {
