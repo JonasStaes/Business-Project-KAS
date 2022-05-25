@@ -62,7 +62,7 @@ public class AccountingService {
             if(validatedRatios.contains(Status.IN_BEHANDELING)) {
                 creditRequest.setStatus(Status.IN_BEHANDELING);
                 feedbackDocument.setApprovalNote("Uw kredietaanvraag is momenteel nog in behandeling. De bank zal u contacteren binnen 2-3 werkdagen");
-            } else if(acceptedRatios == validatedRatios.size()) {
+            } else if(acceptedRatios == 2) {
                 creditRequest.setStatus(Status.GOEDGEKEURD);
                 feedbackDocument.setAmortizationSchedule(calculateFixedPricing(creditRequest));
                 feedbackDocument.setApprovalNote("Uw kredietaanvraag is goedgekeurd.");
@@ -101,7 +101,7 @@ public class AccountingService {
                 .multiply(BigDecimal.valueOf(100))
                 .floatValue()
             )
-            .ceiling(20f)
+            .ceiling(25f)
             .floor(10f)
             .build(); 
     }
@@ -137,8 +137,8 @@ public class AccountingService {
                 .divide(BigDecimal.valueOf(shortTermDebt), RoundingMode.HALF_UP)
                 .floatValue()
             )
-            .ceiling(1.4f)
-            .floor(1.1f)
+            .ceiling(1f)
+            .floor(0.5f)
             .build();
     }
 

@@ -77,12 +77,12 @@ public class OfficeWorkerController {
 
     }
     @DeleteMapping("/editCreditRequest/{id}")
-    public ResponseEntity<MessageResponse> deactivateUser(@PathVariable String id) {
+    public ResponseEntity<MessageResponse> deleteCreditRequest(@PathVariable String id) {
         logger.info("Incoming deletion request:\n {}", id);
         try{
             if(creditRequestRepository.existsById(id)){
-                CreditRequest toBeUpdatedCreditRequest = creditRequestRepository.getById(id);
-                creditRequestRepository.delete(toBeUpdatedCreditRequest);
+                CreditRequest toBeDeletedCreditRequest = creditRequestRepository.getById(id);
+                creditRequestRepository.delete(toBeDeletedCreditRequest);
                 logger.info("Credit request deleted");
             }          
             return ResponseEntity.ok(new MessageResponse("Succesfully deleted request!"));
@@ -108,7 +108,7 @@ public class OfficeWorkerController {
 
     @PutMapping("/editCreditRequest/{id}")
     public ResponseEntity<MessageResponse> updateCreditRequest(@PathVariable String id, @Valid @ModelAttribute CreditRequestCreateDto creditRequest) {
-        logger.info("Incoming deactivation request:\n {}", id);
+        logger.info("Incoming update request:\n {}", id);
         try{
             CreditRequest newCreditRequest = creditRequestMapper.convertFromCreateDTO(creditRequest);
             CreditRequest toBeUpdatedCreditRequest = creditRequestRepository.findById(id).get();

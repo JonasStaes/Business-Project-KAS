@@ -1,65 +1,64 @@
 import { Dialog } from "@headlessui/react";
 import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/solid";
-import { FC, FormEvent, useCallback, useState } from "react";
+import { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { day } from "../../../redux/features/api/constants";
-import { useCreateCreditRequestMutation, useValidateCreditRequestMutation } from "../../../redux/features/api/customerCreditRequest";
+import { useValidateCreditRequestMutation } from "../../../redux/features/api/customerCreditRequest";
 import { useGetAllInvestmentTypesQuery } from "../../../redux/features/api/enums";
-import { useDeleteCreditRequestOfficeMutation } from "../../../redux/features/api/officeworker";
+import { useDeleteCreditRequestOfficeMutation, useUpdateCreditRequestMutation } from "../../../redux/features/api/officeworker";
 import { useGetOneCreditRequestOfficeQuery } from "../../../redux/features/api/officeworker";
-import { CreditRequestCreateDto } from "../../../redux/features/api/types";
+import { CreditRequestUpdateDto } from "../../../redux/features/api/types";
 import { selectCurrentUserId } from "../../../redux/features/auth/authSlice";
-import { validateStateObject } from "../../../services/frontend/StateObjectUpdater.service";
 import { cleanUpInvestmentType } from "../../../services/frontend/TextParser.service";
 import { handleFinancedAmountInputChange, handleNameChange, handleNoteChange, handleTotalAmountInputChange } from "../../../services/frontend/Validator.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 import { StyledFileInput, StyledAppInput, StyledSelect, StyledSlider, StyledTextArea } from "../../genericcomponents/StyledInputs.component";
 
 export const EditCreditRequest: FC = () => {
-    let params = useParams();
-    const { data: creditRequest } = useGetOneCreditRequestOfficeQuery(params.id === undefined ? "" : params.id);
-    const [deactivate] = useDeleteCreditRequestOfficeMutation();
+  let params = useParams();
+  const { data: creditRequest } = useGetOneCreditRequestOfficeQuery(params.id === undefined ? "" : params.id);
+  const [deactivate] = useDeleteCreditRequestOfficeMutation();
   const navigate = useNavigate(); 
   const currentUser = useSelector(selectCurrentUserId);
-  const [createCreditRequest] = useCreateCreditRequestMutation();
+  const [updateCreditRequest] = useUpdateCreditRequestMutation();
   const [validateRequest] = useValidateCreditRequestMutation();
   const { data: investmentTypes, isLoading } = useGetAllInvestmentTypesQuery(undefined, { pollingInterval: day });
   const [open, setOpen] = useState<boolean>(false);
 
-  const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestCreateDto>({
+  const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestUpdateDto>({
+    id: creditRequest !== undefined ? creditRequest.id : "",
     name: { value: creditRequest !== undefined ? creditRequest.name : "", valid: true, errorValue: ""},
     totalAmount: { value: creditRequest !== undefined ? creditRequest.totalAmount : 0, valid: true, errorValue: ""},
     financedAmount: { value: creditRequest !== undefined ? creditRequest.financedAmount : 0, valid: true, errorValue: ""},
-    duration: creditRequest !== undefined ? parseInt(creditRequest.duration) : 1,
-    investmentType: { name: "Selecteer type", min: 1, max: 1 },
+    duration: creditRequest !== undefined ? parseInt(creditRequest.duration.replaceAll(/\D/g, "")) : 1,
+    investmentType: { name: creditRequest !== undefined ? creditRequest.investmentType : "Selecteer Type", min: 1, max: 1 },
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
-    currentUser: currentUser!
-    
+    currentUser: currentUser!,
   })
 
   const calculateRequestedAmount = useCallback(() => {
     return creditRequestInfo.totalAmount.value - creditRequestInfo.financedAmount.value;
   }, [creditRequestInfo])
 
-  function checkType(status: string){
-    if (status == "in_behandeling"){
-        return true;
-    }
-    return false;
-}
-
   const submitCreditRequest = (e: FormEvent) => {
     e.preventDefault()
-    createCreditRequest({ 
-      creditRequestCreateDto: creditRequestInfo, 
+    updateCreditRequest({ 
+      creditRequestUpdateDto: creditRequestInfo, 
       callback: async (id: string) => {
         await validateRequest(id)
         navigate("../credit_requests") 
       }
     })
   }
+
+  useEffect(() => {
+    console.log(creditRequestInfo)
+    if(creditRequest !== undefined) {
+      console.log(parseInt(creditRequest.duration.replaceAll(/\D/g, "")))
+    }
+  })
 
   return(
     <div className="mx-auto max-w-3xl py-8 min-h-full">
@@ -146,6 +145,15 @@ export const EditCreditRequest: FC = () => {
               stateObjectSetter={setCreditRequestInfo}
               stateObject={creditRequestInfo} 
             />
+            <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500" 
+              onClick={() => {
+                setOpen(true)
+              }}
+              disabled={creditRequest?.status !== "in_behandeling"}
+            >
+              <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
+              Intrekken
+            </button>
             <div>
               <input className="hidden peer" id="submit" 
                 type="submit"
@@ -156,14 +164,6 @@ export const EditCreditRequest: FC = () => {
                 <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
                 Volgende
               </label>
-              <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500" 
-                  onClick={() => {
-                    setOpen(true)
-                  }}
-                >
-                  <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
-                  Intrekken
-                </button>
             </div>
           </div>
         </div>

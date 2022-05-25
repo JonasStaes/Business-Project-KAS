@@ -87,7 +87,6 @@ export interface CreditRequestCreateDto  {
 
 export interface CreditRequestUpdateDto extends CreditRequestCreateDto  {
     id: string
-
 }
 
 export type InvestmentType = {

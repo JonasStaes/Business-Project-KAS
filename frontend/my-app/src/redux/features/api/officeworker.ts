@@ -81,8 +81,8 @@ const officeWorkerApi = baseApi.injectEndpoints({
                     investmentType: { name: investmentType }, 
                     approvalNote: { value: approvalNote },
                     files,
-                    id
-
+                    id,
+                    currentUser
                 }
             }) => {
                 let formData = new FormData();
@@ -90,6 +90,7 @@ const officeWorkerApi = baseApi.injectEndpoints({
                 formData.append('financedAmount', financedAmount.toString());
                 formData.append('totalAmount', totalAmount.toString());
                 formData.append('duration', `P${duration}Y`);
+                formData.append('parentId', currentUser);
                 formData.append("investmentType", investmentType);
                 formData.append("approvalNote", approvalNote);
                 if(files.length > 0) {
