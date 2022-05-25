@@ -36,11 +36,19 @@ export const EditCreditRequest: FC = () => {
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
     currentUser: currentUser!
+    
   })
 
   const calculateRequestedAmount = useCallback(() => {
     return creditRequestInfo.totalAmount.value - creditRequestInfo.financedAmount.value;
   }, [creditRequestInfo])
+
+  function checkType(status: string){
+    if (status == "in_behandeling"){
+        return true;
+    }
+    return false;
+}
 
   const submitCreditRequest = (e: FormEvent) => {
     e.preventDefault()
@@ -154,7 +162,7 @@ export const EditCreditRequest: FC = () => {
                   }}
                 >
                   <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
-                  Deactiveren
+                  Intrekken
                 </button>
             </div>
           </div>

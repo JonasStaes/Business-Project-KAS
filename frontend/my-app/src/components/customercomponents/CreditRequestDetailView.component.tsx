@@ -1,7 +1,9 @@
-import { ArrowCircleLeftIcon } from "@heroicons/react/solid";
+import { Dialog } from "@headlessui/react";
+import { ArrowCircleLeftIcon, ExclamationCircleIcon, TrashIcon } from "@heroicons/react/solid";
 import { PDFViewer } from "@react-pdf/renderer";
-import { Link, useParams } from "react-router-dom";
-import { useGetOneCustomerCreditRequestQuery } from "../../redux/features/api/customerCreditRequest";
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDeleteCreditRequestCustomerMutation, useGetOneCustomerCreditRequestQuery } from "../../redux/features/api/customerCreditRequest";
 import { cleanUpStringUppercase, formatNumber } from "../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../genericcomponents/LoadingSpinner";
 import { Feedback } from "./FeedbackDocument.component";
@@ -9,7 +11,9 @@ import { Feedback } from "./FeedbackDocument.component";
 export const CreditRequestDetail = () => {
     let params = useParams();
     const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCustomerCreditRequestQuery(params.id === undefined ? "" : params.id);
-
+    const [open, setOpen] = useState<boolean>(false);
+    const [deactivate] = useDeleteCreditRequestCustomerMutation();
+    const navigate = useNavigate();
     const modifyStatusRow = (status: string) => {
         let tempStyle = ""
         if(status !== null) {
@@ -26,6 +30,13 @@ export const CreditRequestDetail = () => {
               }
               return tempStyle;
         }
+    }
+
+    function checkType(status: string){
+        if (status == "in_behandeling"){
+            return true;
+        }
+        return false;
     }
 
     const calculateRequestedAmount = (totalAmount: number, financedAmount: number) => {
@@ -73,7 +84,18 @@ export const CreditRequestDetail = () => {
                                     <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
                                     Terug
                                 </Link>
+                                <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500"
+                                    disabled={!checkType(creditRequest.status)} 
+                                    onClick={() => {
+                                    setOpen(true)
+                                                    }}
+                                >
+                                    <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
+                                    Intrekken
+                                </button>
+                                
                             </div>
+                            
                         </div>
                     </div>
                     <div className="grow-[1] border border-main-2 h-screen">
@@ -84,6 +106,50 @@ export const CreditRequestDetail = () => {
                             </PDFViewer>
                         </div>
                     </div>
+                    <Dialog className="fixed inset-0 z-10 overflow-y-auto" 
+                        as="div"
+                        open={open} 
+                        onClose={() => setOpen(false)}
+                    >
+                         <div className="min-h-screen px-4 text-center">
+                            <Dialog.Overlay className="fixed inset-0 bg-gray-500 opacity-60"/>
+                            <span
+                            className="inline-block h-screen align-middle"
+                            aria-hidden="true"
+                         >
+                        &#8203;
+                            </span>
+                        <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                        <Dialog.Title
+                        as="h2"
+                        className="text-lg font-semibold leading-6 "
+                        >
+                        Kredietaanvraag intrekken?
+            </Dialog.Title>
+            <Dialog.Description className="mt-2 text-red-700">
+              Deze actie zal deze kredietaanvraag permanent intrekken!
+            </Dialog.Description>
+            <div className="flex items-center justify-between mt-4">
+              <button className="bg-main-0 p-2 rounded flex flex-row items-center text-main-1"
+                onClick={() => setOpen(false)}
+              >
+                <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
+                Terug
+              </button>
+              <button className="bg-red-700 p-2 rounded flex flex-row items-center text-main-1"
+                onClick={() => {
+                  setOpen(false);
+                  deactivate(creditRequest?.id!);
+                  navigate("../credit_requests");
+                }}
+              >
+                <TrashIcon className="fill-current h-7 w-7 mr-2"/>
+                Intrekken kredietaanvraag
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
                 </>
             }
         </div>

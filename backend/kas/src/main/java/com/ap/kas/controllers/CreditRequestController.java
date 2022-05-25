@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -131,4 +132,20 @@ public class CreditRequestController {
             return ResponseEntity.badRequest().body(new MessageResponse("Kon deze aanvraag niet vinden"));
         }
     }
+
+    @DeleteMapping("/editCreditRequest/{id}")
+    public ResponseEntity<MessageResponse> deactivateUser(@PathVariable String id) {
+        logger.info("Incoming deletion request:\n {}", id);
+        try{
+            if(creditRequestRepository.existsById(id)){
+                CreditRequest toBeUpdatedCreditRequest = creditRequestRepository.getById(id);
+                creditRequestRepository.delete(toBeUpdatedCreditRequest);
+                logger.info("Credit request deleted");
+            }          
+            return ResponseEntity.ok(new MessageResponse("Succesfully deleted request!"));
+        } catch(Exception e){
+            return ResponseEntity.badRequest().body(new MessageResponse("Failed to delete credit request"));
+        }
+    }
+
 }

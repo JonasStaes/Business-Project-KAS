@@ -83,8 +83,24 @@ const customerApi = baseApi.injectEndpoints({
             transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
             invalidatesTags: (res) => [{ type: "CreditRequests", id: res?.id }]
         }),
+        deleteCreditRequestCustomer: builder.mutation<MessageResponse<null>, string>({
+            query: (id) => {
+                return {
+                    url: `${urlBase}/editCreditRequest/${id}`,
+                    method: "DELETE"
+                }
+            },
+            onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
+                try {
+                    await queryFulfilled
+                } catch (error) {
+                    dispatch(activateError({message: "Probleem bij het intrekken van deze kredietaanvraag"}))
+                }
+            },
+            invalidatesTags: [{ type: "Users", id: "LIST" }]
+        }),
     }),
     overrideExisting: true
 })
 
-export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation, useValidateCreditRequestMutation, useGetOneCustomerCreditRequestQuery } = customerApi;
+export const { useGetCustomerCreditRequestsQuery, useCreateCreditRequestMutation, useValidateCreditRequestMutation, useGetOneCustomerCreditRequestQuery, useDeleteCreditRequestCustomerMutation } = customerApi;
