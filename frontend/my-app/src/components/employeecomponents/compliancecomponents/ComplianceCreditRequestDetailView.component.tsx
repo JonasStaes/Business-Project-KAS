@@ -109,7 +109,7 @@ const CreditRequestDetailView: FC = () => {
                 </div>
             </div>
             <div className="w-full flex justify-between pr-2 pl-4">
-                <Link to="../credit_requests" className="bg-main-0 shadow text-main-1 rounded w-48 py-2 uppercase text-lg flex justify-center">
+                <Link to="../suspicious_credit_requests" className="bg-main-0 shadow text-main-1 rounded w-48 py-2 uppercase text-lg flex justify-center">
                   <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
                   Terug
                 </Link>
