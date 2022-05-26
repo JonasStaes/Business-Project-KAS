@@ -46,6 +46,19 @@ export type CreditRequestReadDto = {
 type CompanyInfo = {
     name: string,
     nacbelCode: string,
+    equity: number,
+    assets: number,
+    result: number,
+    tax: number,
+    resultAfterTax: number,
+    financialCosts: number,
+    currentAssets: number,
+    stock: number,
+    fixedAssets: number,
+    shortTermDebt: number,
+    longTermDebt: number,
+    depreciation: number,
+    writeDown: number
 }
 
 type FileData = {

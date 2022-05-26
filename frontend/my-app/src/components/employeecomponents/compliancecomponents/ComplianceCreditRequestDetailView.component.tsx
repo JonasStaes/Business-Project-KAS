@@ -12,6 +12,8 @@ import { useGetOneCreditRequestComplianceQuery, useSetFeedBackComplianceMutation
 
 
 const CreditRequestDetailView: FC = () => {
+
+    
     let params = useParams();
     const navigate = useNavigate();
     const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestComplianceQuery(params.id === undefined ? "" : params.id);
