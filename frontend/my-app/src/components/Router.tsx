@@ -19,6 +19,7 @@ import RatingAgentOverview from "./employeecomponents/ratingagentcomponents/Rati
 import AuthenticatedHome from "./genericcomponents/HomeMenuAuthenticated.component";
 import RateCreditRequest from "./employeecomponents/ratingagentcomponents/RatingAgentRateRequest.component";
 import { ComplianceOverview } from "./employeecomponents/compliancecomponents/ComplianceOverview.component";
+import CreditRequestDetailView from "./employeecomponents/compliancecomponents/ComplianceCreditRequestDetailView.component";
 import CommercialDirectionOverview  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionOverview.component";
 import CommercialDirectionBlacklist  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionBlacklist.component";
 import CommercialDirectionAddWhiteList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddWhiteList.component";
@@ -28,6 +29,7 @@ import OfficeWorkerEditCreditRequest from "./employeecomponents/officeworkercomp
 import { useSelector } from "react-redux";
 import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
 import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsOfficeWorker, selectIsRatingAgent } from "../redux/features/auth/authSlice";
+
 
 
 export const CustomerRoutes = () => {
@@ -75,6 +77,7 @@ export const EmployeeRoutes = () => {
                     <Route path="compliance">
                         <Route index element={<Navigate replace to="/kas/employee/compliance/suspicious_credit_requests"/>}/>
                         <Route path="suspicious_credit_requests" element={<ComplianceOverview/>}/>
+                        <Route path="suspicious_credit_request/:id" element={<CreditRequestDetailView/>}/>
                     </Route>
                 }
                 {isCommercialDirection && 

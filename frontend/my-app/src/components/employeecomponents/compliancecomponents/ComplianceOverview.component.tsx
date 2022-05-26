@@ -1,6 +1,7 @@
 import { Listbox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/solid";
 import { Fragment, useState  } from "react";
+import { useNavigate } from "react-router";
 import { useGetAllSuspiciousRequestsQuery } from "../../../redux/features/api/compliance";
 import { day, tenMins } from "../../../redux/features/api/constants";
 import { useGetAllStatusesQuery } from "../../../redux/features/api/enums";
@@ -9,7 +10,10 @@ import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 
 const defaultStatus = "Geen Status";
 
+
 export const ComplianceOverview = () => {
+
+  const navigate = useNavigate();
   const { data: creditRequests, isLoading: creditRequestsLoading } = useGetAllSuspiciousRequestsQuery(undefined, { pollingInterval: tenMins });
   const { data: statuses, isLoading: statusesLoading } = useGetAllStatusesQuery(undefined, { pollingInterval: day })
 
@@ -48,6 +52,10 @@ export const ComplianceOverview = () => {
           break;
       }
       return tempStyle;
+    }
+
+    const handleRowClick = (id: string) => {
+      navigate(`.././suspicious_credit_request/${id}`);
     }
 
     return(
@@ -97,7 +105,7 @@ export const ComplianceOverview = () => {
             </thead>
             <tbody>
             {filterRequests().slice().map(cr => (
-              <tr key={cr.id} className="h-8 odd:bg-blue-100">
+              <tr key={cr.id} className="h-8 odd:bg-blue-100 hover:bg-gray-300" onClick={() => handleRowClick(cr.id)}>
                 <td className="text-center border-x">{cr.name}</td>
                 <td className="text-center border-x text-ellipsis">{cleanUpStringUppercase(cr.investmentType)}</td>
                 <td className="text-center border-x">{cr.totalAmount}</td>

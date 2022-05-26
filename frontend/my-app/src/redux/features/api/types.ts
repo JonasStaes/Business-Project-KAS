@@ -130,6 +130,11 @@ export type CreditRequestStatusConfirmationDto = {
     approvalNote: ValidatedObject<string>,
 }
 
+export type CreditRequestComplianceFeedbackDto = {
+    id: string,
+    feedbackNote: ValidatedObject<string>,
+}
+
 export type PasswordChangeRequestDto = {
     name: ValidatedObject<string>,
     email: ValidatedObject<string>

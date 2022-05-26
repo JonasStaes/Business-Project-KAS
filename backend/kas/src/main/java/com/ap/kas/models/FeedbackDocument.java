@@ -36,6 +36,7 @@ public class FeedbackDocument {
     private String id;
 
     private String approvalNote;
+    private String feedbackNote;
 
     @Singular
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
