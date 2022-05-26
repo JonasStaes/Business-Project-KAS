@@ -61,7 +61,7 @@ const calculateRequestedAmount = (totalAmount: number, financedAmount: number) =
 }
 
 
-export const Feedback: FC<FeedbackProps> = ({ feedbackDocument: { approvalNote, calculatedRatios, amortizationSchedule }, creditRequest: { name, investmentType, totalAmount, financedAmount } }) => { 
+export const Feedback: FC<FeedbackProps> = ({ feedbackDocument: { approvalNote, calculatedRatios, amortizationSchedule}, creditRequest: { name, investmentType, totalAmount, financedAmount } }) => { 
   
   useEffect(() => {
     console.log(amortizationSchedule)
