@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowCircleLeftIcon, PlusCircleIcon, XCircleIcon } from "@heroicons/react/solid";
+import { ArrowCircleLeftIcon, PlusCircleIcon, XCircleIcon, ClipboardListIcon } from "@heroicons/react/solid";
 import { cleanUpStringUppercase, formatNumber } from "../../../services/frontend/TextParser.service";
 import { useGetOneCreditRequestAgentQuery, useSetApprovalStatusAgentMutation } from "../../../redux/features/api/ratingagent";
 import { CreditRequestStatusConfirmationDto } from "../../../redux/features/api/types";
@@ -8,10 +8,12 @@ import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 import { validateStateObject } from "../../../services/frontend/StateObjectUpdater.service";
 import { handleNoteChange } from "../../../services/frontend/Validator.service";
 import { StyledTextArea } from "../../genericcomponents/StyledInputs.component";
+import { Dialog } from "@headlessui/react";
 
 
 const RateCreditRequest: FC = () => {
     let params = useParams();
+    const [open, setOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const { data: creditRequest, isLoading: creditRequestLoading } = useGetOneCreditRequestAgentQuery(params.id === undefined ? "" : params.id);
     const [confirmStatus] = useSetApprovalStatusAgentMutation();
@@ -126,7 +128,71 @@ const RateCreditRequest: FC = () => {
                         Goedkeuren
                   </button>
                 </div>
+                <div className="flex flex-row gap-x-2">
+                <button className="bg-main-0 text-main-1 shadow rounded w-48 py-2 uppercase text-lg flex justify-center disabled:bg-main-input"
+                        onClick={() => {
+                            setOpen(true)
+                          }}
+                    >
+                        <ClipboardListIcon className="fill-current h-7 w-7 mr-2"/>
+                        Jaarrekening
+                  </button>
+                </div>
             </div>
+            <Dialog className="fixed inset-0 z-10 overflow-y-auto" 
+        as="div"
+        open={open} 
+        onClose={() => setOpen(false)}
+      >
+        <div className="min-h-screen px-4 text-center">
+          <Dialog.Overlay className="fixed inset-0 bg-gray-500 opacity-60"/>
+          <span
+            className="inline-block h-screen align-middle"
+            aria-hidden="true"
+          >
+            &#8203;
+          </span>
+          <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <Dialog.Title
+              as="h2"
+              className="text-lg font-semibold leading-6 "
+            >
+              Jaarrekening {creditRequest?.companyInfo?.name}
+            </Dialog.Title>
+            <Dialog.Description className="mt-2">
+            {creditRequest?.companyInfo !== undefined && 
+                    <div className="grow-[1] border border-main-2">
+                        <div className="bg-main-1 rounded-b">
+                            <ul className="capitalize space-y-2 py-2">
+                                <li>Eigen vermogen: {creditRequest.companyInfo.equity}</li>
+                                <li>Activa: {creditRequest.companyInfo.assets}</li>
+                                <li>Resultaat: {creditRequest.companyInfo.result}</li>
+                                <li>Belasting: {creditRequest.companyInfo.tax}</li>
+                                <li>Resultaat na belasting: {creditRequest.companyInfo.resultAfterTax}</li>
+                                <li>Financiële kosten: {creditRequest.companyInfo.financialCosts}</li>
+                                <li>Vlottende activa: {creditRequest.companyInfo.currentAssets}</li>
+                                <li>Stock: {creditRequest.companyInfo.stock}</li>
+                                <li>Vaste activa: {creditRequest.companyInfo.fixedAssets}</li>
+                                <li>Korte termijnsschulden: {creditRequest.companyInfo.shortTermDebt}</li>
+                                <li>Lange termijnsschulden: {creditRequest.companyInfo.longTermDebt}</li>
+                                <li>Afschrijving: {creditRequest.companyInfo.depreciation}</li>
+                                <li>Write-down: {creditRequest.companyInfo.writeDown}</li>
+
+                            </ul>
+                        </div>
+                    </div>}
+            </Dialog.Description>
+            <div className="flex items-center justify-between mt-4">
+              <button className="bg-main-0 p-2 rounded flex flex-row items-center text-main-1"
+                onClick={() => setOpen(false)}
+              >
+                <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
+                Terug
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
         </div>
     );
 
