@@ -80,6 +80,7 @@ const CreditRequestDetailView: FC = () => {
                                 <li>Zelfgefinancieerd bedrag: &euro; {formatNumber(creditRequest.financedAmount)}</li>
                                 <li>Gevraagd bedrag: &euro; {formatNumber(calculateRequestedAmount(creditRequest.totalAmount, creditRequest.financedAmount))}</li>
                                 <li className={modifyStatusRow(creditRequest.status)}>Status: {cleanUpStringUppercase(creditRequest.status)}</li>
+                                <li>Toegevoegde feedback: {creditRequest.feedbackDocument.feedbackNote}</li>
                             </ul>
                             <StyledTextArea 
                                 id={"feedbackNote"} 

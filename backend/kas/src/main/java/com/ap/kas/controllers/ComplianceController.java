@@ -81,11 +81,25 @@ public class ComplianceController {
     }
 
     @PutMapping("/add_feedback")
-    public ResponseEntity<MessageResponse> confirmStatus(@Valid @ModelAttribute CreditRequestAddFeedBackDto feedbackDto) {
+    public ResponseEntity<MessageResponse> addFeedBack(@Valid @ModelAttribute CreditRequestAddFeedBackDto feedbackDto) {
         logger.info("Incoming compliance feedback: \n {}", feedbackDto);
         try {
             CreditRequest creditRequest = creditRequestRepository.findById(feedbackDto.getId()).orElseThrow();
-            creditRequest.getFeedbackDocument().setFeedbackNote(feedbackDto.getFeedbackNote());
+            StringBuilder builder = new StringBuilder();
+            String currentFeedBackNote = creditRequest.getFeedbackDocument().getFeedbackNote();
+            if(currentFeedBackNote != null){
+                builder.append(currentFeedBackNote);
+                builder.append("\n" + feedbackDto.getFeedbackNote());
+                
+            }
+            else{
+                builder.append(feedbackDto.getFeedbackNote());
+            }
+            logger.info("\n\n FEEDBACK:" + builder.toString() +  "\n\n");
+            String updatedFeedBackNote = builder.toString();
+
+            creditRequest.getFeedbackDocument().setFeedbackNote(updatedFeedBackNote);
+            creditRequestRepository.save(creditRequest);
 
             logger.info("Confirmed Credit Request: \n {}", creditRequest);
             return ResponseEntity.ok(new MessageResponse("Confirmed credit request status as " + creditRequest.getStatus(), creditRequest));
