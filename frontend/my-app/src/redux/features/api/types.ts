@@ -57,7 +57,8 @@ type FileData = {
 export type FeedbackDocument = {
     approvalNote: string,
     calculatedRatios: Array<CalculatedRatio>,
-    amortizationSchedule: AmortizationSchedule
+    amortizationSchedule: AmortizationSchedule,
+    feedbackNote: string
 }
 
 export type CalculatedRatio = {
@@ -128,6 +129,11 @@ export type EmployeeFinalizationDto = {
 export type CreditRequestStatusConfirmationDto = {
     id: string,
     approvalNote: ValidatedObject<string>,
+}
+
+export type CreditRequestComplianceFeedbackDto = {
+    id: string,
+    feedbackNote: ValidatedObject<string>,
 }
 
 export type PasswordChangeRequestDto = {
