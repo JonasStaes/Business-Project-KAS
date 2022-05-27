@@ -27,7 +27,8 @@ const CreditRequestDetailView: FC = () => {
     const sendFeedbackData = () => {
         confirmStatus({
             creditRequestComplianceFeedbackDto: feedBackData,
-            callback: () => navigate("../suspicious_credit_requests"),
+            callback: () =>
+            window.location.reload(),
         })
     }
 
