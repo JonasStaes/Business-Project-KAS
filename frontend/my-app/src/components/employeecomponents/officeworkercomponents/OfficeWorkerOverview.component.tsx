@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/solid";
+import { CheckIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import { FC, Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 import { day, tenMins } from "../../../redux/features/api/constants";
@@ -7,6 +7,7 @@ import { useGetAllStatusesQuery } from "../../../redux/features/api/enums";
 import { cleanUpStringUppercase } from "../../../services/frontend/TextParser.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
 import { useGetAllCreditRequestsOfficeQuery} from "../../../redux/features/api/officeworker";
+import { Link } from "react-router-dom";
 
 const defaultStatus = "Geen Status";
 
@@ -90,7 +91,12 @@ const OfficeWorkerOverview: FC = () => {
               ))}
             </Listbox.Options>
           </Listbox>
+          
         }
+        <Link to="../new_credit_request" className="flex items-center flex-shrink-0 text-white bg-main-0 sm:rounded-lg p-2">
+            <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
+            <span className="text-xl tracking-wider mr-2 uppercase">Aanvraag</span>
+          </Link>
       </div>
       <div className="bg-main-1 shadow overflow-hidden container sm:rounded-lg border-main-0 rounded border-2 h-4/5 overflow-y-auto">
         {creditRequestsLoading ? <LoadingSpinner/> : 

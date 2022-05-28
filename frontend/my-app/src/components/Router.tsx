@@ -26,9 +26,11 @@ import CommercialDirectionAddWhiteList  from "./employeecomponents/commercialdir
 import CommercialDirectionAddBlackList  from "./employeecomponents/commercialdirectioncomponents/CommercialDirectionAddBlackList.component";
 import OfficeWorkerOverview  from "./employeecomponents/officeworkercomponents/OfficeWorkerOverview.component";
 import OfficeWorkerEditCreditRequest from "./employeecomponents/officeworkercomponents/OfficeWorkerEditCreditRequest.component";
+
 import { useSelector } from "react-redux";
 import { CreditRequestDetail } from "./customercomponents/CreditRequestDetailView.component";
 import { selectIsAdmin, selectIsCommercialDirection, selectIsCompliance, selectIsOfficeWorker, selectIsRatingAgent } from "../redux/features/auth/authSlice";
+import { OfficeWorkerNewCreditRequest } from "./employeecomponents/officeworkercomponents/OfficeWorkerNewCreditRequest.component";
 
 
 
@@ -93,7 +95,9 @@ export const EmployeeRoutes = () => {
                     <Route path="office_worker">
                         <Route index element={<Navigate replace to="/kas/employee/office_worker/credit_requests"/>}/>
                         <Route path="credit_requests" element={<OfficeWorkerOverview/>}/>
-                        <Route path="credit_request/:id" element={<OfficeWorkerEditCreditRequest/>}/>                       
+                        <Route path="credit_request/:id" element={<OfficeWorkerEditCreditRequest/>}/>   
+                        <Route path="new_credit_request" element={<OfficeWorkerNewCreditRequest/>}/>   
+
                     </Route>
                 }
             </Route>

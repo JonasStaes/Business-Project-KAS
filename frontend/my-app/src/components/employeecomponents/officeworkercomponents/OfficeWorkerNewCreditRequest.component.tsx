@@ -1,41 +1,38 @@
-import { Dialog } from "@headlessui/react";
-import { ArrowCircleLeftIcon, ExclamationCircleIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/solid";
-import { FC, FormEvent, useCallback, useEffect, useState } from "react";
+import { FC, FormEvent, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { day } from "../../../redux/features/api/constants";
-import { useValidateCreditRequestMutation } from "../../../redux/features/api/customerCreditRequest";
+
 import { useGetAllInvestmentTypesQuery } from "../../../redux/features/api/enums";
-import { useDeleteCreditRequestOfficeMutation, useUpdateCreditRequestMutation } from "../../../redux/features/api/officeworker";
-import { useGetOneCreditRequestOfficeQuery } from "../../../redux/features/api/officeworker";
-import { CreditRequestUpdateDto } from "../../../redux/features/api/types";
+
 import { selectCurrentUserId } from "../../../redux/features/auth/authSlice";
-import { cleanUpInvestmentType } from "../../../services/frontend/TextParser.service";
+import { StyledAppInput, StyledFileInput, StyledSelect, StyledSlider, StyledTextArea } from "../../genericcomponents/StyledInputs.component";
+import { useState } from "react";
 import { handleFinancedAmountInputChange, handleNameChange, handleNoteChange, handleTotalAmountInputChange } from "../../../services/frontend/Validator.service";
 import { LoadingSpinner } from "../../genericcomponents/LoadingSpinner";
-import { StyledFileInput, StyledAppInput, StyledSelect, StyledSlider, StyledTextArea } from "../../genericcomponents/StyledInputs.component";
+import { cleanUpInvestmentType } from "../../../services/frontend/TextParser.service";
+import { Link } from "react-router-dom";
+import { ArrowCircleLeftIcon, PlusCircleIcon } from "@heroicons/react/solid";
+import { validateStateObject } from "../../../services/frontend/StateObjectUpdater.service";
+import { OfficeWorkerCreditRequestCreateDto } from "../../../redux/features/api/types";
+import { useCreateCreditRequestOfficeMutation, useValidateCreditRequestOfficeMutation } from "../../../redux/features/api/officeworker";
 
-export const EditCreditRequest: FC = () => {
-  let params = useParams();
-  const { data: creditRequest } = useGetOneCreditRequestOfficeQuery(params.id === undefined ? "" : params.id);
-  const [deactivate] = useDeleteCreditRequestOfficeMutation();
+export const OfficeWorkerNewCreditRequest: FC = () => {
   const navigate = useNavigate(); 
   const currentUser = useSelector(selectCurrentUserId);
-  const [updateCreditRequest] = useUpdateCreditRequestMutation();
-  const [validateRequest] = useValidateCreditRequestMutation();
+  const [createCreditRequest] = useCreateCreditRequestOfficeMutation();
+  const [validateRequest] = useValidateCreditRequestOfficeMutation();
   const { data: investmentTypes, isLoading } = useGetAllInvestmentTypesQuery(undefined, { pollingInterval: day });
-  const [open, setOpen] = useState<boolean>(false);
 
-  const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestUpdateDto>({
-    id: { value: creditRequest !== undefined ? creditRequest.id : "", valid: true, errorValue: ""},
-    name: { value: creditRequest !== undefined ? creditRequest.name : "", valid: true, errorValue: ""},
-    totalAmount: { value: creditRequest !== undefined ? creditRequest.totalAmount : 0, valid: true, errorValue: ""},
-    financedAmount: { value: creditRequest !== undefined ? creditRequest.financedAmount : 0, valid: true, errorValue: ""},
-    duration: creditRequest !== undefined ? parseInt(creditRequest.duration.replaceAll(/\D/g, "")) : 1,
-    investmentType: { name: creditRequest !== undefined ? creditRequest.investmentType : "Selecteer Type", min: 1, max: 1 },
+  const [creditRequestInfo, setCreditRequestInfo] = useState<OfficeWorkerCreditRequestCreateDto>({
+    name: { value: "", valid: true, errorValue: ""},
+    totalAmount: { value: 0, valid: true, errorValue: ""},
+    financedAmount: { value: 0, valid: true, errorValue: ""},
+    duration: 1,
+    investmentType: { name: "Selecteer type", min: 1, max: 1 },
     approvalNote: { value: "", valid: true, errorValue: ""},
     files: [],
-    currentUser: currentUser!,
+    companyNr: { value: "", valid: true, errorValue: ""}
   })
 
   const calculateRequestedAmount = useCallback(() => {
@@ -44,28 +41,14 @@ export const EditCreditRequest: FC = () => {
 
   const submitCreditRequest = (e: FormEvent) => {
     e.preventDefault()
-    updateCreditRequest({ 
-      creditRequestUpdateDto: creditRequestInfo, 
+    createCreditRequest({ 
+      officeWorkerCreditRequestCreateDto: creditRequestInfo, 
       callback: async (id: string) => {
         await validateRequest(id)
         navigate("../credit_requests") 
       }
     })
   }
-
-  function checkType(status: string){
-    if (status == "in_behandeling"){
-        return true;
-    }
-    return false;
-}
-
-  useEffect(() => {
-    console.log(creditRequestInfo)
-    if(creditRequest !== undefined) {
-      console.log(parseInt(creditRequest.duration.replaceAll(/\D/g, "")))
-    }
-  })
 
   return(
     <div className="mx-auto max-w-3xl py-8 min-h-full">
@@ -74,6 +57,13 @@ export const EditCreditRequest: FC = () => {
       >
         <div className="flex justify-between gap-8">
           <div className="w-72 p-2">
+          <StyledAppInput id="companyNr" text="Bedrijfsnummer" type="text"
+              inputValue={creditRequestInfo.companyNr}
+              validateChange={handleNameChange} 
+              stateObjectSetter={setCreditRequestInfo} 
+              stateObject={creditRequestInfo}    
+              minLength={3}
+            />
             <StyledAppInput id="name" text="Projectnaam" type="text"
               inputValue={creditRequestInfo.name}
               validateChange={handleNameChange} 
@@ -86,7 +76,7 @@ export const EditCreditRequest: FC = () => {
               validateChange={handleTotalAmountInputChange} 
               stateObjectSetter={setCreditRequestInfo} 
               stateObject={creditRequestInfo} 
-              min={1000}    
+              min={1000}           
             />
             <StyledAppInput id="financedAmount" text={"Zelf gefinancierd (\u20ac)"} type="number"
               inputValue={creditRequestInfo.financedAmount}
@@ -95,7 +85,6 @@ export const EditCreditRequest: FC = () => {
               stateObject={creditRequestInfo} 
               min={1000}   
               max={creditRequestInfo.totalAmount.value}
-              
             />
             <div className="container pl-2 flex flex-col space-y-2">
               <label className="text-2xl uppercase" htmlFor="total_value">{"Gevraagd bedrag (\u20ac): "}</label>
@@ -117,7 +106,7 @@ export const EditCreditRequest: FC = () => {
                 selectedValue={creditRequestInfo.investmentType} 
                 valueCleaner={cleanUpInvestmentType} 
                 stateObjectSetter={setCreditRequestInfo} 
-                stateObject={creditRequestInfo}
+                stateObject={creditRequestInfo} 
               />
               <StyledSlider 
                 id="duration" 
@@ -152,24 +141,14 @@ export const EditCreditRequest: FC = () => {
               stateObjectSetter={setCreditRequestInfo}
               stateObject={creditRequestInfo} 
             />
-            <button className="bg-yellow-300 p-2 rounded flex flex-row items-center disabled:bg-gray-500" 
-              onClick={() => {
-                setOpen(true)
-              }}
-              disabled={creditRequest?.status !== "in_behandeling"}
-            >
-              <ExclamationCircleIcon className="fill-current h-7 w-7 mr-2"/>
-              Intrekken
-            </button>
             <div>
               <input className="hidden peer" id="submit" 
                 type="submit"
+                disabled={!validateStateObject(creditRequestInfo)}
               />
               <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
                 htmlFor="submit"
-                
               >
-                
                 <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
                 Volgende
               </label>
@@ -177,55 +156,6 @@ export const EditCreditRequest: FC = () => {
           </div>
         </div>
       </form>
-      <Dialog className="fixed inset-0 z-10 overflow-y-auto" 
-        as="div"
-        open={open} 
-        onClose={() => setOpen(false)}
-      >
-        <div className="min-h-screen px-4 text-center">
-          <Dialog.Overlay className="fixed inset-0 bg-gray-500 opacity-60"/>
-          <span
-            className="inline-block h-screen align-middle"
-            aria-hidden="true"
-          >
-            &#8203;
-          </span>
-          <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-            <Dialog.Title
-              as="h2"
-              className="text-lg font-semibold leading-6 "
-            >
-              Kredietaanvraag intrekken?
-            </Dialog.Title>
-            <Dialog.Description className="mt-2 text-red-700">
-              Deze actie zal deze kredietaanvraag permanent intrekken!
-            </Dialog.Description>
-            <div className="flex items-center justify-between mt-4">
-              <button className="bg-main-0 p-2 rounded flex flex-row items-center text-main-1"
-                onClick={() => setOpen(false)}
-              >
-                <ArrowCircleLeftIcon className="fill-current h-7 w-7 mr-2"/>
-                Terug
-              </button>
-              <button className="bg-red-700 p-2 rounded flex flex-row items-center text-main-1"
-                onClick={() => {
-                  setOpen(false);
-                  deactivate(creditRequest?.id!);
-                  navigate("../credit_requests");
-                }}
-              >
-                <TrashIcon className="fill-current h-7 w-7 mr-2"/>
-                Intrekken kredietaanvraag
-              </button>
-            </div>
-          </div>
-        </div>
-      </Dialog>
     </div>
   );
 }
-
-export default EditCreditRequest;
-
-
-  

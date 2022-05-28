@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,10 +19,16 @@ import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.createdtos.OfficeWorkerCreditRequestCreateDto;
+import com.ap.kas.dtos.readdtos.CompanyInfoReadDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.models.CreditRequest;
+import com.ap.kas.models.Customer;
+import com.ap.kas.models.FileStorage;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
+import com.ap.kas.repositories.CustomerRepository;
+import com.ap.kas.repositories.EmployeeRepository;
 import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.AccountingService;
 import com.ap.kas.services.FileStorageService;
@@ -47,6 +55,9 @@ public class OfficeWorkerController {
     
     @Autowired
     private CreditRequestRepository creditRequestRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private AccountingService accountingService;
@@ -106,8 +117,41 @@ public class OfficeWorkerController {
         }
     }
 
+    @PostMapping("/")
+    public ResponseEntity<MessageResponse> createCreditRequest(@Valid @ModelAttribute OfficeWorkerCreditRequestCreateDto newCreditRequest) {
+        logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
+        logger.info("Files:\n {}", newCreditRequest.getFiles());
+        try {
+            CreditRequest creditRequest = creditRequestMapper.convertFromOfficeWorkerCreateDTO(newCreditRequest);
+            logger.info("New Credit Request:\n {}", creditRequest);
+            
+            Customer linkedCustomer = customerRepository.findByCompanyNr(newCreditRequest.getCompanyNr()).get();
+            creditRequest.setCustomer(linkedCustomer);
+        
+
+            //we get the request that was saved because this one contains an ID, which is what links a file to a credit request
+            CreditRequest savedCreditRequest = creditRequestRepository.save(creditRequest);
+            if(newCreditRequest.getFiles() != null) {
+                newCreditRequest.getFiles().forEach(file -> {
+                    try {
+                        FileStorage convertedFile = fileStorageService.convert(file);
+                        convertedFile.setCreditRequest(savedCreditRequest);
+                        logger.info("Converted File: \n {}", convertedFile);
+                        fileStorageRepository.save(convertedFile);
+                    } catch (IOException e) {
+                        logger.error("{}", e);
+                    }
+                });
+            }
+            return ResponseEntity.ok(new MessageResponse("Kredietaanvraag aangemaakt!", creditRequestMapper.convertToReadDto(creditRequest)));
+        } catch (Exception e) {
+            logger.error("{}", e);
+            return ResponseEntity.badRequest().body(new MessageResponse("Probleem bij het aanmaken van kredietaanvraag"));
+        }
+    }
+
     @PutMapping("/editCreditRequest/{id}")
-    public ResponseEntity<MessageResponse> updateCreditRequest(@PathVariable String id, @Valid @ModelAttribute CreditRequestCreateDto creditRequest) {
+    public ResponseEntity<MessageResponse> updateCreditRequest(@PathVariable("id") String id, @Valid @ModelAttribute CreditRequestCreateDto creditRequest) {
         logger.info("Incoming update request:\n {}", id);
         try{
             CreditRequest newCreditRequest = creditRequestMapper.convertFromCreateDTO(creditRequest);
@@ -126,11 +170,27 @@ public class OfficeWorkerController {
             }
 
             creditRequestRepository.save(toBeUpdatedCreditRequest);
+
             
             
             return ResponseEntity.ok(new MessageResponse("Succesfully updated credit request!", creditRequestMapper.convertToReadDto(toBeUpdatedCreditRequest)));
         } catch(Exception e){
             return ResponseEntity.badRequest().body(new MessageResponse("Failed to update credit request"));
+        }
+    }
+
+    @PutMapping("/validate/{id}")
+    public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable String id) {
+        try {
+            logger.info("Incoming validation request:\n id: {}", id);
+            CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
+            CompanyInfoReadDto companyInfo = apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr());
+            CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequest, companyInfo);
+            creditRequestRepository.save(checkedRequest);
+            return ResponseEntity.ok(new MessageResponse("Kredietaanvraag gecheked!", creditRequestMapper.convertToReadDto(checkedRequest)));
+        } catch (NoSuchElementException e) {
+            logger.error("{}", e);
+            return ResponseEntity.badRequest().body(new MessageResponse("Kon deze aanvraag niet vinden"));
         }
     }
 

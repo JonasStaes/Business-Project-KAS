@@ -1,6 +1,6 @@
 import { activateError } from "../errors/errorSlice";
 import { baseApi } from "./baseApi";
-import { CreditRequestReadDto, CreditRequestStatusConfirmationDto, CreditRequestUpdateDto, MessageResponse } from "./types";
+import { CreditRequestReadDto, CreditRequestStatusConfirmationDto, CreditRequestUpdateDto, MessageResponse, OfficeWorkerCreditRequestCreateDto } from "./types";
 
 const urlBase: string = "office_worker";
 
@@ -81,7 +81,7 @@ const officeWorkerApi = baseApi.injectEndpoints({
                     investmentType: { name: investmentType }, 
                     approvalNote: { value: approvalNote },
                     files,
-                    id,
+                    id: {value: id},
                     currentUser
                 }
             }) => {
@@ -93,6 +93,7 @@ const officeWorkerApi = baseApi.injectEndpoints({
                 formData.append('parentId', currentUser);
                 formData.append("investmentType", investmentType);
                 formData.append("approvalNote", approvalNote);
+                formData.append("id", id.toString());
                 if(files.length > 0) {
                     files.forEach(file => {
                         formData.append('files', file);
@@ -115,7 +116,60 @@ const officeWorkerApi = baseApi.injectEndpoints({
             },
             invalidatesTags: ["CreditRequests"]
         }),
+        createCreditRequestOffice: builder.mutation<CreditRequestReadDto, { officeWorkerCreditRequestCreateDto: OfficeWorkerCreditRequestCreateDto, callback: Function }>({
+            query: ({ 
+                officeWorkerCreditRequestCreateDto: {
+                    name: { value: name }, 
+                    financedAmount: { value: financedAmount }, 
+                    totalAmount: { value: totalAmount }, 
+                    duration, 
+                    investmentType: { name: investmentType }, 
+                    approvalNote: { value: approvalNote },
+                    files,
+                    companyNr: {value: companyNr}
+                }
+            }) => {
+                let formData = new FormData();
+                formData.append('name', name);
+                formData.append('financedAmount', financedAmount.toString());
+                formData.append('totalAmount', totalAmount.toString());
+                formData.append('duration', `P${duration}Y`);
+                formData.append('companyNr', companyNr.toString());
+                formData.append('investmentType', investmentType);
+                formData.append('approvalNote', approvalNote);
+                if(files.length !== undefined) {
+                    files.forEach(file => {
+                        formData.append('files', file);
+                    })   
+                }   
+                return {
+                    url: `${urlBase}/`,
+                    method: "POST",
+                    body: formData
+                }
+            },
+            transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
+            onQueryStarted: async (request, {dispatch, queryFulfilled}) => {
+                try {
+                    const { data } = await queryFulfilled
+                    request.callback(data.id);
+                } catch (error) {
+                    dispatch(activateError({message: "Probleem bij het aanmaken van kredietaanvraag"}))
+                }
+            },
+            invalidatesTags: ["CreditRequests"]
+        }),
+        validateCreditRequestOffice: builder.mutation<CreditRequestReadDto, string>({
+            query: (id) => {
+                return {
+                    url: `${urlBase}/validate/${id}`,
+                    method: "PUT"
+                }
+            },
+            transformResponse: (response: MessageResponse<CreditRequestReadDto>) => response.data,
+            invalidatesTags: (res) => [{ type: "CreditRequests", id: res?.id }]
+        }),
     })
 })
 
-export const { useGetAllCreditRequestsOfficeQuery, useGetOneCreditRequestOfficeQuery, useSetApprovalStatusOfficeMutation, useDeleteCreditRequestOfficeMutation, useUpdateCreditRequestMutation } = officeWorkerApi
+export const { useGetAllCreditRequestsOfficeQuery, useGetOneCreditRequestOfficeQuery, useSetApprovalStatusOfficeMutation, useDeleteCreditRequestOfficeMutation, useUpdateCreditRequestMutation, useCreateCreditRequestOfficeMutation, useValidateCreditRequestOfficeMutation } = officeWorkerApi
