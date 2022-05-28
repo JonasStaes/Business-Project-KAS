@@ -99,6 +99,17 @@ export interface CreditRequestCreateDto  {
     currentUser: string
 }
 
+export interface OfficeWorkerCreditRequestCreateDto  {
+    name: ValidatedObject<string>, 
+    totalAmount: ValidatedObject<number>, 
+    financedAmount: ValidatedObject<number>, 
+    duration: number, 
+    investmentType: InvestmentType, 
+    approvalNote: ValidatedObject<string>,
+    files: Array<File>,
+    companyNr: ValidatedObject<string>
+}
+
 export interface CreditRequestUpdateDto extends CreditRequestCreateDto  {
     id: string
 }

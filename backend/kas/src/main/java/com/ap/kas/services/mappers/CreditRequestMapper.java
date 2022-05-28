@@ -1,6 +1,7 @@
 package com.ap.kas.services.mappers;
 
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
+import com.ap.kas.dtos.createdtos.OfficeWorkerCreditRequestCreateDto;
 import com.ap.kas.dtos.readdtos.CompanyInfoReadDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.dtos.updatedtos.CreditRequestStatusConfirmationDto;
@@ -58,4 +59,15 @@ public class CreditRequestMapper {
         }
         return creditRequest;
     }
+
+    public CreditRequest convertFromOfficeWorkerCreateDTO(OfficeWorkerCreditRequestCreateDto creditRequestCreateDto) {
+        Condition<OfficeWorkerCreditRequestCreateDto, CreditRequest> notNull = ctx -> ctx.getSource() != null;
+        modelMapper.typeMap(OfficeWorkerCreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> {
+            mapper.skip(CreditRequest::setId);
+        });
+        return modelMapper.map(creditRequestCreateDto, CreditRequest.class);
+    }
+
+
+    
 }
