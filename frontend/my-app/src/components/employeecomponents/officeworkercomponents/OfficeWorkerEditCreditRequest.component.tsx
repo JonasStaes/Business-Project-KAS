@@ -27,7 +27,7 @@ export const EditCreditRequest: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const [creditRequestInfo, setCreditRequestInfo] = useState<CreditRequestUpdateDto>({
-    id: creditRequest !== undefined ? creditRequest.id : "",
+    id: { value: creditRequest !== undefined ? creditRequest.id : "", valid: true, errorValue: ""},
     name: { value: creditRequest !== undefined ? creditRequest.name : "", valid: true, errorValue: ""},
     totalAmount: { value: creditRequest !== undefined ? creditRequest.totalAmount : 0, valid: true, errorValue: ""},
     financedAmount: { value: creditRequest !== undefined ? creditRequest.financedAmount : 0, valid: true, errorValue: ""},
@@ -52,6 +52,13 @@ export const EditCreditRequest: FC = () => {
       }
     })
   }
+
+  function checkType(status: string){
+    if (status == "in_behandeling"){
+        return true;
+    }
+    return false;
+}
 
   useEffect(() => {
     console.log(creditRequestInfo)
@@ -160,7 +167,9 @@ export const EditCreditRequest: FC = () => {
               />
               <label className="bg-main-accepted text-main-1 shadow rounded w-40 py-2 uppercase text-lg flex justify-center peer-disabled:bg-main-input"
                 htmlFor="submit"
+                
               >
+                
                 <PlusCircleIcon className="fill-current h-7 w-7 mr-2"/>
                 Volgende
               </label>

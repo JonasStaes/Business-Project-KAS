@@ -151,7 +151,7 @@ public class OfficeWorkerController {
     }
 
     @PutMapping("/editCreditRequest/{id}")
-    public ResponseEntity<MessageResponse> updateCreditRequest(@PathVariable String id, @Valid @ModelAttribute CreditRequestCreateDto creditRequest) {
+    public ResponseEntity<MessageResponse> updateCreditRequest(@PathVariable("id") String id, @Valid @ModelAttribute CreditRequestCreateDto creditRequest) {
         logger.info("Incoming update request:\n {}", id);
         try{
             CreditRequest newCreditRequest = creditRequestMapper.convertFromCreateDTO(creditRequest);
@@ -170,6 +170,7 @@ public class OfficeWorkerController {
             }
 
             creditRequestRepository.save(toBeUpdatedCreditRequest);
+
             
             
             return ResponseEntity.ok(new MessageResponse("Succesfully updated credit request!", creditRequestMapper.convertToReadDto(toBeUpdatedCreditRequest)));
@@ -178,9 +179,10 @@ public class OfficeWorkerController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable("id") String id) {
+    @PutMapping("/validate/{id}")
+    public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable String id) {
         try {
+            logger.info("Incoming validation request:\n id: {}", id);
             CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
             CompanyInfoReadDto companyInfo = apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr());
             CreditRequest checkedRequest = accountingService.evaluateCreditRequest(creditRequest, companyInfo);

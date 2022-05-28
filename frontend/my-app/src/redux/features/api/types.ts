@@ -111,7 +111,7 @@ export interface OfficeWorkerCreditRequestCreateDto  {
 }
 
 export interface CreditRequestUpdateDto extends CreditRequestCreateDto  {
-    id: string
+    id: ValidatedObject<string>
 }
 
 export type InvestmentType = {

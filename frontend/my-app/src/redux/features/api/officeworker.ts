@@ -81,7 +81,7 @@ const officeWorkerApi = baseApi.injectEndpoints({
                     investmentType: { name: investmentType }, 
                     approvalNote: { value: approvalNote },
                     files,
-                    id,
+                    id: {value: id},
                     currentUser
                 }
             }) => {
@@ -93,6 +93,7 @@ const officeWorkerApi = baseApi.injectEndpoints({
                 formData.append('parentId', currentUser);
                 formData.append("investmentType", investmentType);
                 formData.append("approvalNote", approvalNote);
+                formData.append("id", id.toString());
                 if(files.length > 0) {
                     files.forEach(file => {
                         formData.append('files', file);
@@ -161,7 +162,7 @@ const officeWorkerApi = baseApi.injectEndpoints({
         validateCreditRequestOffice: builder.mutation<CreditRequestReadDto, string>({
             query: (id) => {
                 return {
-                    url: `${urlBase}/${id}`,
+                    url: `${urlBase}/validate/${id}`,
                     method: "PUT"
                 }
             },
