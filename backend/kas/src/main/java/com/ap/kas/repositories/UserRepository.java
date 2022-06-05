@@ -7,7 +7,7 @@ import com.ap.kas.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 /**
- * This interface is used to perform CRUD operations for the User object on the database.
+ * This interface is used to perform CRUD operations for the User class on the database.
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
