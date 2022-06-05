@@ -37,6 +37,11 @@ public class CommerciaDirectionController {
 
     private static final Logger logger = LoggerFactory.getLogger(CommerciaDirectionController.class);
 
+    
+    /** 
+     * Returns a list of all existing whitelist entries
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with a list of all existing blacklist or a 400(BAD REQUEST)
+     */
     @GetMapping("/allwhitelist")
     public ResponseEntity<MessageResponse> readWhiteList() {
         try {
@@ -52,6 +57,11 @@ public class CommerciaDirectionController {
         }
     }
 
+    
+    /** 
+     * Returns a list of all existing blacklist entries
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with a list of all existing blacklist entries or a 400(BAD REQUEST)
+     */
     @GetMapping("/allblacklist")
     public ResponseEntity<MessageResponse> readBlackList(){
         try {
@@ -68,6 +78,12 @@ public class CommerciaDirectionController {
 
     }
 
+    
+    /** 
+     * Adds a given sector to the whitelist
+     * @param entry - A Dto object containing the NACEBEL code to be added to the whitelist
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the added entry object or a 400(BAD REQUEST) when the given NACEBEL code already exists in the database
+     */
     @PostMapping("/whitelist")
     public ResponseEntity<MessageResponse> createWhiteListEntry(@Valid @ModelAttribute WhiteListEntry entry){
         logger.info("Incoming WhiteList entry:\n {}", entry);
@@ -89,6 +105,12 @@ public class CommerciaDirectionController {
 
     }
 
+    
+    /** 
+     * Adds a given sector to the blacklist
+     * @param entry - A Dto object containing the NACEBEL code to be added to the blacklist
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the added entry object or a 400(BAD REQUEST) when the given NACEBEL code already exists in the database
+     */
     @PostMapping("/blacklist")
     public ResponseEntity<MessageResponse> createBlackListEntry(@Valid @ModelAttribute BlackListEntry entry){
         logger.info("Incoming BlackList entry:\n {}", entry);
@@ -110,6 +132,12 @@ public class CommerciaDirectionController {
 
     }
 
+    
+    /** 
+     * Deletes a whitelist entry
+     * @param id - Id of the whitelist entry to be deleted
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the id of the deleted entry or a 400(BAD REQUEST)
+     */
     @DeleteMapping("/whitelistdelete/{id}")
     public ResponseEntity<MessageResponse> deleteWhiteListEntry(@PathVariable("id") String id){
         try{
@@ -123,6 +151,12 @@ public class CommerciaDirectionController {
         }
     }
 
+    
+    /** 
+     * Deletes a blacklist entry
+     * @param id - Id of the blacklist entry to be deleted
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the id of the deleted entry or a 400(BAD REQUEST)
+     */
     @DeleteMapping("/blacklistdelete/{id}")
     public ResponseEntity<MessageResponse> deleteBlackListEntry(@PathVariable("id") String id){
         try{

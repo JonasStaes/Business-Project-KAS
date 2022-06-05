@@ -42,6 +42,11 @@ public class RatingAgentController {
     @Autowired
     private KruispuntDBApiService apiService;
 
+    
+    /** 
+     * Returns a list of all credit requests that are not marked as suspicious
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the list of credit requests OR a 400(BAD REQUEST)
+     */
     @GetMapping("/all")
 
     public ResponseEntity<MessageResponse> readCreditRequests() {
@@ -70,6 +75,12 @@ public class RatingAgentController {
 
     }
 
+    
+    /** 
+     * Returns a specific credit request
+     * @param id - Id of the credit request to be returned
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the credit request object OR a 400(BAD REQUEST)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MessageResponse> readCreditRequest(@PathVariable("id") String id) {
         try {
@@ -87,6 +98,12 @@ public class RatingAgentController {
         }
     }
 
+    
+    /** 
+     * Updates the status of a credit request that is IN_BEHANDELING and adds a note to the credit requests feedback document
+     * @param confirmationDto - Dto containing the id of the credit request to be updated, the new status and the note 
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the new status and the credit request OR a 400(BAD REQUEST) when the credit request to be updated does not exist
+     */
     @PutMapping("/confirm_status")
     public ResponseEntity<MessageResponse> confirmStatus(@Valid @ModelAttribute CreditRequestStatusConfirmationDto confirmationDto) {
         logger.info("Incoming confirmation: \n {}", confirmationDto);

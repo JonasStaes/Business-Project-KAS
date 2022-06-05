@@ -46,6 +46,11 @@ public class ComplianceController {
     @Autowired
     private CreditRequestMapper creditRequestMapper;
 
+    
+    /** 
+     * Returns a list of all suspicious credit requests
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the list of suspicious credit requests or a 400(BAD REQUEST)
+     */
     @GetMapping("/all")
     public ResponseEntity<MessageResponse> readSuspiciousRequests() {
         try {
@@ -63,6 +68,12 @@ public class ComplianceController {
         }
     }
 
+    
+    /** 
+     * Returns a suspicious credit request object
+     * @param id - Id of the requested credit request
+     * @return ResponseEntity<MessageResponse> - Either returns a 200(OK) with the requested credit request or a 400(BAD REQUEST)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MessageResponse> readCreditRequest(@PathVariable("id") String id) {
         try {
@@ -80,6 +91,12 @@ public class ComplianceController {
         }
     }
 
+    
+    /** 
+     * Adds feedback to the feedback document of a suspicious credit request
+     * @param feedbackDto - Feedback document Dto containing the id of the feedback document and the feedback to be added 
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the credit request belonging to the feedback document or a 400(BAD REQUEST)
+     */
     @PutMapping("/add_feedback")
     public ResponseEntity<MessageResponse> addFeedBack(@Valid @ModelAttribute CreditRequestAddFeedBackDto feedbackDto) {
         logger.info("Incoming compliance feedback: \n {}", feedbackDto);

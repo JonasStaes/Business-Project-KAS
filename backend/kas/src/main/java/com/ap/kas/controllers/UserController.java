@@ -50,6 +50,12 @@ public class UserController {
     @Autowired
     private MailSender mailSender;
 
+    
+    /** 
+     * Sends a finalization mail to a given customer
+     * @param id - Id of the given customer
+     * @return ResponseEntity<MessageResponse> Contains either a 200(OK) or a 400(BAD REQUEST) when the customer does not exist
+     */
     @PostMapping("/requestCustomer/{id}")
     public ResponseEntity<MessageResponse> requestCustomerFinalization(@PathVariable("id") String id) {
         try {
@@ -67,6 +73,12 @@ public class UserController {
         }
     }
 
+    
+    /** 
+     * Finalizes a customer
+     * @param customerInfoDto - Dto containing information of the customer to be finalized
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) OR a 400(OK) when the token is invalid or the finalization fails in any other way
+     */
     @Transactional
     @PutMapping("/finalizeCustomer")
     public ResponseEntity<MessageResponse> finalizeCustomer(@Valid @ModelAttribute CustomerInfoDto customerInfoDto) {
@@ -86,6 +98,12 @@ public class UserController {
         }
     }
 
+    
+    /** 
+     * Sends a finalization mail to a given employee
+     * @param id - Id of the given employee
+     * @return ResponseEntity<MessageResponse> Contains either a 200(OK) or a 400(BAD REQUEST) when the employee does not exist
+     */
     @PostMapping("/requestEmployee/{id}")
     public ResponseEntity<MessageResponse> requestEmployeeFInalization(@PathVariable("id") String id) {
         try {
@@ -104,6 +122,12 @@ public class UserController {
         }
     }
 
+    
+    /** 
+     * Finalizes an employee
+     * @param customerInfoDto - Dto containing information of the employee to be finalized
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) OR a 400(OK) when the token is invalid or the finalization fails in any other way
+     */
     @Transactional
     @PutMapping("/finalizeEmployee")
     public ResponseEntity<MessageResponse> finalizeEmployee(@Valid @ModelAttribute EmployeeInfoDto employeeInfoDto) {

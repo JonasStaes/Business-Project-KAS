@@ -45,6 +45,12 @@ public class PasswordController {
     @Autowired
     private MailSender mailSender;
 
+    
+    /** 
+     * Sends a password change request to the given email
+     * @param passwordChangeRequest - Dto containing the name and email adress of the user requesting the password change
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) or a 400(BAD REQUEST)
+     */
     @PostMapping("/request")
     public ResponseEntity<MessageResponse> createPasswordRequest(@Valid @ModelAttribute PasswordChangeRequestDto passwordChangeRequest) {
         logger.info("Incoming Password Change Request DTO:\n {}", passwordChangeRequest);
@@ -63,6 +69,12 @@ public class PasswordController {
         }
     }
 
+    
+    /** 
+     * Changes a users password
+     * @param passwordChangeDto - Contains the new password and the users token
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) OR a 400(BAD REQUEST) if the token is invalid
+     */
     @Transactional
     @PutMapping("/change")
     public ResponseEntity<MessageResponse> changePassword(@Valid @ModelAttribute PasswordChangeDto passwordChangeDto) {
