@@ -8,6 +8,9 @@ import javax.validation.constraints.Email;
 
 import lombok.Data;
 
+/**
+ * This class is used to recieve Customer creation data from the frontend.
+ */
 @Data
 public class EmployeeCreateDto {
 

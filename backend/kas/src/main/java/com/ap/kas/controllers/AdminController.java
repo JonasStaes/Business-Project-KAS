@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * The AdminController is a RestController class that contains all methods needed to perform admin-related CRUD operations on the database.
+ */
 @RestController
 @RequestMapping("admin")
 public class AdminController {

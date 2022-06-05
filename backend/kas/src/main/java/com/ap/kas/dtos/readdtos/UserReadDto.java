@@ -7,6 +7,10 @@ import com.ap.kas.models.Role;
 
 import lombok.Data;
 
+
+/**
+ * This class is used to send User data to the frontend.
+ */
 @Data
 public class UserReadDto {
 

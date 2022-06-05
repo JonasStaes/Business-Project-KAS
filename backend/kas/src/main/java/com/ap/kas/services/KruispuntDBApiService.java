@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * This class is used to perform CRUD operations on the KruisPuntDB API
+ */
 @Service
 public class KruispuntDBApiService {
 

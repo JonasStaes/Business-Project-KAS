@@ -38,6 +38,10 @@ import com.ap.kas.services.mappers.CreditRequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * The OfficeWorkerController class contains all methods needed to perform admin-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("office_worker")
 public class OfficeWorkerController {

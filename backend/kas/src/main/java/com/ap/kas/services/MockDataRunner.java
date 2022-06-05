@@ -29,7 +29,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
+/**
+ * This class is used to create and randomly generate data for the purpose of testing the  application
+ */
 @Component
 @Profile(Profiles.DEMO)
 public class MockDataRunner implements CommandLineRunner {

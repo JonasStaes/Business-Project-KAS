@@ -9,6 +9,10 @@ import com.ap.kas.models.FileStorage;
 
 import lombok.Data;
 
+/**
+ * This class is used to send CreditRequest data to the frontend.
+ */
+
 @Data
 public class CreditRequestReadDto {
     

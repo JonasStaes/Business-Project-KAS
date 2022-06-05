@@ -23,7 +23,11 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * This class is used to store Credit Requests in the database.
+ * <p>
+ * This class has a Customer object and a FeedbackDocument object linked to it.
+ */
 @Data
 @Entity
 @Table(name = "tblCreditRequests")

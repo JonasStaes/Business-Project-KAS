@@ -19,7 +19,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+/**
+ * This object is used to store Employees in the database.
+ * <p>
+ * Inherits from the User object.
+ */
 @Entity
 @Table(name = "tblEmployees")
 @PrimaryKeyJoinColumn(name = "employeeId")

@@ -10,7 +10,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * This class is used to store WhiteList entries in the database.
+ */
 @Data
 @Entity
 @Table(name = "tblWhiteList")

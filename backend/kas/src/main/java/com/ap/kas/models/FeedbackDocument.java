@@ -20,7 +20,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
-
+/**
+ * This object is used to store Feedback documents in the database.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

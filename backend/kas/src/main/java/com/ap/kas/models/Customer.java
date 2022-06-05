@@ -15,7 +15,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
+/**
+ * This class is used to store Customers in the database.
+ * <p>
+ * This class has an Address object and a CustomerInfo object linked to it.
+ * <p>
+ * Inherits from the User class
+ */
 @Entity
 @Table(name = "tblCustomers")
 @PrimaryKeyJoinColumn(name = "customerId")

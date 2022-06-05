@@ -10,7 +10,9 @@ import javax.validation.constraints.Positive;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
-
+/**
+ * This class is used to recieve CreditRequest creation data from the frontend.
+ */
 @Data
 public class CreditRequestCreateDto {
     

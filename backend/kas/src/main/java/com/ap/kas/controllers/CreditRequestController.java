@@ -32,6 +32,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * The CreditRequestController class contains all methods needed to perform credit request-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("credit_request")
 public class CreditRequestController {

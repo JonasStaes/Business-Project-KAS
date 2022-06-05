@@ -13,6 +13,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * This class is used to store Calculated ratios in the database.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

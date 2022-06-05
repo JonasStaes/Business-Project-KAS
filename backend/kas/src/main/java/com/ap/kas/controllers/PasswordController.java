@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * The PasswordController class contains all methods needed to perform password-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("change_password")
 public class PasswordController {

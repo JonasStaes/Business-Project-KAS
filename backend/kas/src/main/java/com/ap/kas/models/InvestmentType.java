@@ -3,6 +3,9 @@ import java.util.stream.Stream;
 
 import lombok.Getter;
 
+/**
+ * This object is used to store Investment Types in the database.
+ */
 @Getter
 public enum InvestmentType {
     ROLLEND_MATRIEEL(1, 5),

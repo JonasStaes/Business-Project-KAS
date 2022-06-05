@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * This class is used to convert MultiPartFile objects
+ */
 @Service
 public class FileStorageService {
 

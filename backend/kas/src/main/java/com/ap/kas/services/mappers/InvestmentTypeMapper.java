@@ -5,6 +5,10 @@ import com.ap.kas.models.InvestmentType;
 
 import org.springframework.stereotype.Service;
 
+
+/**
+ * This class is used to map InvestmentType objects to the InvestmentTypeReadDto
+ */
 @Service
 public class InvestmentTypeMapper {
 

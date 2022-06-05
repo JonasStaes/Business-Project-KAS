@@ -29,6 +29,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * The UserController class contains methods for the finalization of a user.
+ */
+
 @RestController
 @RequestMapping("user")
 public class UserController {

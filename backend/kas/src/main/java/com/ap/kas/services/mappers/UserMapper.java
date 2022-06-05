@@ -17,6 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * This class is used to map User/Employee/Customer objects to the different Dto's
+ */
 @Service
 public class UserMapper {
     

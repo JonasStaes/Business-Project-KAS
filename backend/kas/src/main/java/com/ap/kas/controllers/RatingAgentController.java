@@ -25,6 +25,10 @@ import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
+/**
+ * The AdminController class contains all methods needed to perform rating agent-related CRUD operations on the database
+ */
+
 @RestController
 @RequestMapping("rating_agent")
 public class RatingAgentController {

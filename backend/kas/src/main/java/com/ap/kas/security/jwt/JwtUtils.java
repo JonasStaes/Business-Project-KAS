@@ -18,6 +18,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
+/**
+ * This class is used for operations on tokens
+ */
 @Component
 public class JwtUtils {
 

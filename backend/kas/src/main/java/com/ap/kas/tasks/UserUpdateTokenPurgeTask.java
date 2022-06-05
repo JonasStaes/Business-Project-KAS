@@ -7,7 +7,9 @@ import com.ap.kas.repositories.UserUpdateTokenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-
+/**
+ * This class is used to convert purge PasswordCreate tokens
+ */
 public class UserUpdateTokenPurgeTask {
 
     @Autowired

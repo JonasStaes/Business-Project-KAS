@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * The EnumController class contains all methods needed to perform enum-related CRUD operations on the database.
+ */
 @RestController
 @RequestMapping("enums")
 public class EnumsController {

@@ -21,7 +21,9 @@ import com.ap.kas.repositories.WhiteListRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+/**
+ * This class is used to evaluate CreditRequests. 
+ */
 @Service
 public class AccountingService {
     private final float baseInterestRate = 2;

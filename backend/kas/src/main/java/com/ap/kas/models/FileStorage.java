@@ -18,6 +18,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * This object is used to store Files in the database.
+ */
 @Data
 @NoArgsConstructor
 @Entity

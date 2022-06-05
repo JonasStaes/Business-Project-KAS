@@ -27,7 +27,9 @@ import com.ap.kas.services.mappers.CreditRequestMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * The ComplianceController class contains all methods needed to perform compliance-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("compliance")
 public class ComplianceController {

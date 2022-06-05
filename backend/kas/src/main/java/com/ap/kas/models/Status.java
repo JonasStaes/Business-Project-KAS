@@ -1,7 +1,9 @@
 package com.ap.kas.models;
 
 import java.util.stream.Stream;
-
+/**
+ * This object is used to store the Status types in the database.
+ */
 public enum Status {
     GEEN_STATUS,
     GOEDGEKEURD,

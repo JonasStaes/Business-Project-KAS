@@ -23,7 +23,9 @@ import com.ap.kas.payload.response.MessageResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * The CommercialDirection Controller class contains all methods needed to perform commercial direction-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("commercial_direction")
 public class CommerciaDirectionController {

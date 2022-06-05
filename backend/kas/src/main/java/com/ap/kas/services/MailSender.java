@@ -10,6 +10,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used send different types of e-mails
+ */
 @Service
 public class MailSender {
     

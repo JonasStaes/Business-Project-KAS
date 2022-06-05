@@ -13,6 +13,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * This class is used for to store user details in the database
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     
