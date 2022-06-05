@@ -6,6 +6,10 @@ import javax.validation.constraints.Pattern;
 
 import lombok.Data;
 
+
+/**
+ * This class is used to recieve Customer creation data from the frontend.
+ */
 @Data
 public class CustomerCreateDto {
 

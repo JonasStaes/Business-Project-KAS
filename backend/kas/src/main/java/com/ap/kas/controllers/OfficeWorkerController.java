@@ -38,6 +38,10 @@ import com.ap.kas.services.mappers.CreditRequestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * The OfficeWorkerController class contains all methods needed to perform admin-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("office_worker")
 public class OfficeWorkerController {
@@ -65,6 +69,11 @@ public class OfficeWorkerController {
     @Autowired
     private KruispuntDBApiService apiService;
 
+    
+    /** 
+     * Returns a list of all credit requests
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the list of credit requests OR a 400(BAD REQUEST)
+     */
     @GetMapping("/all")
     public ResponseEntity<MessageResponse> readCreditRequests() {
         try {
@@ -87,6 +96,12 @@ public class OfficeWorkerController {
         }
 
     }
+    
+    /** 
+     * Deletes a given credit request
+     * @param id - Id of the credit request to be deleted
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) OR a 400(BAD REQUEST)
+     */
     @DeleteMapping("/editCreditRequest/{id}")
     public ResponseEntity<MessageResponse> deleteCreditRequest(@PathVariable String id) {
         logger.info("Incoming deletion request:\n {}", id);
@@ -102,6 +117,12 @@ public class OfficeWorkerController {
         }
     }
 
+    
+    /** 
+     * Returns a specific credit request
+     * @param id - Id of the credit request to be returned
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the credit request OR a 400(BAD REQUEST)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MessageResponse> readCreditRequest(@PathVariable("id") String id) {
         try {
@@ -117,6 +138,12 @@ public class OfficeWorkerController {
         }
     }
 
+    
+    /** 
+     * Creates a new credit request in the name of a customer and links it to that customer
+     * @param newCreditRequest - The credit request to be created
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the created credit request object OR a 400(BAD_REQUEST)
+     */
     @PostMapping("/")
     public ResponseEntity<MessageResponse> createCreditRequest(@Valid @ModelAttribute OfficeWorkerCreditRequestCreateDto newCreditRequest) {
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
@@ -150,6 +177,13 @@ public class OfficeWorkerController {
         }
     }
 
+    
+    /** 
+     * Edits a credit request with the given information
+     * @param id - Id of the credit request to be edited
+     * @param creditRequest - Credit request dto containing the new information
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the updated credit request object OR a 400(BAD_REQUEST)
+     */
     @PutMapping("/editCreditRequest/{id}")
     public ResponseEntity<MessageResponse> updateCreditRequest(@PathVariable("id") String id, @Valid @ModelAttribute CreditRequestCreateDto creditRequest) {
         logger.info("Incoming update request:\n {}", id);
@@ -179,6 +213,12 @@ public class OfficeWorkerController {
         }
     }
 
+    
+    /** 
+     * Evaluates a credit request (Sets the status and suspicious marker)
+     * @param id - Id of the credit request to be evaluated
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the evaluated credit request OR a 400(BAD REQUEST)
+     */
     @PutMapping("/validate/{id}")
     public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable String id) {
         try {

@@ -29,7 +29,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
+/**
+ * This class is used to create and randomly generate data for the purpose of testing the  application
+ */
 @Component
 @Profile(Profiles.DEMO)
 public class MockDataRunner implements CommandLineRunner {
@@ -63,6 +65,12 @@ public class MockDataRunner implements CommandLineRunner {
     Faker faker = new Faker(new Locale("nl-BE"));
     FakeValuesService fakeValuesService = new FakeValuesService(new Locale("nl-BE"), new RandomService());
 
+    
+    /** 
+     * Creates fake data for the purpose of testing the application. Creates: Users (both employee and customers with auto-generated names and emails), White and Blacklist entries, CreditRequests
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
 
@@ -130,6 +138,13 @@ public class MockDataRunner implements CommandLineRunner {
         creditRequestRepository.findAll().forEach(cr -> logger.info("{}\n", cr));
     }
 
+    
+    /** 
+     * Creates a credit request with random values for the given Customer and evaluates this credit request
+     * @param i
+     * @param customer - The given customer
+     * @return CreditRequest - The created and evaluated credit request
+     */
     private CreditRequest createRandomCreditRequest(int i, Customer customer) {
         float financedAmount = randomFloat(4, 6);
         float totalAmount = Float.sum(randomFloat(5, 7), financedAmount);
@@ -138,6 +153,13 @@ public class MockDataRunner implements CommandLineRunner {
         return accountingService.evaluateCreditRequest(new CreditRequest(faker.company().bs(), totalAmount, financedAmount, period, investmentType, customer), apiService.getCompanyInfoDto(customer.getCompanyNr()));
     }    
 
+    
+    /** 
+     * Generates a random float value between the bounds of the given min and max values
+     * @param min - The minimum value
+     * @param max - The maximum value
+     * @return float - The generated float value
+     */
     public float randomFloat(int min, int max) {
         return Float.parseFloat(fakeValuesService.numerify(fakeValuesService.regexify(String.format("[#]{%d,%d}\\.[#]{2}", min, max))));
     }

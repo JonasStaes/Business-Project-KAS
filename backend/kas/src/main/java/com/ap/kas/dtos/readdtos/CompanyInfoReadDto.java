@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * This class is used to send CompanyInfo data to the frontend.
+ */
 @Data
 @Builder
 @NoArgsConstructor

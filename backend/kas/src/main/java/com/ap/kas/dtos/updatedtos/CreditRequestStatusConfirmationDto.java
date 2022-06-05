@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
+/**
+ * This class is used to recieve and update CreditRequest status data from the frontend.
+ */
 @Data
 public class CreditRequestStatusConfirmationDto {
     

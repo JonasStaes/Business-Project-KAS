@@ -10,7 +10,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * This class is used to store addresses in the database.
+ */
 @Data
 @NoArgsConstructor
 @Entity

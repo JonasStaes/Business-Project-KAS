@@ -32,6 +32,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * The CreditRequestController class contains all methods needed to perform credit request-related CRUD operations on the database
+ */
 @RestController
 @RequestMapping("credit_request")
 public class CreditRequestController {
@@ -56,6 +60,12 @@ public class CreditRequestController {
     @Autowired
     private KruispuntDBApiService apiService;
 
+    
+    /** 
+     * Returns a list credit requests belonging to a specified user
+     * @param id - The id of user 
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the list of credit requests OR a 400(BAD REQUEST)
+     */
     @GetMapping("/all/{id}")
     public ResponseEntity<MessageResponse> readCreditRequests(@PathVariable("id") String id) {
         try {
@@ -75,6 +85,12 @@ public class CreditRequestController {
         }
     }
 
+    
+    /** 
+     * Returns a credit request
+     * @param id - Id of the requested credit request
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the requested credit request OR a 400(OK)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MessageResponse> readCreditRequest(@PathVariable("id") String id) {
         try {
@@ -90,6 +106,12 @@ public class CreditRequestController {
         }
     }
 
+    
+    /** 
+     * Creates a new credit request
+     * @param newCreditRequest - Dto that contains the credit request data as well as the id of the user who created it
+     * @return ResponseEntity<MessageResponse> - Returns either a 200(OK) with the created credit request object OR a 400(BAD REQUEST)
+     */
     @PostMapping("/")
     public ResponseEntity<MessageResponse> createCreditRequest(@Valid @ModelAttribute CreditRequestCreateDto newCreditRequest) {
         logger.info("Incoming Credit Request DTO:\n {}", newCreditRequest);
@@ -119,6 +141,12 @@ public class CreditRequestController {
         }
     }
 
+    
+    /** 
+     * Evaluates a given credit request
+     * @param id - Id of the credit request to be evaluated
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the evaluated credit request OR a 400(BAD REQUEST)
+     */
     @PutMapping("/{id}")
     public ResponseEntity<MessageResponse> validateCreditRequest(@PathVariable("id") String id) {
         try {
@@ -133,6 +161,12 @@ public class CreditRequestController {
         }
     }
 
+    
+    /** 
+     * Deletes a given credit request
+     * @param id - Id of the credit request to be deleted
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) or a 400(BAD_REQUEST)
+     */
     @DeleteMapping("/editCreditRequest/{id}")
     public ResponseEntity<MessageResponse> deactivateUser(@PathVariable String id) {
         logger.info("Incoming deletion request:\n {}", id);

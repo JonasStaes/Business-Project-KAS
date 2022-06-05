@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * This class is used to store employee details in the database
+ */
 @Data
 @AllArgsConstructor
 public class EmployeeDetailsImpl implements UserDetails {

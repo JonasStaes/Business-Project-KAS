@@ -20,7 +20,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * This class is used to store User update tokens in the database.
+ */
 @Data
 @NoArgsConstructor
 @Entity

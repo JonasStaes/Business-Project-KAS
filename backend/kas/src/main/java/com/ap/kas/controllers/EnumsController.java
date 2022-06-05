@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * The EnumController class contains all methods needed to perform enum-related CRUD operations on the database.
+ */
 @RestController
 @RequestMapping("enums")
 public class EnumsController {
@@ -28,6 +32,11 @@ public class EnumsController {
     @Autowired
     private InvestmentTypeMapper investmentTypeMapper;
     
+    
+    /** 
+     * Returns a list of all possible statuses
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the list of possible statuses OR a 400(BAD REQUEST)
+     */
     @GetMapping("/statuses")
     public ResponseEntity<MessageResponse> readAllStatuses() {
         try {
@@ -37,6 +46,11 @@ public class EnumsController {
         }
     }
 
+    
+    /** 
+     * Returns a list of all possible investment types
+     * @return ResponseEntity<MessageResponse> - Contains either a 200(OK) with the list of possible investment types OR a 400(BAD REQUEST)
+     */
     @GetMapping("/investmentTypes")
     public ResponseEntity<MessageResponse> readAllInvestmentTypes() {
         try {

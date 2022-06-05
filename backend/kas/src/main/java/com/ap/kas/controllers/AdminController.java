@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * The AdminController is a RestController class that contains all methods needed to perform admin-related CRUD operations on the database.
+ */
 @RestController
 @RequestMapping("admin")
 public class AdminController {
@@ -44,6 +46,11 @@ public class AdminController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    
+    /** 
+     * Returns a  list of all existing users, both employees and customers
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the list of all existing users or a 400(BAD REQUEST)
+     */
     @GetMapping("/allUsers")
     public ResponseEntity<MessageResponse> readUsers() {
         try {
@@ -63,6 +70,11 @@ public class AdminController {
         }
     }
 
+    
+    /** 
+     * Rreturns a list of all possible employee roles
+     * @return ResponseEntity<MessageResponse> - Either returns a 200(OK) with the list of roles or a 400(BAD REQUEST)
+     */
     @GetMapping("/employeeRoles")
     public ResponseEntity<MessageResponse> readEmployeeRoles() {
         try {
@@ -72,6 +84,11 @@ public class AdminController {
         }
     }
 
+    
+    /** 
+     * Returns a list of all possible customer roles
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the list of roles or a 400(BAD REQUEST)
+     */
     @GetMapping("/customerRoles")
     public ResponseEntity<MessageResponse> readCustomerRoles() {
         try {
@@ -81,6 +98,12 @@ public class AdminController {
         }
     }
 
+    
+    /** 
+     * Creates a new customer
+     * @param newCustomer - The customer to be created
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) or 400(BAD REQUEST). Can also contain a 400(BAD REQUEST) when trying to create a customer with an already existing company number.
+     */
     @PostMapping("/newCustomer")
     public ResponseEntity<MessageResponse> createCustomer(@Valid @ModelAttribute CustomerCreateDto newCustomer) {
         logger.info("Incoming Customer Create DTO:\n {}", newCustomer);
@@ -102,6 +125,12 @@ public class AdminController {
         } 
     }
 
+    
+    /**  
+     * Creates a new employee
+     * @param newEmployee - The employee to be created
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) with the created employee object or a 400(BAD REQUEST)
+     */
     @PostMapping("/newEmployee")
     public ResponseEntity<MessageResponse> createEmployee(@Valid @ModelAttribute EmployeeCreateDto newEmployee) {
         logger.info("Incoming Employee Create DTO:\n {}", newEmployee);
@@ -117,6 +146,12 @@ public class AdminController {
         }
     }
 
+    
+    /** 
+     * Deletes a given user
+     * @param id - the id of the given user
+     * @return ResponseEntity<MessageResponse> - Contains a 200(OK) or a 400(BAD REQUEST)
+     */
     @PutMapping("/users/{id}")
     public ResponseEntity<MessageResponse> deactivateUser(@PathVariable String id) {
         logger.info("Incoming deactivation request:\n {}", id);

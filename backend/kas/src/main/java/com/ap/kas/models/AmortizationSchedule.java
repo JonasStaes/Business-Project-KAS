@@ -21,6 +21,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * This class is used to store AmortizationSchedules in the database.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

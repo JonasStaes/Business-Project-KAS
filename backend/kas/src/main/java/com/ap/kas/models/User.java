@@ -12,7 +12,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * This object is used to store Users in the database.
+ */
 @Data
 @NoArgsConstructor
 @Entity

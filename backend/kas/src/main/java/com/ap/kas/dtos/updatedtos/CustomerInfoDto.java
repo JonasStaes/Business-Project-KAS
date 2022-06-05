@@ -5,6 +5,9 @@ import javax.validation.constraints.Positive;
 
 import lombok.Data;
 
+/**
+ * This class is used to recieve and update CustomerInfo data from the frontend.
+ */
 @Data
 public class CustomerInfoDto {
 

@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
+/**
+ * This class is used to recieve Credit Request creation data that an employee with the "KREDIET_BEOORDELAAR" role has submitted from the frontend.
+ */
 @Data
 public class OfficeWorkerCreditRequestCreateDto {
     

@@ -20,6 +20,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * This class is used for the filtering of tokens
+ */
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
     
@@ -32,6 +35,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Value("${Kas.app.tokenBearer}")
     private String bearer;
 
+    
+    /** 
+     * @param request
+     * @return String
+     */
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
@@ -42,6 +50,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         return null;
     }
 
+    
+    /** 
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

@@ -6,12 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * This class is used to perform CRUD operations on the KruisPuntDB API
+ */
 @Service
 public class KruispuntDBApiService {
 
     @Autowired
     private WebClient kruispuntdb;
     
+    
+    /** 
+     * Gets the company info (from the KruisPuntDB) of a company using a given companyNr 
+     * @param companyNr - The given companyNr
+     * @return CompanyInfoReadDto - The CompanyInfoReadDto containing the company info
+     */
     public CompanyInfoReadDto getCompanyInfoDto(String companyNr) {
         companyNr = companyNr.replaceAll("\\D", "");
         String convertedNr = "BE" + companyNr.substring(0, 4) + "." + companyNr.substring(4, 7) + "." + companyNr.substring(7, 10);

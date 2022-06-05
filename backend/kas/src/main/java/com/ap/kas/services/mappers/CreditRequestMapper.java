@@ -12,13 +12,21 @@ import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+/**
+ * This class is used to map CreditRequests to the different CreditRequestDto's
+ */
 @Service
 public class CreditRequestMapper {
     
     @Autowired
     private ModelMapper modelMapper;
 
+    
+    /** 
+     * Converts a given CreditRequestCreateDto object to a CreditRequest object
+     * @param creditRequestCreateDto - The CreditRequestCreateDto object to be converted
+     * @return CreditRequest - The converted CreditRequest object
+     */
     public CreditRequest convertFromCreateDTO(CreditRequestCreateDto creditRequestCreateDto) {
         Condition<CreditRequestCreateDto, CreditRequest> notNull = ctx -> ctx.getSource() != null;
         modelMapper.typeMap(CreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> {
@@ -28,6 +36,12 @@ public class CreditRequestMapper {
         return modelMapper.map(creditRequestCreateDto, CreditRequest.class);
     }
 
+    
+    /** 
+     * Converts a given CreditRequest object to a CreditRequestReadDto object
+     * @param creditRequest - The given CreditRequest object to be converted
+     * @return CreditRequestReadDto - The converted CreditRequestReadDto object
+     */
     public CreditRequestReadDto convertToReadDto(CreditRequest creditRequest) {
         Condition<CreditRequest, CreditRequestReadDto> notNull = ctx -> ctx.getSource() != null;
         modelMapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(mapper -> {
@@ -38,6 +52,13 @@ public class CreditRequestMapper {
         return modelMapper.map(creditRequest, CreditRequestReadDto.class);
     }
 
+    
+    /** 
+     * Converts and merges the given CreditRequest object and the CompanyInfoReadDto object into a CreditRequestReadDto object
+     * @param creditRequest - The given CreditRequest object
+     * @param companyInfo - The given CompanyInfoReadDto object
+     * @return CreditRequestReadDto - The converted CreditRequestReadDto object
+     */
     public CreditRequestReadDto convertToReadDtoWithCompanyInfo(CreditRequest creditRequest, CompanyInfoReadDto companyInfo) {
         Condition<CreditRequest, CreditRequestReadDto> notNull = ctx -> ctx.getSource() != null;
         modelMapper.typeMap(CreditRequest.class, CreditRequestReadDto.class).addMappings(mapper -> {
@@ -50,6 +71,13 @@ public class CreditRequestMapper {
         return output;
     }
 
+    
+    /** 
+     * Changes the status field of a given CreditRequest object according to the isApproval field of a given confirmationDto object. If the isApproval is true the status field will be set to "GOEDGEKEURD", if not it will be set to "AFGEKEURD"
+     * @param confirmationDto - The confirmationDto object containing the isApproval boolean 
+     * @param creditRequest - The given CreditRequest object
+     * @return CreditRequest - The updated CreditRequest object
+     */
     public CreditRequest confirmStatus(CreditRequestStatusConfirmationDto confirmationDto, CreditRequest creditRequest) {
         creditRequest.getFeedbackDocument().setApprovalNote(confirmationDto.getApprovalNote());
         if(confirmationDto.isApproval()) {
@@ -60,6 +88,12 @@ public class CreditRequestMapper {
         return creditRequest;
     }
 
+    
+    /** 
+     * Converts a given OfficeWorkerCreateDto object to a CreditRequest object
+     * @param creditRequestCreateDto - The given OfficeWorkerCreateDto object
+     * @return CreditRequest - The converted CreditRequest object
+     */
     public CreditRequest convertFromOfficeWorkerCreateDTO(OfficeWorkerCreditRequestCreateDto creditRequestCreateDto) {
         Condition<OfficeWorkerCreditRequestCreateDto, CreditRequest> notNull = ctx -> ctx.getSource() != null;
         modelMapper.typeMap(OfficeWorkerCreditRequestCreateDto.class, CreditRequest.class).addMappings(mapper -> {

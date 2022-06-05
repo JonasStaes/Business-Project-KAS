@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lombok.Getter;
-
+/**
+ * This object is used to store Roles in the database.
+ */
 @Getter
 public enum Role {
     KLANT("customer"),
