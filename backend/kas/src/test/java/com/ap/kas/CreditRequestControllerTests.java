@@ -14,13 +14,14 @@ import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
 import com.ap.kas.dtos.requestdtos.CustomerLoginRequestDto;
 import com.ap.kas.models.CreditRequest;
 import com.ap.kas.models.Customer;
+import com.ap.kas.models.InvestmentType;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
 import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-
-
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,17 +43,21 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 
-
-
+@ActiveProfiles(profiles = Profiles.TEST)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CreditRequestControllerTests {
 
     private static final String CONTROLLER_MAPPING = "/credit_request";
-    private static final String LOGIN_MAPPING = "/signin/customer";
     private static final Logger logger = LoggerFactory.getLogger(CreditRequestControllerTests.class);
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private WebTestClient webClient;
 
     @Autowired
     private CreditRequestRepository creditRequestRepository;
@@ -67,38 +74,23 @@ public class CreditRequestControllerTests {
     @Autowired
     private CustomerRepository customerRepository;
 
-    private static CreditRequest creditRequest;
+    private Customer testCustomer;
+
+    private CreditRequest creditRequest;
 
 
     Faker faker = new Faker(new Locale("nl-BE"));
     FakeValuesService fakeValuesService = new FakeValuesService(new Locale("nl-BE"), new RandomService());
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+    public void init() {
+        testCustomer = new Customer("testCustomer", "testCustomer@gmail.com", true, passwordEncoder.encode(new StringBuffer("testCustomer")), "1234567890");
         //initialize test data
-        creditRequest = new CreditRequest();
-        creditRequest.setName("Test Request");
-        creditRequest.setFinancedAmount(100.0f);
-        creditRequest.setTotalAmount(200.0f);
-        creditRequest.setDuration(Period.ofMonths(2));  
+        creditRequest = new CreditRequest("Test Request", 200.0f, 100.0f, Period.ofMonths(2), InvestmentType.ONROERENDE_GOEDEREN, testCustomer);
     }
 
     @Test
     public void readAllCapabilitiesTest() {
-
-
-        Customer testCustomer = customerRepository.findByCompanyNr("1234567856").orElse(null);
-        
-        
-        CustomerLoginRequestDto customerLoginRequestDto = new CustomerLoginRequestDto();
-        customerLoginRequestDto.setCompanyNr(testCustomer.getCompanyNr());
-        customerLoginRequestDto.setPassword("testPassword");
-
-        
-
-        final ResponseEntity<MessageResponse> loginEntity = restTemplate.postForEntity(LOGIN_MAPPING, customerLoginRequestDto,  MessageResponse.class);
-        assertEquals(HttpStatus.OK, loginEntity.getStatusCode());
-
 
         final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all" + "/" + testCustomer.getId() , MessageResponse.class);
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
@@ -120,23 +112,23 @@ public class CreditRequestControllerTests {
 
     @Test
     public void createNewCreditRequestTest() {
-        //create dto for test
-        CreditRequestCreateDto dto = new CreditRequestCreateDto();
-        dto.setName(creditRequest.getName());
-        dto.setTotalAmount(creditRequest.getTotalAmount());
-        dto.setFinancedAmount(creditRequest.getFinancedAmount());
-        dto.setDuration(creditRequest.getDuration());
-        //dto.setFiles(fileStorageRepository.findAllByCreditRequest(creditRequest));
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
 
-        //get actual result from mock API call
-        final ResponseEntity<MessageResponse> forEntity = restTemplate.postForEntity(CONTROLLER_MAPPING + "/", dto, MessageResponse.class);
+        bodyBuilder.part("parentID", creditRequest.getCustomer().getId());
+        bodyBuilder.part("name", creditRequest.getName());
+        bodyBuilder.part("totalAmount", creditRequest.getTotalAmount());
+        bodyBuilder.part("financedAmount", creditRequest.getFinancedAmount());
+        bodyBuilder.part("duration", creditRequest.getDuration());
+        bodyBuilder.part("investmentType", creditRequest.getInvestmentType().name());
 
-        //assert that status code is ok, meaning the request was successful
-        assertEquals(HttpStatus.OK, forEntity.getStatusCode());
+        webClient.post().uri(CONTROLLER_MAPPING + "/")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .accept(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody();
 
-        //assert that all PASSED fields are the same, aka all fields in the dto.
-        //we can't test if the two objects are the same, even with hashcode and equals overrides
-        //since the test data doesn't have an ID, and even if it did it's ID wouldn't match the DTO since they're separate entries in the repo
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
         assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
