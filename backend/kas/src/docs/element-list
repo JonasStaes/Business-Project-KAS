@@ -1,0 +1,15 @@
+com.ap.kas
+com.ap.kas.config
+com.ap.kas.controllers
+com.ap.kas.dtos.createdtos
+com.ap.kas.dtos.readdtos
+com.ap.kas.dtos.requestdtos
+com.ap.kas.dtos.updatedtos
+com.ap.kas.models
+com.ap.kas.payload.response
+com.ap.kas.repositories
+com.ap.kas.security.jwt
+com.ap.kas.security.services
+com.ap.kas.services
+com.ap.kas.services.mappers
+com.ap.kas.tasks

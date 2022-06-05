@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 /**
- * This object is used to store Feedback documents in the database.
+ * This class is used to store Feedback documents in the database.
  */
 @Data
 @NoArgsConstructor
@@ -48,4 +48,8 @@ public class FeedbackDocument {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "amortization_schedule_id")
     private AmortizationSchedule amortizationSchedule;
+
+    public static class FeedbackDocumentBuilder {}
+
+
 }
