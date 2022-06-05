@@ -32,6 +32,13 @@ public class AccountingService {
     @Autowired 
     private BlackListRepository blackListRepository;
 
+    
+    /** 
+     * Evaluates the given CreditRequest object. This method checks if the given credit request is suspicious and gives it a status according to calculations.
+     * @param creditRequest - The given CreditRequestObject to be evaluated.
+     * @param companyInfo - CompanyInfoReadDto object with the information of the company who submitted the credit request
+     * @return CreditRequest - The evaluated CreditRequest object.
+     */
     //#region credit request evaluation
     
     public CreditRequest evaluateCreditRequest(CreditRequest creditRequest, CompanyInfoReadDto companyInfo) {
@@ -76,6 +83,13 @@ public class AccountingService {
         return creditRequest;
     }
 
+    
+    /** 
+     * Builds the feedbackdocument of the CreditRequest being evaluated
+     * @param companyInfo - The CompanyInfoReadDto object containing the  information of the company that submitted the CreditRequest
+     * @param builder - The builder
+     * @return FeedbackDocumentBuilder - The completed feedbackdocument
+     */
     //#region evaluation methods
 
     private FeedbackDocumentBuilder calculateRatios(CompanyInfoReadDto companyInfo, FeedbackDocumentBuilder builder) {
@@ -93,6 +107,13 @@ public class AccountingService {
         return builder;
     }
 
+    
+    /** 
+     * Calculates the solvency rate of the CreditRequest being evaluated
+     * @param equity - The given equity value
+     * @param assets - The given assets value
+     * @return CalculatedRatio - The calculated ratio
+     */
     private CalculatedRatio calculateSolvencyRate(float equity, float assets) {
         return CalculatedRatio.builder()
             .name("Solvabiliteit")
@@ -106,6 +127,13 @@ public class AccountingService {
             .build(); 
     }
 
+    
+    /** 
+     * Calculates the profitability rate on the equity
+     * @param result - The given result value of the company 
+     * @param equity - The given equity value of the company
+     * @return CalculatedRatio - The calculated ratio
+     */
     private CalculatedRatio calculateProfitabilityRateOnEquity(float result, float equity) {
         return CalculatedRatio.builder()
             .name("Rentabiliteit eigen vermogen")
@@ -117,6 +145,15 @@ public class AccountingService {
             .build();
     }
 
+    
+    /** 
+     * Calculates the profitability rate on the assets
+     * @param resultAfterTax - The given result after tax value
+     * @param financialCosts - The given financial costs value
+     * @param tax - The given tax value
+     * @param assets - The given assets value
+     * @return CalculatedRatio - The calculated ratio
+     */
     private CalculatedRatio calculateProfitabilityRateOnAssets(float resultAfterTax, float financialCosts, float tax, float assets) {
         return CalculatedRatio.builder()
             .name("Rentabiliteit totaal vermogen")
@@ -130,6 +167,13 @@ public class AccountingService {
             .build();
     }
 
+    
+    /** 
+     * Calculates the current ratio 
+     * @param currentAssets - The given current assets value
+     * @param shortTermDebt - The given short term debt value
+     * @return CalculatedRatio - The calculated current ratio
+     */
     private CalculatedRatio calculateCurrentRatio(float currentAssets, float shortTermDebt) {
         return CalculatedRatio.builder()
             .name("Current Ratio")
@@ -142,6 +186,14 @@ public class AccountingService {
             .build();
     }
 
+    
+    /**
+     * Calculates the quick ratio 
+     * @param currentAssets - The given current assets value
+     * @param stock - The given stock value
+     * @param shortTermDebt - The given short term debt value
+     * @return CalculatedRatio - The calculated quick ratio
+     */
     private CalculatedRatio calculateQuickRatio(float currentAssets, float stock, float shortTermDebt) {
         return CalculatedRatio.builder()
             .name("Quick Ratio")
@@ -153,6 +205,14 @@ public class AccountingService {
             .build();
     }
 
+    
+    /** 
+     * Calculates the cash flow 
+     * @param depreciation - The  given depreciation value
+     * @param writeDown - The given write down value
+     * @param resultAfterTax - The given result after tax value
+     * @return CalculatedRatio - The calculated cash flow value
+     */
     private CalculatedRatio calculateCashflow(float depreciation, float writeDown, float resultAfterTax) {
         return CalculatedRatio.builder()
             .name("Cashflow")
@@ -164,6 +224,16 @@ public class AccountingService {
             .build();
     }
 
+    
+    /** 
+     * - Calculates the repayment capacity
+     * @param depreciation - The given depreciation value
+     * @param writeDown - The given write down value
+     * @param resultAfterTax the given result after tax value
+     * @param shortTermDebt - The given short term debt value
+     * @param longTermDebt - The given long term debt value
+     * @return CalculatedRatio - The calculated repayment capacity
+     */
     private CalculatedRatio calculateRepaymentCapacity(float depreciation, float writeDown, float resultAfterTax, float shortTermDebt, float longTermDebt) {
         return CalculatedRatio.builder()
             .name("Terugbetalingscapaciteit")
@@ -175,6 +245,13 @@ public class AccountingService {
             .build();
     }
 
+    
+    /** 
+     * Calculates the degree of self financing
+     * @param equity - The given equity value
+     * @param assets - The given assets value
+     * @return CalculatedRatio - The calculated degree of self financing
+     */
     private CalculatedRatio calculateDegreeOfSelfFinancing(float equity, float assets) {
         return CalculatedRatio.builder()
             .name("Graad van zelffinanciering")
@@ -185,16 +262,34 @@ public class AccountingService {
             .build();
     }
 
+    
+    /** 
+     * Checks if the given nacebel code matches any white list entry
+     * @param nacebel - The given nacebel code
+     * @return boolean - True if matches, false if it doesn't
+     */
     private boolean checkIfMatchesWhiteListEntry(String nacebel){
        return  whiteListRepository.findAll().stream()
             .anyMatch(entry -> entry.getNacebel().equals(nacebel));
     }
 
+    
+    /** 
+     * Checks if the given nacebel code matches any black list entry
+     * @param nacebel - The given nacebel code
+     * @return boolean - True if matches, false if it doesn't
+     */
     private boolean checkIfMatchesBlackListEntry(String nacebel){
         return blackListRepository.findAll().stream()
             .anyMatch(entry -> entry.getNacebel().equals(nacebel));    
     }
 
+    
+    /** 
+     * Calculates the fixed pricing of a given CreditRequest object
+     * @param creditRequest - The given CreditRequest object
+     * @return AmortizationSchedule - The calculated fixed pricing
+     */
     //#endregion evaluation methods
 
     //#endregion credit request evaluation

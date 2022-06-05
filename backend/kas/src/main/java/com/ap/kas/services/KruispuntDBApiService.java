@@ -12,6 +12,12 @@ public class KruispuntDBApiService {
     @Autowired
     private WebClient kruispuntdb;
     
+    
+    /** 
+     * Gets the company info (from the KruisPuntDB) of a company using a given companyNr 
+     * @param companyNr - The given companyNr
+     * @return CompanyInfoReadDto - The CompanyInfoReadDto containing the company info
+     */
     public CompanyInfoReadDto getCompanyInfoDto(String companyNr) {
         companyNr = companyNr.replaceAll("\\D", "");
         String convertedNr = "BE" + companyNr.substring(0, 4) + "." + companyNr.substring(4, 7) + "." + companyNr.substring(7, 10);

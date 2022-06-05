@@ -29,6 +29,11 @@ public class JwtUtils {
     @Value("${Kas.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    
+    /** 
+     * @param authentication
+     * @return String
+     */
     public String generateJwtToken(Authentication authentication) {
         Date now = new Date();
         if(authentication.getPrincipal() instanceof CustomerDetailsImpl) {
@@ -53,10 +58,20 @@ public class JwtUtils {
         
     }
 
+    
+    /** 
+     * @param token
+     * @return String
+     */
     public String getPrincipalFromJwt(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
     
+    
+    /** 
+     * @param token
+     * @return boolean
+     */
     public boolean validateJwt(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);

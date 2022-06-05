@@ -32,6 +32,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Value("${Kas.app.tokenBearer}")
     private String bearer;
 
+    
+    /** 
+     * @param request
+     * @return String
+     */
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
@@ -42,6 +47,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         return null;
     }
 
+    
+    /** 
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
