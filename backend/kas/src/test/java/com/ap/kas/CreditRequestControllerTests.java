@@ -6,12 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
+import com.ap.kas.config.Profiles;
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
 import com.ap.kas.dtos.readdtos.CreditRequestReadDto;
+import com.ap.kas.dtos.requestdtos.CustomerLoginRequestDto;
 import com.ap.kas.models.CreditRequest;
+import com.ap.kas.models.Customer;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.CreditRequestRepository;
+import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
@@ -24,11 +29,25 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
+
+
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CreditRequestControllerTests {
 
     private static final String CONTROLLER_MAPPING = "/credit_request";
+    private static final String LOGIN_MAPPING = "/signin/customer";
+    private static final Logger logger = LoggerFactory.getLogger(CreditRequestControllerTests.class);
     
     @Autowired
     private TestRestTemplate restTemplate;
@@ -45,7 +64,14 @@ public class CreditRequestControllerTests {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     private static CreditRequest creditRequest;
+
+
+    Faker faker = new Faker(new Locale("nl-BE"));
+    FakeValuesService fakeValuesService = new FakeValuesService(new Locale("nl-BE"), new RandomService());
 
     @BeforeAll
     public static void init() {
@@ -54,12 +80,27 @@ public class CreditRequestControllerTests {
         creditRequest.setName("Test Request");
         creditRequest.setFinancedAmount(100.0f);
         creditRequest.setTotalAmount(200.0f);
-        creditRequest.setDuration(Period.ofMonths(2));
+        creditRequest.setDuration(Period.ofMonths(2));  
     }
 
     @Test
     public void readAllCapabilitiesTest() {
-        final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all", MessageResponse.class);
+
+
+        Customer testCustomer = customerRepository.findByCompanyNr("1234567856").orElse(null);
+        
+        
+        CustomerLoginRequestDto customerLoginRequestDto = new CustomerLoginRequestDto();
+        customerLoginRequestDto.setCompanyNr(testCustomer.getCompanyNr());
+        customerLoginRequestDto.setPassword("testPassword");
+
+        
+
+        final ResponseEntity<MessageResponse> loginEntity = restTemplate.postForEntity(LOGIN_MAPPING, customerLoginRequestDto,  MessageResponse.class);
+        assertEquals(HttpStatus.OK, loginEntity.getStatusCode());
+
+
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all" + "/" + testCustomer.getId() , MessageResponse.class);
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
 
         List<CreditRequestReadDto> expectedList = new LinkedList<CreditRequestReadDto>();

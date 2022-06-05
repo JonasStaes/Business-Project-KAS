@@ -73,6 +73,8 @@ public class MockDataRunner implements CommandLineRunner {
         customerRepository.save(customer2);
         Customer customer3 = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("customer3")), "1483476443");
         customerRepository.save(customer3);
+        Customer testCustomer = new Customer(faker.name().fullName(), faker.internet().emailAddress(), true, passwordEncoder.encode(new StringBuffer("testPassword")), "1234567856");
+        customerRepository.save(testCustomer);
         customerRepository.findAll().forEach(cu -> logger.info("{}", cu));
 
         employeeRepository.deleteAll();
