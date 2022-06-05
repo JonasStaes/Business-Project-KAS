@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 /**
- * This object is used to store Employees in the database.
+ * This class is used to store Employees in the database.
  * <p>
- * Inherits from the User object.
+ * Inherits from the User class.
  */
 @Entity
 @Table(name = "tblEmployees")

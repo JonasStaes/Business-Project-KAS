@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * This object is used to store Customer information  in the database.
+ * This class is used to store Customer information  in the database.
  */
 @Data
 @NoArgsConstructor
