@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WhiteListRepository extends JpaRepository<WhiteListEntry, String> {
 
     boolean existsByNacebel(String nacebel);
+    WhiteListEntry findByNacebel(String nacebel);
     
 }

@@ -125,6 +125,7 @@ public class CreditRequestControllerTests {
     @Test
     public void createNewCreditRequestTest() {
         MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+        
 
         Customer customer = customerRepository.findByCompanyNr("1234567890").orElse(null);
 
