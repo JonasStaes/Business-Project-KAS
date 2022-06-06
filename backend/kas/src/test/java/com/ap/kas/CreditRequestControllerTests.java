@@ -87,6 +87,7 @@ public class CreditRequestControllerTests {
         testCustomer = new Customer("testCustomer", "testCustomer@gmail.com", true, passwordEncoder.encode(new StringBuffer("testCustomer")), "1234567890");
         //initialize test data
         creditRequest = new CreditRequest("Test Request", 200.0f, 100.0f, Period.ofMonths(2), InvestmentType.ONROERENDE_GOEDEREN, testCustomer);
+        
     }
 
     @Test
@@ -113,6 +114,7 @@ public class CreditRequestControllerTests {
     @Test
     public void createNewCreditRequestTest() {
         MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+        
 
         bodyBuilder.part("parentID", creditRequest.getCustomer().getId());
         bodyBuilder.part("name", creditRequest.getName());
