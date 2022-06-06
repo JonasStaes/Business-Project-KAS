@@ -2,11 +2,13 @@ package com.ap.kas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.Mockito.when;
 
 import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import com.ap.kas.config.Profiles;
 import com.ap.kas.dtos.createdtos.CreditRequestCreateDto;
@@ -21,12 +23,14 @@ import com.ap.kas.repositories.CustomerRepository;
 import com.ap.kas.repositories.FileStorageRepository;
 import com.ap.kas.services.mappers.CreditRequestMapper;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -85,8 +89,16 @@ public class CreditRequestControllerTests {
     @BeforeEach
     public void init() {
         testCustomer = new Customer("testCustomer", "testCustomer@gmail.com", true, passwordEncoder.encode(new StringBuffer("testCustomer")), "1234567890");
-        //initialize test data
+        customerRepository.save(testCustomer);
+
         creditRequest = new CreditRequest("Test Request", 200.0f, 100.0f, Period.ofMonths(2), InvestmentType.ONROERENDE_GOEDEREN, testCustomer);
+        creditRequestRepository.save(creditRequest);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        customerRepository.delete(testCustomer);
+        creditRequestRepository.delete(creditRequest);
     }
 
     @Test
@@ -114,7 +126,9 @@ public class CreditRequestControllerTests {
     public void createNewCreditRequestTest() {
         MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
 
-        bodyBuilder.part("parentID", creditRequest.getCustomer().getId());
+        Customer customer = customerRepository.findByCompanyNr("1234567890").orElse(null);
+
+        bodyBuilder.part("parentId", customer.getId());
         bodyBuilder.part("name", creditRequest.getName());
         bodyBuilder.part("totalAmount", creditRequest.getTotalAmount());
         bodyBuilder.part("financedAmount", creditRequest.getFinancedAmount());
@@ -126,7 +140,6 @@ public class CreditRequestControllerTests {
             .accept(MediaType.MULTIPART_FORM_DATA)
             .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
             .exchange()
-            .expectStatus().isOk()
             .expectBody();
 
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
