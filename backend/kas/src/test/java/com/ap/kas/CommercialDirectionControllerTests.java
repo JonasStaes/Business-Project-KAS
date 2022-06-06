@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import com.ap.kas.config.Profiles;
 import com.ap.kas.models.BlackListEntry;
+import com.ap.kas.models.Customer;
 import com.ap.kas.models.WhiteListEntry;
 import com.ap.kas.payload.response.MessageResponse;
 import com.ap.kas.repositories.BlackListRepository;
@@ -58,6 +59,9 @@ public class CommercialDirectionControllerTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
+    private WebTestClient webClient;
+
+    @Autowired
     private ModelMapper modelMapper;
  
     private WhiteListEntry whiteListEntry;
@@ -83,6 +87,7 @@ public class CommercialDirectionControllerTests {
         blackListEntry = new BlackListEntry();
         blackListEntry.setNacebel("0123457");
         blackListRepository.save(blackListEntry);
+        
     }
 
     @Test
@@ -145,5 +150,55 @@ public class CommercialDirectionControllerTests {
 
         
         assertNull(blackListRepository.findByNacebel(blackListEntry.getNacebel()));
+    }
+
+    @Test
+    public void createWhiteListEntryTest(){
+        
+       
+        //Because only one entry with the same nacebel can exist at the same time, we will just test if an entry with the given expected nacebel code exists.
+
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+
+        String expectedNacebelCode = "012345678";
+
+        bodyBuilder.part("nacebel", expectedNacebelCode);
+
+  
+
+        webClient.post().uri(CONTROLLER_MAPPING + "/whitelist")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .accept(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectBody();
+
+        
+        assertNotNull(whiteListRepository.findByNacebel(expectedNacebelCode));
+    }
+
+    @Test
+    public void createBlackListEntryTest(){
+        
+       
+        //Because only one entry with the same nacebel can exist at the same time, we will just test if an entry with the given expected nacebel code exists.
+
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+
+        String expectedNacebelCode = "012345679";
+
+        bodyBuilder.part("nacebel", expectedNacebelCode);
+
+  
+
+        webClient.post().uri(CONTROLLER_MAPPING + "/blacklist")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .accept(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectBody();
+
+        
+        assertNotNull(blackListRepository.findByNacebel(expectedNacebelCode));
     }
 }
