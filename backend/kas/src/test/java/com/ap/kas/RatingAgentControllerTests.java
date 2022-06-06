@@ -37,6 +37,7 @@ import com.ap.kas.services.mappers.CreditRequestMapper;
 import com.ap.kas.services.mappers.InvestmentTypeMapper;
 import com.ap.kas.services.mappers.UserMapper;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -79,6 +80,7 @@ public class RatingAgentControllerTests {
  
     private Customer testCustomer;
     private CreditRequest creditRequest;
+    private String creditRequestId;
 
  
 
@@ -117,6 +119,14 @@ public class RatingAgentControllerTests {
 
         creditRequest = new CreditRequest("Test Request", 200.0f, 100.0f, Period.ofMonths(2), InvestmentType.ONROERENDE_GOEDEREN, testCustomer);
         creditRequestRepository.save(creditRequest);
+
+        creditRequestId = creditRequestRepository.findByName("Test Request").orElse(null).getId();
+    }
+
+    @AfterEach
+    public void cleanup() {
+        customerRepository.delete(testCustomer);
+        creditRequestRepository.delete(creditRequest);
     }
 
     @Test
@@ -144,4 +154,23 @@ public class RatingAgentControllerTests {
 
         assertIterableEquals(expectedList, actualList);
     }
+
+    @Test
+    public void readOneCreditRequest() {
+
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/" + creditRequestId , MessageResponse.class);
+        assertEquals(HttpStatus.OK, forEntity.getStatusCode());
+
+        CreditRequestReadDto expectedCreditRequest = creditRequestMapper.convertToReadDtoWithCompanyInfo(creditRequest,
+        apiService.getCompanyInfoDto(creditRequest.getCustomer().getCompanyNr()));
+
+        assertEquals(expectedCreditRequest, modelMapper.map(forEntity.getBody().getData(), CreditRequestReadDto.class));
+
+    }
+
+
+        
+        
+
+   
 }
