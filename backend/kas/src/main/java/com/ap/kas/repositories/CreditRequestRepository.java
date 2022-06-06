@@ -17,4 +17,5 @@ public interface CreditRequestRepository extends JpaRepository<CreditRequest, St
     //findBy{propertyname} auto generates a method that find an entry in the repository by this prop
     Optional<CreditRequest> findByName(String name);
     List<CreditRequest> findAllByCustomerId(String id);
+    
 }

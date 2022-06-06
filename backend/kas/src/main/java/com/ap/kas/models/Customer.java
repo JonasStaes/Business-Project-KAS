@@ -49,4 +49,6 @@ public class Customer extends User {
         super(name, email, active, password);
         this.companyNr = companyNr;
     }
+
+    
 }
