@@ -152,6 +152,8 @@ public class CreditRequestControllerTests {
         bodyBuilder.part("duration", creditRequest.getDuration());
         bodyBuilder.part("investmentType", creditRequest.getInvestmentType().name());
 
+        
+
         webClient.post().uri(CONTROLLER_MAPPING + "/")
             .contentType(MediaType.MULTIPART_FORM_DATA)
             .accept(MediaType.MULTIPART_FORM_DATA)
@@ -159,6 +161,7 @@ public class CreditRequestControllerTests {
             .exchange()
             .expectBody();
 
+        
         CreditRequest actualCreditRequest = creditRequestRepository.findByName(creditRequest.getName()).get();
         assertEquals(creditRequest.getName(), actualCreditRequest.getName());
         assertEquals(creditRequest.getTotalAmount(), actualCreditRequest.getTotalAmount());
