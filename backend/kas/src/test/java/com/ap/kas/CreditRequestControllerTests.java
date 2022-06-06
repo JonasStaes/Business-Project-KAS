@@ -47,6 +47,8 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 
+import lombok.var;
+
 @ActiveProfiles(profiles = Profiles.TEST)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CreditRequestControllerTests {
@@ -82,6 +84,8 @@ public class CreditRequestControllerTests {
 
     private CreditRequest creditRequest;
 
+    private String creditRequestId;
+
 
     Faker faker = new Faker(new Locale("nl-BE"));
     FakeValuesService fakeValuesService = new FakeValuesService(new Locale("nl-BE"), new RandomService());
@@ -90,9 +94,11 @@ public class CreditRequestControllerTests {
     public void init() {
         testCustomer = new Customer("testCustomer", "testCustomer@gmail.com", true, passwordEncoder.encode(new StringBuffer("testCustomer")), "1234567890");
         customerRepository.save(testCustomer);
+        
 
         creditRequest = new CreditRequest("Test Request", 200.0f, 100.0f, Period.ofMonths(2), InvestmentType.ONROERENDE_GOEDEREN, testCustomer);
         creditRequestRepository.save(creditRequest);
+        creditRequestId = creditRequestRepository.findByName("Test Request").orElse(null).getId();
     }
 
     @AfterEach
@@ -102,7 +108,7 @@ public class CreditRequestControllerTests {
     }
 
     @Test
-    public void readAllCapabilitiesTest() {
+    public void readAllCreditRequests() {
 
         final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/all" + "/" + testCustomer.getId() , MessageResponse.class);
         assertEquals(HttpStatus.OK, forEntity.getStatusCode());
@@ -121,13 +127,23 @@ public class CreditRequestControllerTests {
         assertIterableEquals(expectedList, actualList);
     }
 
+    @Test
+    public void readOneCreditRequest() {
+
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/" + creditRequestId , MessageResponse.class);
+        assertEquals(HttpStatus.OK, forEntity.getStatusCode());
+
+        assertEquals(modelMapper.map(creditRequest, CreditRequestReadDto.class), modelMapper.map(forEntity.getBody().getData(), CreditRequestReadDto.class));
+
+    }
+
 
     @Test
-    public void createNewCreditRequestTest() {
-        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-        
+    public void createNewCreditRequest() {
 
         Customer customer = customerRepository.findByCompanyNr("1234567890").orElse(null);
+
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
 
         bodyBuilder.part("parentId", customer.getId());
         bodyBuilder.part("name", creditRequest.getName());
