@@ -37,6 +37,7 @@ import com.ap.kas.services.mappers.CreditRequestMapper;
 import com.ap.kas.services.mappers.InvestmentTypeMapper;
 import com.ap.kas.services.mappers.UserMapper;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -79,6 +80,7 @@ public class OfficeWorkerControllerTests {
  
     private Customer testCustomer;
     private CreditRequest creditRequest;
+    private String creditRequestId;
 
  
 
@@ -117,6 +119,14 @@ public class OfficeWorkerControllerTests {
 
         creditRequest = new CreditRequest("Test Request", 200.0f, 100.0f, Period.ofMonths(2), InvestmentType.ONROERENDE_GOEDEREN, testCustomer);
         creditRequestRepository.save(creditRequest);
+
+        creditRequestId = creditRequestRepository.findByName("Test Request").orElse(null).getId();
+    }
+
+    @AfterEach
+    public void cleanup() {
+        customerRepository.delete(testCustomer);
+        creditRequestRepository.delete(creditRequest);
     }
 
     @Test
@@ -154,6 +164,16 @@ public class OfficeWorkerControllerTests {
         Optional<CreditRequest> expectedResult = Optional.empty();
         assertEquals(expectedResult, creditRequestRepository.findById(creditRequest.getId()));
       
+
+    }
+
+    @Test
+    public void readOneCreditRequest() {
+
+        final ResponseEntity<MessageResponse> forEntity = restTemplate.getForEntity(CONTROLLER_MAPPING + "/" + creditRequestId , MessageResponse.class);
+        assertEquals(HttpStatus.OK, forEntity.getStatusCode());
+
+        assertEquals(modelMapper.map(creditRequest, CreditRequestReadDto.class), modelMapper.map(forEntity.getBody().getData(), CreditRequestReadDto.class));
 
     }
 }
