@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Period;
 import java.util.LinkedList;
@@ -179,5 +180,57 @@ public class AdminControllerTests {
 
         assertFalse(deactivatedCustomer.getActive());
 
+    }
+
+    @Test public void createCustomerTest(){
+
+
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+     
+
+        bodyBuilder.part("name", "testName");
+        bodyBuilder.part("email", "testEmail@outlook.com");
+        bodyBuilder.part("companyNr", "1234567890" );
+
+  
+
+        webClient.post().uri(CONTROLLER_MAPPING + "/newCustomer")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .accept(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectBody();
+
+        
+        assertNotNull(customerRepository.findByCompanyNr("1234567890").get());
+    }
+
+    @Test public void createEmployeeTest(){
+
+
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+
+       
+
+       
+
+        bodyBuilder.part("name", "testName1");
+        bodyBuilder.part("email", "testEmail@outlook.com");
+        bodyBuilder.part("roles", "[KANTOOR_MEDEWERKER]" );
+
+  
+
+        webClient.post().uri(CONTROLLER_MAPPING + "/newEmployee")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .accept(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectBody();
+
+        
+
+
+        assertNotNull(employeeRepository.findByName("testName1"));
+      
     }
 }
